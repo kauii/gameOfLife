@@ -2,6 +2,11 @@ package Board;
 
 import java.util.BitSet;
 
+/*
+*   https://github.com/mafm/HashLife
+*   Code in .Tree
+*/
+
 public class Board {
     private final BitSet[][] board;
     private final int dim;
