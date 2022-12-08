@@ -3,9 +3,9 @@ package Board;
 import java.util.BitSet;
 
 /*
-*   https://github.com/mafm/HashLife
-*   Code in .Tree
-*/
+ *   https://github.com/mafm/HashLife
+ *   Code in .Tree
+ */
 
 public class Board {
     private final BitSet[][] board;
@@ -23,7 +23,7 @@ public class Board {
         }
     }
 
-    // Exports board as 2D-int array.
+    // Exports board as 2D-short array.
     // 0 || 1 = cell is dead
     // 2 = alive, player 1
     // 3 = alive, player 2
@@ -57,7 +57,7 @@ public class Board {
         board[x_cor][y_cor].set(1, player);
     }
 
-    public int getDimension(){
+    public int getDimension() {
         return dim;
     }
 
