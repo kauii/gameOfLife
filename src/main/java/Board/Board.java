@@ -13,7 +13,7 @@ public class Board {
 
     public Board(int dimension) {
         dim = dimension;
-        // Create D-BitSet array
+        // Create 2D-BitSet array
         board = new BitSet[dimension][dimension];
         // Initialized all as 0
         for (int i = 0; i < dimension; i++) {
@@ -27,27 +27,27 @@ public class Board {
     // 0 || 1 = cell is dead
     // 2 = alive, player 1
     // 3 = alive, player 2
-    public int[][] getBoard() {
+    public short[][] getBoard() {
         // Creating a 2D-int-array for display
-        int[][] res = new int[dim][dim];
+        short[][] res = new short[dim][dim];
 
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                res[i][j] = toInt(board[i][j]);
+                res[i][j] = toShort(board[i][j]);
             }
         }
         return res;
     }
 
-    public static int toInt(BitSet bitSet) {
-        // Method to translate BitSet into int
-        int intValue = 0;
+    public static short toShort(BitSet bitSet) {
+        // Method to translate BitSet into short
+        short shortValue = 0;
         for (int bit = 0; bit < bitSet.length(); bit++) {
             if (bitSet.get(bit)) {
-                intValue |= (1 << bit);
+                shortValue |= (1 << bit);
             }
         }
-        return intValue;
+        return shortValue;
     }
 
     public void setCell(int x_cor, int y_cor, boolean alive, boolean player) {
@@ -55,6 +55,10 @@ public class Board {
         board[x_cor][y_cor].set(0, alive);
         // Set second bit to relevant player
         board[x_cor][y_cor].set(1, player);
+    }
+
+    public int getDimension(){
+        return dim;
     }
 
 }
