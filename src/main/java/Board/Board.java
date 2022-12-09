@@ -1,26 +1,23 @@
 package Board;
 
-import java.util.BitSet;
-
 /*
- *   https://github.com/mafm/HashLife
- *   Code in .Tree
+ *  Facade Design Pattern
+ *  Each Board manipulation is handled through the Board class
+ *
+ *  Memento Design Pattern
+ *  After the end of each turn, the state of the Board is saved in the Caretaker
+ *  Enables us to show a review of the game at the end
  */
 
+import java.util.ArrayList;
+
 public class Board {
-    private final BitSet[][] board;
-    private final int dim;
+    private final Grid grid;
+    private final Caretaker ct;
 
     public Board(int dimension) {
-        dim = dimension;
-        // Create 2D-BitSet array
-        board = new BitSet[dimension][dimension];
-        // Initialized all as 0
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                board[i][j] = new BitSet(2);
-            }
-        }
+        grid = new Grid(this, dimension);
+        ct = new Caretaker(grid);
     }
 
     // Exports board as 2D-short array.
@@ -28,37 +25,26 @@ public class Board {
     // 2 = alive, player 1
     // 3 = alive, player 2
     public short[][] getBoard() {
-        // Creating a 2D-int-array for display
-        short[][] res = new short[dim][dim];
-
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                res[i][j] = toShort(board[i][j]);
-            }
-        }
-        return res;
-    }
-
-    public static short toShort(BitSet bitSet) {
-        // Method to translate BitSet into short
-        short shortValue = 0;
-        for (int bit = 0; bit < bitSet.length(); bit++) {
-            if (bitSet.get(bit)) {
-                shortValue |= (1 << bit);
-            }
-        }
-        return shortValue;
+        return ct.getCurrent();
     }
 
     public void setCell(int x_cor, int y_cor, boolean alive, boolean player) {
-        // Set first bit status to alive or dead
-        board[x_cor][y_cor].set(0, alive);
-        // Set second bit to relevant player
-        board[x_cor][y_cor].set(1, player);
+        grid.setCell(this, x_cor, y_cor, alive, player);
     }
 
     public int getDimension() {
-        return dim;
+        return grid.getDimension();
+    }
+
+    public void evolve() {
+        // Current state gets saved in Memento Design Pattern for game history
+        ct.saveState();
+        // TODO: Evolution call gets placed here
+
+    }
+
+    public ArrayList<short[][]> getHistory() {
+        return ct.getHistory();
     }
 
 }
