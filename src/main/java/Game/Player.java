@@ -3,12 +3,11 @@ package Game;
 public class Player {
 
     private final String name;
-    private final String color;
+    private  String color;
     private int liveCells;
 
-    public Player(String name, String color) {
+    public Player(String name) {
         this.name = name;
-        this.color = color;
         this.liveCells = 0;
     }
 
