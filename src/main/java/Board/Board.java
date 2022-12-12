@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class Board {
     private final Grid grid;
     private final Caretaker ct;
+    private final Evolution evo;
 
     public Board(int dimension) {
         grid = new Grid(this, dimension);
         ct = new Caretaker(grid);
+        evo = new Evolution();
     }
 
     // Exports board as 2D-short array.
@@ -39,7 +41,8 @@ public class Board {
     public void evolve() {
         // Current state gets saved in Memento Design Pattern for game history
         ct.saveState();
-        // TODO: Evolution call gets placed here
+        // Grid progresses one evolution
+        evo.evolve(this, grid);
 
     }
 

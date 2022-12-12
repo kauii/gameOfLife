@@ -5,6 +5,7 @@ import java.util.BitSet;
 /*
  * Grid shall only be created by Board
  * Memento can access the get methods, Board the set methods
+ * Evolution can access the getGrid and setCell methods
  */
 
 public class Grid {
@@ -30,8 +31,8 @@ public class Grid {
     // Set value of a cell to dead or alive + player
     // Arguments: true=1, false=0
     protected void setCell(Object o, int x_cor, int y_cor, boolean alive, boolean player) {
-        // Call has to be made by Board, otherwise no action
-        if (o instanceof Board) {
+        // Call has to be made by Board or Evolution, otherwise no action
+        if (o instanceof Board || o instanceof Evolution) {
 
             // Set first bit status to alive or dead
             grid[x_cor][y_cor].set(0, alive);
@@ -47,8 +48,8 @@ public class Grid {
 
     // Returns the grid as BitSet to the Memento
     protected BitSet[][] getGrid(Object o) {
-        // If call not made by Memento, null return
-        if (!(o instanceof Memento)) {
+        // If call not made by Memento or Evolution, null return
+        if (!(o instanceof Memento || o instanceof Evolution)) {
             return null;
         }
         return grid;
