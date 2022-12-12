@@ -6,7 +6,7 @@ public class Player {
     private  String color;
     private int liveCells;
 
-    PlayerNr aNr;
+    private PlayerNr aNr;
 
     public Player(String name) {
         this.name = name;
@@ -16,6 +16,8 @@ public class Player {
     public String getName() { return name; }
 
     public String getColor() { return color; }
+
+    public PlayerNr getPlayerNr() { return aNr; }
 
     public int getLiveCells() { return liveCells; }
 
