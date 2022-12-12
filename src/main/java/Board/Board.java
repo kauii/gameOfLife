@@ -13,7 +13,7 @@ import Game.PlayerNr;
 
 import java.util.ArrayList;
 
-public class Board implements BoardInter{
+public class Board implements BoardInter {
     private final Grid grid;
     private final Caretaker ct;
     private final Evolution evo;
@@ -32,7 +32,10 @@ public class Board implements BoardInter{
         return ct.getCurrent();
     }
 
-    public void setCell(int x_cor, int y_cor, boolean alive, PlayerNr player) {
+    public void setCell(int x_cor, int y_cor, boolean alive, PlayerNr playerNr) {
+        // If playerNr == 1 -> player = false
+        // If playerNr == 2 -> player = true
+        boolean player = playerNr == PlayerNr.PLAYER2;
         grid.setCell(this, x_cor, y_cor, alive, player);
     }
 
@@ -53,7 +56,7 @@ public class Board implements BoardInter{
     }
 
     // Get int array [player_1,player_2]
-    public int[] getPlayerCells(){
+    public int[] getPlayerCells() {
         return new int[1];
     }
 
