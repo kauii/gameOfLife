@@ -13,7 +13,7 @@ import Game.PlayerNr;
 
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements BoardInter{
     private final Grid grid;
     private final Caretaker ct;
     private final Evolution evo;
@@ -50,6 +50,11 @@ public class Board {
 
     public ArrayList<short[][]> getHistory() {
         return ct.getHistory();
+    }
+
+    // Get int array [player_1,player_2]
+    public int[] getPlayerCells(){
+        return new int[1];
     }
 
 }
