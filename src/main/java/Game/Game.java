@@ -30,11 +30,13 @@ public class Game {
         // sort Names alphabetically
         players.sort(Comparator.comparing(Player::getName));
 
+        // determine player 1 player 2
+        players.get(0).setPlayerNr(PlayerNr.PLAYER1);
+        players.get(1).setPlayerNr(PlayerNr.PLAYER2);
+
         // Ask which color for each Player should be used
 
         //
-
-
     }
 
     private void initialBoardConfig() {
@@ -44,6 +46,9 @@ public class Game {
                 1000);
 
         // Place first cells
+        for (int i = 0; i < 4; i++) {
+            board.setCell(0, 0, true, PlayerNr.PLAYER1);
+        }
 
     }
 

@@ -9,6 +9,8 @@ package Board;
  *  Enables us to show a review of the game at the end
  */
 
+import Game.PlayerNr;
+
 import java.util.ArrayList;
 
 public class Board {
@@ -30,7 +32,7 @@ public class Board {
         return ct.getCurrent();
     }
 
-    public void setCell(int x_cor, int y_cor, boolean alive, boolean player) {
+    public void setCell(int x_cor, int y_cor, boolean alive, PlayerNr player) {
         grid.setCell(this, x_cor, y_cor, alive, player);
     }
 
