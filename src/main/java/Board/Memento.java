@@ -39,12 +39,13 @@ public class Memento {
 
     // Internal method to translate BitSet into short
     private static short toShort(BitSet bitSet) {
-        short shortValue = 0;
-        for (int bit = 0; bit < bitSet.length(); bit++) {
-            if (bitSet.get(bit)) {
-                shortValue |= (1 << bit);
-            }
+        short res = 0;
+        if (bitSet.get(0)) {
+            res += 2;
         }
-        return shortValue;
+        if (bitSet.get(1)) {
+            res++;
+        }
+        return res;
     }
 }

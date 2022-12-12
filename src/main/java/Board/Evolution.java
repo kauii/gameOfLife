@@ -17,7 +17,8 @@ public class Evolution {
             return;
         }
         // Create copy of grid for iteration
-        BitSet[][] old_grid = grid.getGrid(this);
+        BitSet[][] old_grid = copyGrid(grid.getGrid(this));
+        //BitSet[][] old_grid = grid.getGrid(this).clone();
         int dim = old_grid.length;
         int[] neighbours;
 
@@ -41,6 +42,19 @@ public class Evolution {
                 }
             }
         }
+    }
+
+    // Creates a copy of the grid as not to interfere with manipulations
+    private BitSet[][] copyGrid(BitSet[][] grid){
+        int dim=grid.length;
+        BitSet[][] res=new BitSet[dim][dim];
+        for(int i=0;i<dim;i++){
+            for(int j=0;j<dim;j++){
+                res[i][j]= (BitSet) grid[i][j].clone();
+            }
+        }
+
+        return res;
     }
 
     // Get the number of neighbours and the player with the majority of cells
@@ -80,7 +94,7 @@ public class Evolution {
         return res;
     }
 
-    // Get the status and player of a specific cell (0=dead, 1=player_1,2=player 2
+    // Get the status and player of a specific cell (0=dead, 1=player_1, 2=player_2
     private int getCellStatus(BitSet[][] old_grid, int x_cor, int y_cor) {
         // Try-catch
         try {
