@@ -57,7 +57,7 @@ public class Board implements BoardInter {
 
     // Get int array [player_1,player_2]
     public int[] getPlayerCells() {
-        return new int[1];
+        return grid.getPlayerCells();
     }
 
 }
