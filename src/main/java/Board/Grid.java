@@ -55,4 +55,26 @@ public class Grid {
         return grid;
     }
 
+    // Get int array [player_1,player_2]
+    protected int[] getPlayerCells() {
+        int p1 = 0;
+        int p2 = 0;
+
+        // Iterate through grid
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                // If cell alive
+                if (grid[i][j].get(0)) {
+                    // Add cell count to player
+                    if (!grid[i][j].get(1)) {
+                        p1++;
+                    } else {
+                        p2++;
+                    }
+                }
+            }
+        }
+        return new int[]{p1, p2};
+    }
+
 }
