@@ -16,6 +16,7 @@ public class Program extends JFrame {
 
     setSize(1024, 768);
     setVisible(true);
+    setResizable(true);
   }
 
   public static void main(String[] args) {

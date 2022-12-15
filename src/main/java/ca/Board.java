@@ -7,12 +7,14 @@ import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 
 /**
  * Board with Points that may be expanded (with automatic change of cell
  * number) with mouse event listener
  */
 public class Board extends JComponent implements MouseInputListener, ComponentListener {
+  @Serial
   private static final long serialVersionUID = 1L;
   private java.awt.Point[][] points;
   private int size = 14;
