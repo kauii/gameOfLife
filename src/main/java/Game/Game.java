@@ -1,6 +1,7 @@
 package Game;
 
 import Board.Board;
+import GUI.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class Game {
     private final int PLAYER2_INDEX = 1;
 
     public Game() {
+        GUI gui = new GUI();
     }
 
     public void setUp() {
