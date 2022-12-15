@@ -2,6 +2,7 @@ package Game;
 
 import Board.Board;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,10 +24,10 @@ public class Game {
 
         // Player 1
         players.add(new Player(//TODO: ask User about Name))
-                "Bob"));
+                "Bob", Color.BLUE));
 
         // Player 2
-        players.add(new Player("Joe"));
+        players.add(new Player("Joe",Color.RED));
 
         // sort Names alphabetically
         players.sort(Comparator.comparing(Player::getName));
