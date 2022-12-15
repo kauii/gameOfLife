@@ -9,10 +9,10 @@ import java.util.List;
 public class Game {
 
     private Board board;
-    private boolean gameOver;
-    private final List<Player> players = new ArrayList<>();
     private Player winner;
-
+    private final List<Player> players = new ArrayList<>();
+    private final int PLAYER1_INDEX = 0;
+    private final int PLAYER2_INDEX = 1;
 
     public Game() {
     }
@@ -32,8 +32,8 @@ public class Game {
         players.sort(Comparator.comparing(Player::getName));
 
         // determine player 1 player 2
-        players.get(0).setPlayerNr(PlayerNr.PLAYER1);
-        players.get(1).setPlayerNr(PlayerNr.PLAYER2);
+        players.get(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
+        players.get(PLAYER2_INDEX).setPlayerNr(PlayerNr.PLAYER2);
 
         // Ask which color for each Player should be used
 
@@ -54,9 +54,8 @@ public class Game {
     }
 
     public void play() {
-        int[] playerCells;
 
-        while (!gameOver) {
+        while (winner == null) {
 
             for (Player player : players) {
                 // Player takes turn
@@ -64,23 +63,29 @@ public class Game {
                 // Simulate Generation
                 board.evolve();
                 // Check if Cells == 0
-                playerCells = board.getPlayerCells();
-                if (playerCells[0] == 0) {
-                    gameOver = true;
-                    winner = players.get(1); // declare Player2 as Winner
-
-                }
-                if (playerCells[1] == 0) {
-                    gameOver = true;
-                    winner = players.get(0); // declare Player1 as Winner
-                }
+                declareWinner();
             }
         }
     }
 
     public void turn(Player player) {
 
+
+
     }
+
+    private void declareWinner() {
+        int[] playerCells = board.getPlayerCells();
+
+        if (playerCells[PLAYER1_INDEX] == 0) {
+            winner = players.get(PLAYER2_INDEX); // declare Player2 as Winner
+
+        }
+        if (playerCells[PLAYER2_INDEX] == 0) {
+            winner = players.get(PLAYER2_INDEX); // declare Player1 as Winner
+        }
+    }
+
 
 
 }
