@@ -14,8 +14,9 @@ import static javax.swing.text.html.HTML.Tag.INPUT;
 public class GUI extends JFrame implements ActionListener, ChangeListener {
 
     private JButton start;
-    private JTextField player1;
-    private JTextField player2;
+    private JButton restart;
+
+    private boolean running = false;
 
 
     String name1;
@@ -53,14 +54,19 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         start = new JButton("Start");
         start.setActionCommand("Start");
         start.setToolTipText("Starts Game");
-        start.setBounds(200,100,250,100);
-        start.setFocusable(false);
         start.addActionListener(this);
 
-        player1 = new JTextField("Player 1");
-        player2 = new JTextField("Player 2");
+        restart = new JButton("Restart");
+        restart.setActionCommand("Restart");
+        restart.setToolTipText("Restarts Game");
+        restart.addActionListener(this);
+        restart.setEnabled(false);
+
+
+
 
         buttonPanel.add(start);
+        buttonPanel.add(restart);
         container.add(buttonPanel, BorderLayout.CENTER);
 
     }
@@ -84,13 +90,26 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == start) {
+            if (!running) {
 
-            name1 = JOptionPane.showInputDialog(null, "Enter your name:", "Player 1", JOptionPane.INFORMATION_MESSAGE);
-            color1 = JColorChooser.showDialog(null, "Player 1 - Choose a color for your cells:", Color.BLACK);
+                name1 = JOptionPane.showInputDialog(null, "Enter your name:", "Player 1", JOptionPane.INFORMATION_MESSAGE);
+                color1 = JColorChooser.showDialog(null, "Player 1 - Choose a color for your cells:", Color.BLACK);
 
-            name2 = JOptionPane.showInputDialog(null, "Enter your name:", "Player 2", JOptionPane.INFORMATION_MESSAGE);
-            color2 = JColorChooser.showDialog(null, "Player 2 - Choose a color for your cells:", Color.BLACK);
+                name2 = JOptionPane.showInputDialog(null, "Enter your name:", "Player 2", JOptionPane.INFORMATION_MESSAGE);
+                color2 = JColorChooser.showDialog(null, "Player 2 - Choose a color for your cells:", Color.BLACK);
 
+                start.setEnabled(false);
+                restart.setEnabled(true);
+
+                running = true;
+
+            }
+        }
+        if (e.getSource() == restart) {
+
+            start.setEnabled(true);
+            restart.setEnabled(false);
+            running = false;
 
         }
 
@@ -100,5 +119,11 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     public void stateChanged(ChangeEvent e) {
 
     }
+
+    public boolean getRunning() {
+        return running;
+    }
+
+
 }
 
