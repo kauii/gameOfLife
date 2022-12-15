@@ -17,6 +17,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     private JButton restart;
 
     private boolean running = false;
+    private int dim;
 
 
     String name1;
@@ -97,6 +98,8 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
 
                 name2 = JOptionPane.showInputDialog(null, "Enter your name:", "Player 2", JOptionPane.INFORMATION_MESSAGE);
                 color2 = JColorChooser.showDialog(null, "Player 2 - Choose a color for your cells:", Color.BLACK);
+
+                dim = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter a dimension for the board (E.g. 1000 = 1000x1000)",JOptionPane.INFORMATION_MESSAGE));
 
                 start.setEnabled(false);
                 restart.setEnabled(true);

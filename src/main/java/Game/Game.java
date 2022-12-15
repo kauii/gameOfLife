@@ -15,21 +15,26 @@ public class Game {
     private final List<Player> players = new ArrayList<>();
     private final int PLAYER1_INDEX = 0;
     private final int PLAYER2_INDEX = 1;
+    GUI gui;
 
     public Game() {
-        GUI gui = new GUI();
+        gui = new GUI();
+        if (gui.getRunning()) {
+            setUp();
+        }
     }
 
     public void setUp() {
 
         initialBoardConfig();
 
+
+
         // Player 1
-        players.add(new Player(//TODO: ask User about Name))
-                "Bob", Color.BLUE));
+        players.add(new Player(gui.getName(PLAYER1_INDEX), gui.getColor(PLAYER2_INDEX)));
 
         // Player 2
-        players.add(new Player("Joe",Color.RED));
+        players.add(new Player(gui.getName(PLAYER2_INDEX), gui.getColor(PLAYER2_INDEX)));
 
         // sort Names alphabetically
         players.sort(Comparator.comparing(Player::getName));
