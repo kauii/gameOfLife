@@ -219,7 +219,8 @@ public class Menu extends JFrame implements Subject {
                 start.setEnabled(false);
             } else if (Objects.equals(command, "slot2")) {
                 // Handle delete button event for player 2
-                players.remove(1);
+                if (players.size() == 1) { players.remove(0); }
+                else { players.remove(1); }
                 player2.setText("EMPTY SLOT");
                 slot2.setBackground(new Color(200, 200, 200));
                 remove2.setEnabled(false);
