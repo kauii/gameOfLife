@@ -21,6 +21,8 @@ public class Menu extends JFrame implements Subject {
     private final JButton start;
     private final JButton player;
     private JSlider dimension;
+    private JLabel player1;
+    private JLabel player2;
 
 
 
@@ -37,9 +39,9 @@ public class Menu extends JFrame implements Subject {
         ImageIcon image = new ImageIcon("logo.png");
         setIconImage(image.getImage());
 
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(222,222,222));
-        panel.setPreferredSize(new Dimension(100,70));
+        JPanel buttons = new JPanel();
+        buttons.setBackground(new Color(222,222,222));
+        buttons.setPreferredSize(new Dimension(100,35));
 
         start = new JButton("Start");
         start.setActionCommand("Start");
@@ -60,23 +62,34 @@ public class Menu extends JFrame implements Subject {
         dimension.setPaintLabels(true);
         dimension.setSnapToTicks(true);
 
-        panel.add(start);
-        panel.add(player);
-        panel.add(help);
-        panel.add(dimension);
+        buttons.add(start);
+        buttons.add(player);
+        buttons.add(help);
 
-        JPanel panel2 = new JPanel();
-        panel2.setBackground(Color.white);
-        panel2.setPreferredSize(new Dimension(100,190));
+        JPanel sliderPanel = new JPanel();
+        sliderPanel.setBackground(Color.green);
 
-        JLabel player1 = new JLabel("EMPTY SLOT");
-        JLabel color1 = new JLabel("EMPTY SLOT");
+        JPanel playerSlots = new JPanel();
+        playerSlots.setBackground(Color.white);
+        playerSlots.setPreferredSize(new Dimension(300,100));
 
-        panel2.add(player1);
-        panel2.add(color1);
+        JPanel slot1 = new JPanel();
+        slot1.setBackground(Color.cyan);
+        slot1.setPreferredSize(new Dimension(135,100));
 
-        add(panel, BorderLayout.NORTH);
-        add(panel2, BorderLayout.SOUTH);
+        JPanel slot2 = new JPanel();
+        slot2.setBackground(Color.blue);
+        slot2.setPreferredSize(new Dimension(135,100));
+
+        player1 = new JLabel("EMPTY SLOT");
+        player2 = new JLabel("EMPTY SLOT");
+
+        playerSlots.add(slot1, BorderLayout.WEST);
+        playerSlots.add(slot2, BorderLayout.EAST);
+
+        add(buttons, BorderLayout.NORTH);
+        add(playerSlots, BorderLayout.SOUTH);
+        add(sliderPanel, BorderLayout.CENTER);
         setVisible(true);
 
 
@@ -117,12 +130,18 @@ public class Menu extends JFrame implements Subject {
 
                     name = JOptionPane.showInputDialog(null,"Enter your name:","Player",JOptionPane.INFORMATION_MESSAGE);
                     color = JColorChooser.showDialog(null,"Choose a color for your cells",Color.BLACK);
-                    players.add(new Player(name,color));
+                    if (name != null) {
+                        players.add(new Player(name,color));
+                    }
                     notifyObserver();
                     if (players.size() == 2) {
                         start.setEnabled(true);
                         player.setEnabled(false);
+                        player2.setText(name);
 
+                    }
+                    if (players.size() == 1) {
+                        player1.setText(name);
                     }
                 }
 
