@@ -40,7 +40,7 @@ public class Menu extends JFrame implements Subject {
         setResizable(false);
 
         // set custom icon
-        ImageIcon image = new ImageIcon("logo.png");
+        ImageIcon image = new ImageIcon("menu.png");
         setIconImage(image.getImage());
 
         // create top buttons
@@ -193,7 +193,7 @@ public class Menu extends JFrame implements Subject {
     private JSlider createDimSlider() {
         JSlider dimSlider = new JSlider(100, 1500);
         dimSlider.setPaintTrack(true);
-        dimSlider.setMajorTickSpacing(50);
+        dimSlider.setMajorTickSpacing(100);
         dimSlider.setPaintLabels(false);
         dimSlider.setSnapToTicks(true);
         dimSlider.addChangeListener(e -> {
@@ -216,6 +216,7 @@ public class Menu extends JFrame implements Subject {
                 slot1.setBackground(new Color(200, 200, 200));
                 remove1.setEnabled(false);
                 player.setEnabled(true);
+                start.setEnabled(false);
             } else if (Objects.equals(command, "slot2")) {
                 // Handle delete button event for player 2
                 players.remove(1);
@@ -223,6 +224,7 @@ public class Menu extends JFrame implements Subject {
                 slot2.setBackground(new Color(200, 200, 200));
                 remove2.setEnabled(false);
                 player.setEnabled(true);
+                start.setEnabled(false);
             }
         });
         deleteButton.setEnabled(false);
