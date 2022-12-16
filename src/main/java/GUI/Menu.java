@@ -128,8 +128,7 @@ public class Menu extends JFrame implements Subject {
         startButton.setActionCommand("Start");
         startButton.addActionListener(e -> {
             // setup game with the given information
-            game.setUp();
-            game.initialBoardConfig(dimSlider.getValue());
+            game.setUp(dimSlider.getValue());
             // close the menu
             close();
         });

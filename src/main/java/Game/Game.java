@@ -20,7 +20,12 @@ public class Game implements Observer {
         menu.registerObserver(this);
     }
 
-    public void setUp() {
+    public void setUp(int dimension) {
+
+        // create board
+        this.board = new Board(dimension);
+
+        gui = new GUI(board.getBoard());
 
         // sort Names alphabetically
        players.sort(Comparator.comparing(Player::getName));
@@ -32,14 +37,15 @@ public class Game implements Observer {
         System.out.println(players.get(PLAYER1_INDEX).getName());
         System.out.println(players.get(PLAYER2_INDEX).getName());
 
-        gui = new GUI();
+
+        initialBoardConfig();
+
+        gui.registerObserver(this);
 
     }
 
-    public void initialBoardConfig(int dimension) {
+    public void initialBoardConfig() {
 
-        // Create Board
-        this.board = new Board(dimension);
 
         // Place first cells
         for (int i = 0; i < 4; i++) {
