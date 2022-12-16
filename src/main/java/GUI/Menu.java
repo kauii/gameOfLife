@@ -11,20 +11,14 @@ import java.util.Objects;
 public class Menu extends JFrame implements Subject {
 
     private final List<Observer> observers;
-    Game game;
-    List<Player> players = new ArrayList<>();
-    String name;
-    Color color;
-    private final JButton start;
-    private final JButton player;
-    private final JButton remove1;
-    private final JButton remove2;
+    private final Game game;
+    private final List<Player> players = new ArrayList<>();
+    private String name;
+    private Color color;
+    private final JButton start, player, remove1, remove2;
     private final JSlider dimSlider;
-    private final JLabel dimLabel;
-    private final JLabel player1;
-    private final JLabel player2;
-    private final JPanel slot1;
-    private final JPanel slot2;
+    private final JLabel dimLabel, player1, player2;
+    private final JPanel slot1, slot2;
 
     public Menu() {
 
