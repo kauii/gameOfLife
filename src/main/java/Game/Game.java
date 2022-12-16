@@ -3,25 +3,20 @@ package Game;
 import Board.Board;
 import GUI.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class Game {
+public class Game implements Observer {
 
     private Board board;
     private Player winner;
-    private final List<Player> players = new ArrayList<>();
+    public List<Player> players = new ArrayList<>();
     private final int PLAYER1_INDEX = 0;
     private final int PLAYER2_INDEX = 1;
-    GUI gui;
 
-    public Game() {
-        gui = new GUI();
-        if (gui.getRunning()) {
-            setUp();
-        }
+    public Game(Menu menu) {
+        menu.registerObserver(this);
     }
 
     public void setUp() {
@@ -29,23 +24,16 @@ public class Game {
         initialBoardConfig();
 
 
-
-        // Player 1
-        players.add(new Player(gui.getName(PLAYER1_INDEX), gui.getColor(PLAYER2_INDEX)));
-
-        // Player 2
-        players.add(new Player(gui.getName(PLAYER2_INDEX), gui.getColor(PLAYER2_INDEX)));
-
         // sort Names alphabetically
-        players.sort(Comparator.comparing(Player::getName));
+       players.sort(Comparator.comparing(Player::getName));
 
         // determine player 1 player 2
         players.get(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
         players.get(PLAYER2_INDEX).setPlayerNr(PlayerNr.PLAYER2);
 
-        // Ask which color for each Player should be used
+        System.out.println(players.get(PLAYER1_INDEX).getName());
+        System.out.println(players.get(PLAYER2_INDEX).getName());
 
-        //
     }
 
     private void initialBoardConfig() {
@@ -95,5 +83,8 @@ public class Game {
     }
 
 
+    public void updatePlayers(List<Player> players) {
+        this.players = players;
 
+    }
 }

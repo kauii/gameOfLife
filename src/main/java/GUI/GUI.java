@@ -17,7 +17,6 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     private JButton restart;
 
     private boolean running = false;
-    private int dim;
 
 
     String name1;
@@ -39,7 +38,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         ImageIcon image = new ImageIcon("logo.png");
         setIconImage(image.getImage());
 
-        JColorChooser cc = new JColorChooser();
+
 
 
 
@@ -48,9 +47,10 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     public void initialize(Container container) {
         container.setLayout(new BorderLayout());
         container.setSize(new Dimension(1024,768));
+        container.setBackground(Color.white);
 
         JPanel buttonPanel = new JPanel();
-
+        buttonPanel.setBackground(new Color(155,155,155));
 
         start = new JButton("Start");
         start.setActionCommand("Start");
@@ -68,7 +68,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
 
         buttonPanel.add(start);
         buttonPanel.add(restart);
-        container.add(buttonPanel, BorderLayout.CENTER);
+        container.add(buttonPanel, BorderLayout.SOUTH);
 
     }
 
@@ -99,24 +99,27 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
                 name2 = JOptionPane.showInputDialog(null, "Enter your name:", "Player 2", JOptionPane.INFORMATION_MESSAGE);
                 color2 = JColorChooser.showDialog(null, "Player 2 - Choose a color for your cells:", Color.BLACK);
 
-                dim = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter a dimension for the board (E.g. 1000 = 1000x1000)",JOptionPane.INFORMATION_MESSAGE));
-
                 start.setEnabled(false);
                 restart.setEnabled(true);
 
                 running = true;
-
             }
         }
         if (e.getSource() == restart) {
 
-            start.setEnabled(true);
-            restart.setEnabled(false);
-            running = false;
+            int result = JOptionPane.showConfirmDialog(null,"Are you sure you want to restart?","Confirm",JOptionPane.YES_NO_OPTION);
+
+            if (result == JOptionPane.YES_OPTION) {
+                start.setEnabled(true);
+                restart.setEnabled(false);
+                running = false;
+            }
 
         }
 
     }
+
+
 
     @Override
     public void stateChanged(ChangeEvent e) {
