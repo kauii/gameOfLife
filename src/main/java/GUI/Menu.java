@@ -20,6 +20,7 @@ public class Menu extends JFrame implements Subject {
 
     private final JButton start;
     private final JButton player;
+    private JSlider dimension;
 
 
 
@@ -53,22 +54,23 @@ public class Menu extends JFrame implements Subject {
         help.setActionCommand("Help");
         help.addActionListener(new ButtonClickListener());
 
-        JSlider setDim = new JSlider(0,1000);
-        setDim.setPaintTrack(true);
-        setDim.setMajorTickSpacing(250);
-        setDim.setPaintLabels(true);
+        dimension = new JSlider(0,1000);
+        dimension.setPaintTrack(true);
+        dimension.setMajorTickSpacing(250);
+        dimension.setPaintLabels(true);
+        dimension.setSnapToTicks(true);
 
         panel.add(start);
         panel.add(player);
         panel.add(help);
-        panel.add(setDim);
+        panel.add(dimension);
 
         JPanel panel2 = new JPanel();
         panel2.setBackground(Color.white);
         panel2.setPreferredSize(new Dimension(100,190));
 
-        JLabel player1 = new JLabel("Player slot 1");
-        JLabel color1 = new JLabel("Player slot 2");
+        JLabel player1 = new JLabel("EMPTY SLOT");
+        JLabel color1 = new JLabel("EMPTY SLOT");
 
         panel2.add(player1);
         panel2.add(color1);
@@ -107,6 +109,7 @@ public class Menu extends JFrame implements Subject {
 
             if (command.equals("Start")) {
                 game.setUp();
+                game.initialBoardConfig(dimension.getValue());
                 close();
             }
             if (command.equals("Player")) {
@@ -125,9 +128,7 @@ public class Menu extends JFrame implements Subject {
 
             }
             if (command.equals("Help")) {
-                JPopupMenu menu = new JPopupMenu();
-                menu.setSize(500,500);
-                menu.setVisible(true);
+                Help h = new Help();
             }
 
         }

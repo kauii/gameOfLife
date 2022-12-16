@@ -22,10 +22,6 @@ public class Game implements Observer {
 
     public void setUp() {
 
-
-        initialBoardConfig();
-
-
         // sort Names alphabetically
        players.sort(Comparator.comparing(Player::getName));
 
@@ -40,11 +36,10 @@ public class Game implements Observer {
 
     }
 
-    private void initialBoardConfig() {
+    public void initialBoardConfig(int dimension) {
 
         // Create Board
-        this.board = new Board(//TODO: ask User for dimension through GUI
-                1000);
+        this.board = new Board(dimension);
 
         // Place first cells
         for (int i = 0; i < 4; i++) {
