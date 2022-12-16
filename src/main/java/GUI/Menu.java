@@ -3,11 +3,14 @@ package GUI;
 import Game.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Menu extends JFrame implements Subject {
 
@@ -20,9 +23,14 @@ public class Menu extends JFrame implements Subject {
 
     private final JButton start;
     private final JButton player;
-    private JSlider dimension;
-    private JLabel player1;
-    private JLabel player2;
+    private final JButton delete1;
+    private final JButton delete2;
+    private final JSlider dimSlider;
+    private final JLabel dimLabel;
+    private final JLabel player1;
+    private final JLabel player2;
+    private final JPanel slot1;
+    private final JPanel slot2;
 
 
 
@@ -45,44 +53,70 @@ public class Menu extends JFrame implements Subject {
 
         start = new JButton("Start");
         start.setActionCommand("Start");
-        start.addActionListener(new ButtonClickListener());
+        start.addActionListener(new MenuHandler());
         start.setEnabled(false);
 
         player = new JButton("add Player");
         player.setActionCommand("Player");
-        player.addActionListener(new ButtonClickListener());
+        player.addActionListener(new MenuHandler());
 
         JButton help = new JButton("Help");
         help.setActionCommand("Help");
-        help.addActionListener(new ButtonClickListener());
+        help.addActionListener(new MenuHandler());
 
-        dimension = new JSlider(0,1000);
-        dimension.setPaintTrack(true);
-        dimension.setMajorTickSpacing(250);
-        dimension.setPaintLabels(true);
-        dimension.setSnapToTicks(true);
+        dimSlider = new JSlider(100,1500);
+        dimSlider.setPaintTrack(true);
+        dimSlider.setMajorTickSpacing(50);
+        dimSlider.setPaintLabels(false);
+        dimSlider.setSnapToTicks(true);
+        dimSlider.addChangeListener(new MenuHandler());
+
+        dimLabel = new JLabel();
+        dimLabel.setText("Board Dimension: " + dimSlider.getValue() + " x " + dimSlider.getValue());
+
 
         buttons.add(start);
         buttons.add(player);
         buttons.add(help);
 
         JPanel sliderPanel = new JPanel();
-        sliderPanel.setBackground(Color.green);
+
+        sliderPanel.add(dimSlider);
+        sliderPanel.add(dimLabel);
 
         JPanel playerSlots = new JPanel();
         playerSlots.setBackground(Color.white);
-        playerSlots.setPreferredSize(new Dimension(300,100));
+        playerSlots.setPreferredSize(new Dimension(300,180));
 
-        JPanel slot1 = new JPanel();
-        slot1.setBackground(Color.cyan);
-        slot1.setPreferredSize(new Dimension(135,100));
+        slot1 = new JPanel();
+        slot1.setBackground(new Color(200,200,200));
+        slot1.setPreferredSize(new Dimension(135,174));
+        slot1.setLayout(new BorderLayout());
 
-        JPanel slot2 = new JPanel();
-        slot2.setBackground(Color.blue);
-        slot2.setPreferredSize(new Dimension(135,100));
+        slot2 = new JPanel();
+        slot2.setBackground(new Color(200,200,200));
+        slot2.setPreferredSize(new Dimension(135,174));
+        slot2.setLayout(new BorderLayout());
 
-        player1 = new JLabel("EMPTY SLOT");
-        player2 = new JLabel("EMPTY SLOT");
+        player1 = new JLabel("EMPTY SLOT", SwingConstants.CENTER);
+        player2 = new JLabel("EMPTY SLOT", SwingConstants.CENTER);
+
+        //player1.setFont(new Font(null,Font.BOLD, 16));
+
+        delete1 = new JButton("Delete");
+        delete1.setActionCommand("Delete1");
+        delete1.addActionListener(new MenuHandler());
+        delete1.setEnabled(false);
+
+        delete2 = new JButton("Delete");
+        delete2.setActionCommand("Delete2");
+        delete2.addActionListener(new MenuHandler());
+        delete2.setEnabled(false);
+
+        slot1.add(player1, BorderLayout.CENTER);
+        slot1.add(delete1, BorderLayout.SOUTH);
+        slot2.add(player2,BorderLayout.CENTER);
+        slot2.add(delete2, BorderLayout.SOUTH);
 
         playerSlots.add(slot1, BorderLayout.WEST);
         playerSlots.add(slot2, BorderLayout.EAST);
@@ -113,7 +147,7 @@ public class Menu extends JFrame implements Subject {
         dispose();
     }
 
-    private class ButtonClickListener implements ActionListener {
+    private class MenuHandler implements ActionListener, ChangeListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -122,7 +156,7 @@ public class Menu extends JFrame implements Subject {
 
             if (command.equals("Start")) {
                 game.setUp();
-                game.initialBoardConfig(dimension.getValue());
+                game.initialBoardConfig(dimSlider.getValue());
                 close();
             }
             if (command.equals("Player")) {
@@ -132,16 +166,22 @@ public class Menu extends JFrame implements Subject {
                     color = JColorChooser.showDialog(null,"Choose a color for your cells",Color.BLACK);
                     if (name != null) {
                         players.add(new Player(name,color));
-                    }
-                    notifyObserver();
-                    if (players.size() == 2) {
-                        start.setEnabled(true);
-                        player.setEnabled(false);
-                        player2.setText(name);
+                        notifyObserver();
 
-                    }
-                    if (players.size() == 1) {
-                        player1.setText(name);
+                        if (Objects.equals(player1.getText(), "EMPTY SLOT")) {
+                            player1.setText(name);
+                            slot1.setBackground(color);
+                            delete1.setEnabled(true);
+                        }
+                        else if (Objects.equals(player2.getText(), "EMPTY SLOT")) {
+                            player2.setText(name);
+                            slot2.setBackground(color);
+                            delete2.setEnabled(true);
+                        }
+                        if (players.size() == 2) {
+                            start.setEnabled(true);
+                            player.setEnabled(false);
+                        }
                     }
                 }
 
@@ -149,7 +189,26 @@ public class Menu extends JFrame implements Subject {
             if (command.equals("Help")) {
                 Help h = new Help();
             }
+            if (command.equals("Delete1")) {
+                players.remove(0);
+                player1.setText("EMPTY SLOT");
+                slot1.setBackground(new Color(200,200,200));
+                delete1.setEnabled(false);
+                player.setEnabled(true);
+            }
+            if (command.equals("Delete2")) {
+                players.remove(1);
+                player2.setText("EMPTY SLOT");
+                slot2.setBackground(new Color(200,200,200));
+                delete2.setEnabled(false);
+                player.setEnabled(true);
+            }
 
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            dimLabel.setText("Board Dimension: " + dimSlider.getValue() + " x " + dimSlider.getValue());
         }
     }
 }
