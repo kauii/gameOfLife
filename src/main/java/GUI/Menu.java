@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Menu extends JFrame implements Subject {
     Color color2;
 
     private final JButton start;
+    private final JButton player;
     private int counter;
 
 
@@ -48,9 +50,9 @@ public class Menu extends JFrame implements Subject {
         start.addActionListener(new ButtonClickListener());
         start.setEnabled(false);
 
-        JButton addPlayer = new JButton("add Player");
-        addPlayer.setActionCommand("add Player");
-        addPlayer.addActionListener(new ButtonClickListener());
+        player = new JButton("add Player");
+        player.setActionCommand("Player");
+        player.addActionListener(new ButtonClickListener());
 
         JButton help = new JButton("Help");
         help.setActionCommand("Help");
@@ -62,7 +64,7 @@ public class Menu extends JFrame implements Subject {
         setDim.setPaintLabels(true);
 
         panel.add(start);
-        panel.add(addPlayer);
+        panel.add(player);
         panel.add(help);
         panel.add(setDim);
 
@@ -96,6 +98,11 @@ public class Menu extends JFrame implements Subject {
 
     }
 
+    private void close()  {
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        dispose();
+    }
+
     private class ButtonClickListener implements ActionListener {
 
         @Override
@@ -105,8 +112,9 @@ public class Menu extends JFrame implements Subject {
 
             if (command.equals("Start")) {
                 game.setUp();
+                close();
             }
-            if (command.equals("add Player")) {
+            if (command.equals("Player")) {
                 if (players.size() <= 1) {
 
                     name = JOptionPane.showInputDialog(null,"Enter your name:","Player",JOptionPane.INFORMATION_MESSAGE);
@@ -115,6 +123,8 @@ public class Menu extends JFrame implements Subject {
                     notifyObserver();
                     if (players.size() == 2) {
                         start.setEnabled(true);
+                        player.setEnabled(false);
+
                     }
                 }
 

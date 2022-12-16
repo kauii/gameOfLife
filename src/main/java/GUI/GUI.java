@@ -11,7 +11,7 @@ import java.awt.event.*;
 
 import static javax.swing.text.html.HTML.Tag.INPUT;
 
-public class GUI extends JFrame implements ActionListener, ChangeListener {
+public class GUI extends JFrame implements ActionListener, ChangeListener, Subject {
 
     private JButton start;
     private JButton restart;
@@ -131,5 +131,14 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     }
 
 
+    @Override
+    public void registerObserver(Observer o) {
+
+    }
+
+    @Override
+    public void notifyObserver() {
+
+    }
 }
 

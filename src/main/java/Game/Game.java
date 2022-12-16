@@ -14,12 +14,14 @@ public class Game implements Observer {
     public List<Player> players = new ArrayList<>();
     private final int PLAYER1_INDEX = 0;
     private final int PLAYER2_INDEX = 1;
+    private GUI gui;
 
     public Game(Menu menu) {
         menu.registerObserver(this);
     }
 
     public void setUp() {
+
 
         initialBoardConfig();
 
@@ -33,6 +35,8 @@ public class Game implements Observer {
 
         System.out.println(players.get(PLAYER1_INDEX).getName());
         System.out.println(players.get(PLAYER2_INDEX).getName());
+
+        gui = new GUI();
 
     }
 
