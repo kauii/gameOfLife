@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +18,8 @@ public class Menu extends JFrame implements Subject {
     String name;
     Color color;
 
-    String name2;
-    Color color2;
-
     private final JButton start;
     private final JButton player;
-    private int counter;
 
 
 
