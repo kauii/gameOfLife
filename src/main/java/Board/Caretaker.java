@@ -14,6 +14,11 @@ public class Caretaker {
 
     protected Caretaker(Grid grid) {
         mem = new Memento(grid);
+
+        // Create initial empty Board
+        int dim= mem.getDim();
+        short[][] inBoard=new short[dim][dim];
+        states.add(inBoard);
     }
 
     // Saving state to history by adding it to the ArrayList

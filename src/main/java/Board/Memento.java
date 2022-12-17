@@ -48,4 +48,8 @@ public class Memento {
         }
         return res;
     }
+
+    protected int getDim(){
+        return grid.getDimension();
+    }
 }

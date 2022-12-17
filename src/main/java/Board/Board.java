@@ -28,7 +28,6 @@ public class Board implements BoardInter {
     // 0 || 1 = cell is dead
     // 2 = alive, player 1
     // 3 = alive, player 2
-    // IMPORTANT: at least one evolution has to have happened before calling this method
     public short[][] getBoard() {
         return ct.getCurrent();
     }
