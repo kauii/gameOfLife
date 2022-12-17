@@ -13,18 +13,17 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     private JButton start;
     private JButton restart;
     private JButton evolve;
-
-    String name1;
-    Color color1;
-
-    String name2;
-    Color color2;
+    private JScrollPane scrollPane;
+    private JScrollBar xScrollBar;
+    private JScrollBar yScrollBar;
 
 
     public GUI(short[][] board) {
 
         setTitle("Game of Life");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.board = new GameOfLifeBoard(board);
         initialize(getContentPane());
 
         setSize(1024,768);
@@ -33,9 +32,6 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
 
         ImageIcon image = new ImageIcon("logo.png");
         setIconImage(image.getImage());
-
-        this.board = new GameOfLifeBoard(board);
-
     }
 
     public void initialize(Container container) {
@@ -63,8 +59,18 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         buttonPanel.add(restart);
         buttonPanel.add(evolve);
 
+        scrollPane = new JScrollPane(board);
+        xScrollBar = scrollPane.getHorizontalScrollBar();
+        yScrollBar = scrollPane.getVerticalScrollBar();
+
+        JPanel player1 = new JPanel();
+        JPanel player2 = new JPanel();
+
+
+        container.add(player1, BorderLayout.WEST);
+        container.add(player2, BorderLayout.EAST);
         container.add(buttonPanel, BorderLayout.SOUTH);
-        container.add(board, BorderLayout.CENTER);
+        container.add(scrollPane, BorderLayout.CENTER);
     }
 
 

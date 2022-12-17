@@ -184,9 +184,9 @@ public class Menu extends JFrame implements Subject {
     }
 
     private JSlider createDimSlider() {
-        JSlider dimSlider = new JSlider(100, 1500);
+        JSlider dimSlider = new JSlider(10, 1000);
         dimSlider.setPaintTrack(true);
-        dimSlider.setMajorTickSpacing(100);
+        dimSlider.setMajorTickSpacing(10);
         dimSlider.setPaintLabels(false);
         dimSlider.setSnapToTicks(true);
         dimSlider.addChangeListener(e -> {
