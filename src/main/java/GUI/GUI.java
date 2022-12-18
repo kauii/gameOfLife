@@ -1,10 +1,15 @@
 package GUI;
 
+import Game.Player;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUI extends JFrame implements ActionListener, ChangeListener, Subject {
 
@@ -15,6 +20,8 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     private JButton reset;
     private JButton evolve;
     private JScrollPane scrollPane;
+
+    private List<Player> aPlayers;
     private JScrollBar xScrollBar;
     private JScrollBar yScrollBar;
 

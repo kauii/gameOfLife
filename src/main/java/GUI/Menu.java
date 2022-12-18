@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Menu extends JFrame implements Subject {
+public class Menu extends JFrame {
 
-    private final List<Observer> observers;
+    Singleton players = Singleton.getInstance();
     private final Game game;
-    private final List<Player> players = new ArrayList<>();
     private String name;
     private Color color;
     private final JButton start, player, remove1, remove2;
@@ -22,10 +21,8 @@ public class Menu extends JFrame implements Subject {
 
     public Menu() {
 
-        observers = new ArrayList<>();
-
         // create new Game
-        game = new Game(this);
+        game = new Game();
 
         // config for menu
         setTitle("Menu");
@@ -106,18 +103,6 @@ public class Menu extends JFrame implements Subject {
         setVisible(true);
     }
 
-    @Override
-    public void registerObserver(Observer o) {
-        this.observers.add(o);
-    }
-
-    @Override
-    public void notifyObserver() {
-        for (Observer o : observers) {
-            o.updatePlayers(players);
-        }
-    }
-
     private void close() {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         dispose();
@@ -140,15 +125,14 @@ public class Menu extends JFrame implements Subject {
         JButton playerButton = new JButton("add Player");
         playerButton.setActionCommand("Player");
         playerButton.addActionListener(e -> {
-            if (players.size() <= 1) {
+            if (players.getList().size() <= 1) {
 
                 name = JOptionPane.showInputDialog(null, "Enter your name:", "Player", JOptionPane.INFORMATION_MESSAGE);
                 color = JColorChooser.showDialog(null, "Choose a color for your cells", Color.BLACK);
 
                 if (name != null) {
                     // create new player
-                    players.add(new Player(name, color));
-                    notifyObserver();
+                    players.addToList(new Player(name, color));
 
                     // if the first slot is empty
                     if (Objects.equals(player1.getText(), "EMPTY SLOT")) {
@@ -163,7 +147,7 @@ public class Menu extends JFrame implements Subject {
                         remove2.setEnabled(true);
                     }
                     // enable start button if 2 players
-                    if (players.size() == 2) {
+                    if (players.getList().size() == 2) {
                         start.setEnabled(true);
                         player.setEnabled(false);
                     }
@@ -204,7 +188,7 @@ public class Menu extends JFrame implements Subject {
             String command = e.getActionCommand();
             if (Objects.equals(command, "slot1")) {
                 // Handle delete button event for player 1
-                players.remove(0);
+                players.removeFromList(0);
                 player1.setText("EMPTY SLOT");
                 slot1.setBackground(new Color(200, 200, 200));
                 remove1.setEnabled(false);
@@ -212,8 +196,8 @@ public class Menu extends JFrame implements Subject {
                 start.setEnabled(false);
             } else if (Objects.equals(command, "slot2")) {
                 // Handle delete button event for player 2
-                if (players.size() == 1) { players.remove(0); }
-                else { players.remove(1); }
+                if (players.getList().size() == 1) { players.removeFromList(0); }
+                else { players.removeFromList(1); }
                 player2.setText("EMPTY SLOT");
                 slot2.setBackground(new Color(200, 200, 200));
                 remove2.setEnabled(false);

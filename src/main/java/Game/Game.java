@@ -3,22 +3,14 @@ package Game;
 import Board.Board;
 import GUI.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 public class Game implements Observer {
 
+    Singleton players = Singleton.getInstance();
     private Board board;
     private Player winner;
-    public List<Player> players = new ArrayList<>();
     private final int PLAYER1_INDEX = 0;
     private final int PLAYER2_INDEX = 1;
     private GUI gui;
-
-    public Game(Menu menu) {
-        menu.registerObserver(this);
-    }
 
     public void setUp(int dimension) {
 
@@ -28,14 +20,14 @@ public class Game implements Observer {
         gui = new GUI(board.getBoard());
 
         // sort Names alphabetically
-       players.sort(Comparator.comparing(Player::getName));
+       players.sortList();
 
         // determine player 1 player 2
-        players.get(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
-        players.get(PLAYER2_INDEX).setPlayerNr(PlayerNr.PLAYER2);
-
-        System.out.println(players.get(PLAYER1_INDEX).getName());
-        System.out.println(players.get(PLAYER2_INDEX).getName());
+        //players.getList(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
+        //players.get(PLAYER2_INDEX).setPlayerNr(PlayerNr.PLAYER2);
+        for (Player player : players.getList()) {
+            System.out.println(player.getName());
+        }
 
 
         initialBoardConfig();
@@ -58,7 +50,7 @@ public class Game implements Observer {
 
         while (winner == null) {
 
-            for (Player player : players) {
+            for (Player player : players.getList()) {
                 // Player takes turn
                 turn(player);
                 // Simulate Generation
@@ -79,17 +71,12 @@ public class Game implements Observer {
         int[] playerCells = board.getPlayerCells();
 
         if (playerCells[PLAYER1_INDEX] == 0) {
-            winner = players.get(PLAYER2_INDEX); // declare Player2 as Winner
+            winner = players.getPlayer(PLAYER2_INDEX); // declare Player2 as Winner
 
         }
         if (playerCells[PLAYER2_INDEX] == 0) {
-            winner = players.get(PLAYER2_INDEX); // declare Player1 as Winner
+            winner = players.getPlayer(PLAYER2_INDEX); // declare Player1 as Winner
         }
     }
 
-
-    public void updatePlayers(List<Player> players) {
-        this.players = players;
-
-    }
 }
