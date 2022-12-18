@@ -9,6 +9,7 @@ import java.awt.event.*;
 public class GUI extends JFrame implements ActionListener, ChangeListener, Subject {
 
     private GameOfLifeBoard board;
+    private short[][] aGrid;
 
     private JButton start;
     private JButton restart;
@@ -18,12 +19,13 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     private JScrollBar yScrollBar;
 
 
-    public GUI(short[][] board) {
+    public GUI(short[][] grid) {
+
+        aGrid = grid;
 
         setTitle("Game of Life");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.board = new GameOfLifeBoard(board);
         initialize(getContentPane());
 
         setSize(1024,768);
@@ -47,11 +49,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         start.setToolTipText("Starts Game");
         start.addActionListener(this);
 
-        restart = new JButton("Restart");
-        restart.setActionCommand("Restart");
-        restart.setToolTipText("Restarts Game");
-        restart.addActionListener(this);
-        restart.setEnabled(false);
+        restart = createRestartButton();
 
         evolve = createEvolve();
 
@@ -59,16 +57,41 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         buttonPanel.add(restart);
         buttonPanel.add(evolve);
 
+        board = new GameOfLifeBoard(aGrid);
+
         scrollPane = new JScrollPane(board);
         xScrollBar = scrollPane.getHorizontalScrollBar();
         yScrollBar = scrollPane.getVerticalScrollBar();
 
+        JPanel statistics = new JPanel();
+        statistics.setLayout(new BorderLayout());
+        //sas
+        JPanel generation = new JPanel();
+        generation.setBackground(new Color(200,200,200));
+        JPanel players = new JPanel();
+        players.setLayout(new BorderLayout());
         JPanel player1 = new JPanel();
+        player1.setBackground(Color.white);
         JPanel player2 = new JPanel();
+        player2.setBackground(Color.white);
+
+        JLabel genCounter = new JLabel("Generation: 1");
+        generation.add(genCounter);
+        player1.add(new JLabel("Player 1"));
+        player1.add(new JLabel(("Cells alive:")));
+        player1.setPreferredSize(new Dimension(generation.getWidth(),(container.getHeight() - generation.getHeight() - buttonPanel.getHeight() - 100)/2));
+        player2.add(new JLabel("Player 2"));
+        player2.add(new JLabel("Cells alive:"));
+        player2.setPreferredSize(new Dimension(generation.getWidth(),(container.getHeight() - generation.getHeight() - buttonPanel.getHeight() - 100)/2));
+
+        players.add(player1, BorderLayout.NORTH);
+        players.add(player2, BorderLayout.SOUTH);
 
 
-        container.add(player1, BorderLayout.WEST);
-        container.add(player2, BorderLayout.EAST);
+        statistics.add(generation, BorderLayout.NORTH);
+        statistics.add(players, BorderLayout.CENTER);
+
+        container.add(statistics, BorderLayout.EAST);
         container.add(buttonPanel, BorderLayout.SOUTH);
         container.add(scrollPane, BorderLayout.CENTER);
     }
@@ -111,6 +134,17 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     public void updateBoard(short[][] board) {
         this.board = new GameOfLifeBoard(board);
         this.board.repaint();
+    }
+
+    private JButton createRestartButton() {
+        JButton restartButton = new JButton("Restart");
+        restartButton.setActionCommand("Restart");
+        restartButton.addActionListener(e -> {
+            // Handle restart button event
+            System.out.println("Restart");
+            updateBoard(aGrid);
+        });
+        return restartButton;
     }
 }
 
