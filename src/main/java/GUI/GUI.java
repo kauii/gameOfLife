@@ -12,7 +12,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     private short[][] aGrid;
 
     private JButton start;
-    private JButton restart;
+    private JButton reset;
     private JButton evolve;
     private JScrollPane scrollPane;
     private JScrollBar xScrollBar;
@@ -49,12 +49,12 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         start.setToolTipText("Starts Game");
         start.addActionListener(this);
 
-        restart = createRestartButton();
+        reset = createRestartButton();
 
         evolve = createEvolve();
 
         buttonPanel.add(start);
-        buttonPanel.add(restart);
+        buttonPanel.add(reset);
         buttonPanel.add(evolve);
 
         board = new BoardPanel(aGrid);
@@ -137,12 +137,14 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     }
 
     private JButton createRestartButton() {
-        JButton restartButton = new JButton("Restart");
-        restartButton.setActionCommand("Restart");
+        JButton restartButton = new JButton("Reset");
+        restartButton.setActionCommand("Reset");
         restartButton.addActionListener(e -> {
             // Handle restart button event
-            System.out.println("Restart");
-            updateBoard(aGrid);
+            int confirm = JOptionPane.showConfirmDialog(null,"Are you sure you want to reset the board?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+            if (confirm == 0) {
+                board.clear();
+            }
         });
         return restartButton;
     }

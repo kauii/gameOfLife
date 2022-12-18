@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 
 public class BoardPanel extends JPanel implements MouseListener {
 
@@ -80,6 +81,13 @@ public class BoardPanel extends JPanel implements MouseListener {
         }
     }
 
-
+    public void clear() {
+        // Reset the game board to its initial state
+        for (short[] shorts : grid) {
+            Arrays.fill(shorts, (short) 0);
+        }
+        // Repaint the panel to reflect the changes
+        repaint();
+    }
 }
 
