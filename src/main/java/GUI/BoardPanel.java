@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class GameOfLifeBoard extends JPanel implements MouseListener {
+public class BoardPanel extends JPanel implements MouseListener {
 
     private final short[][] grid;
     private final int cellSize = 10; // size of each cell in pixels
@@ -13,7 +13,7 @@ public class GameOfLifeBoard extends JPanel implements MouseListener {
     private final int cols; // dimensions of the grid
     private int zoom = 1; // scale factor for the cells
 
-    public GameOfLifeBoard(short[][] grid) {
+    public BoardPanel(short[][] grid) {
         this.grid = grid;
         rows = grid.length;
         cols = grid[0].length;

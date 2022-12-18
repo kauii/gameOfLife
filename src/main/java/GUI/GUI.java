@@ -8,7 +8,7 @@ import java.awt.event.*;
 
 public class GUI extends JFrame implements ActionListener, ChangeListener, Subject {
 
-    private GameOfLifeBoard board;
+    private BoardPanel board;
     private short[][] aGrid;
 
     private JButton start;
@@ -57,7 +57,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         buttonPanel.add(restart);
         buttonPanel.add(evolve);
 
-        board = new GameOfLifeBoard(aGrid);
+        board = new BoardPanel(aGrid);
 
         scrollPane = new JScrollPane(board);
         xScrollBar = scrollPane.getHorizontalScrollBar();
@@ -132,7 +132,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     }
 
     public void updateBoard(short[][] board) {
-        this.board = new GameOfLifeBoard(board);
+        this.board = new BoardPanel(board);
         this.board.repaint();
     }
 
