@@ -1,6 +1,8 @@
 package GUI;
 
+import Game.Player;
 import Game.Singleton;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -15,6 +17,15 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     private final short[][] aGrid;
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
+    private JButton start;
+    private JButton reset;
+    private JButton evolve;
+    private JScrollPane scrollPane;
+    private JScrollBar xScrollBar;
+    private JScrollBar yScrollBar;
+    private JLabel generation;
+    private int genCounter;
+
 
     public GUI(short[][] grid) {
 
@@ -41,14 +52,14 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(155,155,155));
 
-        JButton start = new JButton("Start");
+        start = new JButton("Start");
         start.setActionCommand("Start");
         start.setToolTipText("Starts Game");
         start.addActionListener(this);
 
-        JButton reset = createRestartButton();
+        reset = createRestartButton();
 
-        JButton evolve = createEvolve();
+        evolve = createEvolve();
 
         buttonPanel.add(start);
         buttonPanel.add(reset);
@@ -56,15 +67,15 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
 
         board = new BoardPanel(aGrid);
 
-        JScrollPane scrollPane = new JScrollPane(board);
-        JScrollBar xScrollBar = scrollPane.getHorizontalScrollBar();
-        JScrollBar yScrollBar = scrollPane.getVerticalScrollBar();
+        scrollPane = new JScrollPane(board);
+        xScrollBar = scrollPane.getHorizontalScrollBar();
+        yScrollBar = scrollPane.getVerticalScrollBar();
 
         JPanel statistics = new JPanel();
         statistics.setLayout(new BorderLayout());
         //sas
-        JPanel generation = new JPanel();
-        generation.setBackground(new Color(200,200,200));
+        JPanel genPanel = new JPanel();
+        genPanel.setBackground(new Color(200,200,200));
         JPanel playerPanel = new JPanel();
         playerPanel.setLayout(new BorderLayout());
         JPanel player1 = new JPanel();
@@ -72,22 +83,22 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         JPanel player2 = new JPanel();
         player2.setBackground(Color.white);
 
-        JLabel genCounter = new JLabel("Generation: 1");
-        generation.add(genCounter);
+        generation = new JLabel("Generation: 1");
+        genPanel.add(generation);
         player1.add(new JLabel("Player 1: "), SwingConstants.CENTER);
         player1.add(new JLabel(players.getPlayer(0).getName()));
         player1.add(new JLabel(("Cells alive:")));
         player1.add(new JLabel("0"));
-        player1.setPreferredSize(new Dimension(generation.getWidth(),(container.getHeight() - generation.getHeight() - buttonPanel.getHeight() - 100)/2));
+        player1.setPreferredSize(new Dimension(genPanel.getWidth(),(container.getHeight() - genPanel.getHeight() - buttonPanel.getHeight() - 100)/2));
         player2.add(new JLabel("Player 2"));
         player2.add(new JLabel("Cells alive:"));
-        player2.setPreferredSize(new Dimension(generation.getWidth(),(container.getHeight() - generation.getHeight() - buttonPanel.getHeight() - 100)/2));
+        player2.setPreferredSize(new Dimension(genPanel.getWidth(),(container.getHeight() - genPanel.getHeight() - buttonPanel.getHeight() - 100)/2));
 
         playerPanel.add(player1, BorderLayout.NORTH);
         playerPanel.add(player2, BorderLayout.SOUTH);
 
 
-        statistics.add(generation, BorderLayout.NORTH);
+        statistics.add(genPanel, BorderLayout.NORTH);
         statistics.add(playerPanel, BorderLayout.CENTER);
 
         container.add(statistics, BorderLayout.EAST);
@@ -117,6 +128,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         evolveButton.addActionListener(e -> {
             // event handling
             notifyObserver(null, "evolve");
+            generation.setText("Generation: " + ++genCounter);
         });
         return evolveButton;
     }
