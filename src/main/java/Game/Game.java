@@ -17,10 +17,10 @@ public class Game implements Observer {
         // create board
         this.board = new Board(dimension);
 
-        gui = new GUI(board.getBoard());
-
         // sort Names alphabetically
-       players.sortList();
+        players.sortList();
+
+        gui = new GUI(board.getBoard());
 
         // determine player 1 player 2
         //players.getList(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
@@ -29,11 +29,9 @@ public class Game implements Observer {
             System.out.println(player.getName());
         }
 
-
-        initialBoardConfig();
-
         gui.registerObserver(this);
-
+        gui.board.registerObserver(this);
+        initialBoardConfig();
     }
 
     public void initialBoardConfig() {
@@ -79,4 +77,24 @@ public class Game implements Observer {
         }
     }
 
+    @Override
+    public void update(short[][] grid, String method) {
+        if (method.equals("updateGrid")) {
+            for (int row = 0; row < grid.length; row++) {
+                for (int col = 0; col < grid[0].length; col++) {
+
+                    if (grid[row][col] == 2) {
+                        board.setCell(row, col, true, PlayerNr.PLAYER1);
+                    }
+                    else if (grid[row][col] == 3) {
+                        board.setCell(row, col, true, PlayerNr.PLAYER2);
+                    }
+                }
+            }
+        }
+        else if (method.equals("evolve")) {
+            board.evolve();
+            gui.setBoard(board.getBoard());
+        }
+    }
 }

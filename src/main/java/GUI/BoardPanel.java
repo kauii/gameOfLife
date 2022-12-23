@@ -1,18 +1,25 @@
 package GUI;
 
+import Game.Singleton;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class BoardPanel extends JPanel implements MouseListener {
+public class BoardPanel extends JPanel implements MouseListener, Subject {
 
-    private final short[][] grid;
+    Singleton players = Singleton.getInstance();
+    private final List<Observer> observers = new ArrayList<>();
+    private short[][] grid;
     private final int cellSize = 10; // size of each cell in pixels
     private final int rows;
     private final int cols; // dimensions of the grid
     private int zoom = 1; // scale factor for the cells
+    private int turn;
 
     public BoardPanel(short[][] grid) {
         this.grid = grid;
@@ -20,6 +27,7 @@ public class BoardPanel extends JPanel implements MouseListener {
         cols = grid[0].length;
         setPreferredSize(new Dimension(cols * cellSize, rows * cellSize));
         addMouseListener(this);
+        turn = 1;
     }
 
     @Override
@@ -28,10 +36,15 @@ public class BoardPanel extends JPanel implements MouseListener {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 // Fill the cell with black or white depending on the value of grid[row][col]
-                if (grid[row][col] == 1) {
-                    g.setColor(Color.BLACK);
+                if (grid[row][col] == 2) {
+                    g.setColor(players.getPlayer(0).getColor());
                     g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
-                } else {
+                }
+                else if (grid[row][col] == 3) {
+                    g.setColor(players.getPlayer(1).getColor());
+                    g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
+                }
+                else {
                     g.setColor(Color.WHITE);
                     g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
                 }
@@ -44,10 +57,19 @@ public class BoardPanel extends JPanel implements MouseListener {
     }
 
     public void updateGrid(int x, int y) {
-        if (x >= 0 && x < cols && y >= 0 && y < rows) {
-            grid[y][x] = (grid[y][x] == 1) ? (short)0 : (short)1;
+        if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
+
+            grid[y][x] = (short) (turn + 1);
+            // Toggle the players turn
+            turn = (turn == 1) ? 2 : 1;
             repaint();
+            notifyObserver(grid, "updateGrid");
         }
+    }
+
+    public void setGrid(short[][] pGrid) {
+        grid = pGrid;
+        repaint();
     }
 
     // MouseListener methods
@@ -88,6 +110,18 @@ public class BoardPanel extends JPanel implements MouseListener {
         }
         // Repaint the panel to reflect the changes
         repaint();
+    }
+
+    @Override
+    public void registerObserver(Observer o) {
+        this.observers.add(o);
+    }
+
+    @Override
+    public void notifyObserver(short[][] grid, String method) {
+        for (Observer o : observers) {
+            o.update(grid, method);
+        }
     }
 }
 

@@ -3,17 +3,18 @@ package Game;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 public class Singleton {
     private static Singleton instance;
-    private List<Player> players;
+    private final List<Player> players;
 
     private Singleton() {
         players = new ArrayList<>();
     }
 
     public static Singleton getInstance() {
+
+        // lazy initialization
         if (instance == null) {
             instance = new Singleton();
         }
