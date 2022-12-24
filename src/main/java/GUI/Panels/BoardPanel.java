@@ -22,6 +22,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private final int cols; // dimensions of the grid
     private int zoom = 1; // scale factor for the cells
     private int turn;
+    private int countCells = 0;
 
     public BoardPanel(short[][] grid) {
         this.grid = grid;
@@ -59,13 +60,23 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     }
 
     public void updateGrid(int x, int y) {
-        if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
-
-            grid[y][x] = (short) (turn + 1);
-            // Toggle the players turn
-            turn = (turn == 1) ? 2 : 1;
-            repaint();
-            notifyObserver();
+        if (countCells < 3) {
+            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0 && grid[rows - 1 - y][cols - 1 - x] == 0) {
+                ++countCells;
+                grid[y][x] = (short) (turn + 1);
+                grid[rows - 1 - y][cols - 1 - x] = (short) (turn + 2);
+                // Toggle the players turn
+                repaint();
+                notifyObserver();
+            }
+        } else {
+            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
+                grid[y][x] = (short) (turn + 1);
+                // Toggle the players turn
+                turn = (turn == 1) ? 2 : 1;
+                repaint();
+                notifyObserver();
+            }
         }
     }
 
@@ -117,6 +128,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         }
         // Repaint the panel to reflect the changes
         repaint();
+        countCells = 0;
         notifyObserver();
     }
 
