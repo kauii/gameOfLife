@@ -1,6 +1,5 @@
 package GUI;
 
-import Game.Player;
 import Game.Singleton;
 
 import javax.swing.*;
@@ -127,7 +126,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         evolveButton.setActionCommand("Evolve");
         evolveButton.addActionListener(e -> {
             // event handling
-            notifyObserver(null, "evolve");
+            notifyObserver();
             generation.setText("Generation: " + ++genCounter);
         });
         return evolveButton;
@@ -139,9 +138,9 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     }
 
     @Override
-    public void notifyObserver(short[][] grid, String method) {
+    public void notifyObserver() {
         for (Observer o : observers) {
-            o.update(grid, method);
+            o.skipGen();
         }
     }
 
@@ -151,7 +150,9 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
         restartButton.setActionCommand("Reset");
         restartButton.addActionListener(e -> {
             // Handle restart button event
-            int confirm = JOptionPane.showConfirmDialog(null,"Are you sure you want to reset the board?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+            int confirm = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to reset the board?", "Confirm",
+                    JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
             if (confirm == 0) {
                 board.clear();
             }

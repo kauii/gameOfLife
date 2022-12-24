@@ -1,5 +1,6 @@
 package GUI;
 
 public interface Observer {
-    void update(short[][] grid, String method);
+    void updateGrid(short[][] grid);
+    void skipGen();
 }

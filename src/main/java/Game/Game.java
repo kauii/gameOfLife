@@ -78,23 +78,24 @@ public class Game implements Observer {
     }
 
     @Override
-    public void update(short[][] grid, String method) {
-        if (method.equals("updateGrid")) {
-            for (int row = 0; row < grid.length; row++) {
-                for (int col = 0; col < grid[0].length; col++) {
+    public void updateGrid(short[][] grid) {
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[0].length; col++) {
 
-                    if (grid[row][col] == 2) {
+                if (grid[row][col] == 2) {
                         board.setCell(row, col, true, PlayerNr.PLAYER1);
-                    }
-                    else if (grid[row][col] == 3) {
-                        board.setCell(row, col, true, PlayerNr.PLAYER2);
-                    }
                 }
+                else if (grid[row][col] == 3) {
+                    board.setCell(row, col, true, PlayerNr.PLAYER2);
+                }
+                else { board.setCell(row, col, false, PlayerNr.PLAYER1); } // don't matter which player
             }
         }
-        else if (method.equals("evolve")) {
-            board.evolve();
-            gui.setBoard(board.getBoard());
-        }
+    }
+
+    @Override
+    public void skipGen() {
+        board.evolve();
+        gui.setBoard(board.getBoard());
     }
 }

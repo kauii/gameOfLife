@@ -63,7 +63,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
             // Toggle the players turn
             turn = (turn == 1) ? 2 : 1;
             repaint();
-            notifyObserver(grid, "updateGrid");
+            notifyObserver();
         }
     }
 
@@ -108,8 +108,14 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         for (short[] shorts : grid) {
             Arrays.fill(shorts, (short) 0);
         }
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                System.out.println(grid[row][col]);
+            }
+        }
         // Repaint the panel to reflect the changes
         repaint();
+        notifyObserver();
     }
 
     @Override
@@ -118,9 +124,9 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     }
 
     @Override
-    public void notifyObserver(short[][] grid, String method) {
+    public void notifyObserver() {
         for (Observer o : observers) {
-            o.update(grid, method);
+            o.updateGrid(grid);
         }
     }
 }
