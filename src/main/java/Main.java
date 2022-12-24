@@ -1,5 +1,4 @@
-import GUI.*;
-import Game.Game;
+import GUI.Frames.Menu;
 
 public class Main {
     public static void main(String[] args) {

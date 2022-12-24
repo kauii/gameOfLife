@@ -1,4 +1,4 @@
-package GUI;
+package Game;
 
 public interface Observer {
     void updateGrid(short[][] grid);

@@ -1,5 +1,8 @@
-package GUI;
+package GUI.Frames;
 
+import GUI.Panels.BoardPanel;
+import Game.Observer;
+import GUI.Subject;
 import Game.Singleton;
 
 import javax.swing.*;
@@ -10,7 +13,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GUI extends JFrame implements ActionListener, ChangeListener, Subject {
+public class GameOfLife extends JFrame implements ActionListener, ChangeListener, Subject {
 
     public BoardPanel board;
     private final short[][] aGrid;
@@ -26,7 +29,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Subje
     private int genCounter;
 
 
-    public GUI(short[][] grid) {
+    public GameOfLife(short[][] grid) {
 
         aGrid = grid;
 

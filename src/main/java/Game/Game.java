@@ -1,7 +1,7 @@
 package Game;
 
 import Board.Board;
-import GUI.*;
+import GUI.Frames.GameOfLife;
 
 public class Game implements Observer {
 
@@ -10,7 +10,7 @@ public class Game implements Observer {
     private Player winner;
     private final int PLAYER1_INDEX = 0;
     private final int PLAYER2_INDEX = 1;
-    private GUI gui;
+    private GameOfLife gui;
 
     public void setUp(int dimension) {
 
@@ -20,7 +20,7 @@ public class Game implements Observer {
         // sort Names alphabetically
         players.sortList();
 
-        gui = new GUI(board.getBoard());
+        gui = new GameOfLife(board.getBoard());
 
         // determine player 1 player 2
         //players.getList(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);

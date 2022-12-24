@@ -1,5 +1,7 @@
-package GUI;
+package GUI.Panels;
 
+import Game.Observer;
+import GUI.Subject;
 import Game.Singleton;
 
 import javax.swing.*;
