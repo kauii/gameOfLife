@@ -140,7 +140,7 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
         startButton.setActionCommand("Start");
         startButton.addActionListener(e -> {
             // event handling
-            board.setPreRound(false);
+            board.startGame();
             start.setEnabled(false);
         });
         startButton.setEnabled(false);
@@ -159,6 +159,7 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
                 board.clear();
                 generation.setText("Generation: 1");
                 start.setEnabled(false);
+                evolve.setEnabled(false);
             }
         });
         return resetButton;

@@ -19,7 +19,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
     private short[][] grid;
-    private final int cellSize = 10; // size of each cell in pixels
+    private final int cellSize = 20; // size of each cell in pixels
     private final int rows;
     private final int cols; // dimensions of the grid
     private int zoom = 1; // scale factor for the cells
@@ -71,8 +71,6 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private void play(int x, int y) {
 
         if (activePlayer.getPlayerNr() == PlayerNr.PLAYER1) {
-            System.out.println("Moin");
-
             if (inBoard(x, y) && grid[y][x] == 0) {
                 if (!cellPlaced) {
                     grid[y][x] = (short) 2;
@@ -133,8 +131,8 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         }
     }
 
-    public void setPreRound(boolean bool) {
-        preRound = bool;
+    public void startGame() {
+        preRound = false;
     }
 
     // MouseListener methods
@@ -202,11 +200,11 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     @Override
     public void notifyObserver() {
         for (Observer o : observers) {
-            if (countCells == 4) {
-                ++countCells;
+            if (countCells == 4 && preRound) {
                 o.enableStart(true);
             }
             else {
+                o.enableStart(false);
                 o.updateGrid(grid);
                 if (cellPlaced && cellKilled) {
                     o.turnOver();
