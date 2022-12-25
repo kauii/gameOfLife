@@ -2,6 +2,8 @@ package GUI.Panels;
 
 import Game.Observer;
 import GUI.Subject;
+import Game.Player;
+import Game.PlayerNr;
 import Game.Singleton;
 
 import javax.swing.*;
@@ -21,8 +23,11 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private final int rows;
     private final int cols; // dimensions of the grid
     private int zoom = 1; // scale factor for the cells
-    private int turn;
     private int countCells = 0;
+    private boolean preRound = true;
+    private Player activePlayer;
+    private boolean cellPlaced = false;
+    private boolean cellKilled = false;
 
     public BoardPanel(short[][] grid) {
         this.grid = grid;
@@ -30,7 +35,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         cols = grid[0].length;
         setPreferredSize(new Dimension(cols * cellSize, rows * cellSize));
         addMouseListener(this);
-        turn = 1;
+        activePlayer = players.getPlayer(0);
     }
 
     @Override
@@ -59,25 +64,46 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         }
     }
 
-    public void updateGrid(int x, int y) {
-        if (countCells < 3) {
-            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0 && grid[rows - 1 - y][cols - 1 - x] == 0) {
-                ++countCells;
-                grid[y][x] = (short) (turn + 1);
-                grid[rows - 1 - y][cols - 1 - x] = (short) (turn + 2);
-                // Toggle the players turn
-                repaint();
-                notifyObserver();
+    private boolean inBoard(int x, int y) {
+        return x >= 0 && x < cols && y >= 0 && y < rows;
+    }
+
+    private void play(int x, int y) {
+
+        if (activePlayer.getPlayerNr() == PlayerNr.PLAYER1) {
+            System.out.println("Moin");
+
+            if (inBoard(x, y) && grid[y][x] == 0) {
+                if (!cellPlaced) {
+                    grid[y][x] = (short) 2;
+                    cellPlaced = true;
+                }
             }
-        } else {
-            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
-                grid[y][x] = (short) (turn + 1);
-                // Toggle the players turn
-                turn = (turn == 1) ? 2 : 1;
-                repaint();
-                notifyObserver();
+            else if (inBoard(x, y) && grid[y][x] == 3) {
+                if (!cellKilled) {
+                    grid[y][x] = (short) 0;
+                    cellKilled = true;
+                }
             }
         }
+        else {
+
+            if (inBoard(x, y) && grid[y][x] == 0) {
+                if (!cellPlaced) {
+                    grid[y][x] = (short) 3;
+                    cellPlaced = true;
+                }
+            }
+            else if (inBoard(x, y) && grid[y][x] == 2) {
+                if (!cellKilled) {
+                    grid[y][x] = (short) 0;
+                    cellKilled = true;
+                }
+            }
+        }
+
+        repaint();
+        notifyObserver();
     }
 
     public void setGrid(short[][] pGrid) {
@@ -85,12 +111,41 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         repaint();
     }
 
+    private void initialCellPlacement(int x, int y) {
+
+        if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
+            if (countCells < 4) {
+                // Create player 1s cell and the symmetrical cell for player 2
+                ++countCells;
+                grid[y][x] = (short) 2;
+                grid[rows - 1 - y][cols - 1 - x] = (short) 3;
+                repaint();
+                notifyObserver();
+            }
+        }
+        else if (grid[y][x] == 2 || grid[rows - 1 - y][cols - 1 - x] == 3) {
+            // Erase player 1s cell and the symmetrical cell for player 2
+            --countCells;
+            grid[y][x] = 0;
+            grid[rows - 1 - y][cols - 1 - x] = 0;
+            repaint();
+            notifyObserver();
+        }
+    }
+
+    public void setPreRound(boolean bool) {
+        preRound = bool;
+    }
+
     // MouseListener methods
     @Override
     public void mousePressed(MouseEvent e) {
         int x = e.getX() / (cellSize * zoom);
         int y = e.getY() / (cellSize * zoom);
-        updateGrid(x, y);
+
+        // place the first 4 cells
+        if (preRound) { initialCellPlacement(x, y); }
+        else { play(x,y); }
     }
 
     @Override
@@ -129,7 +184,14 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         // Repaint the panel to reflect the changes
         repaint();
         countCells = 0;
+        preRound = true;
         notifyObserver();
+    }
+
+    public void checkWinner() {
+        cellPlaced = false;
+        cellKilled = false;
+        activePlayer = players.getPlayer(activePlayer.getPlayerNr() == PlayerNr.PLAYER1 ? 1 : 0);
     }
 
     @Override
@@ -140,7 +202,16 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     @Override
     public void notifyObserver() {
         for (Observer o : observers) {
-            o.updateGrid(grid);
+            if (countCells == 4) {
+                ++countCells;
+                o.enableStart(true);
+            }
+            else {
+                o.updateGrid(grid);
+                if (cellPlaced && cellKilled) {
+                    o.turnOver();
+                }
+            }
         }
     }
 }

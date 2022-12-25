@@ -23,14 +23,14 @@ public class Game implements Observer {
         gui = new GameOfLife(board.getBoard());
 
         // determine player 1 player 2
-        //players.getList(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
-        //players.get(PLAYER2_INDEX).setPlayerNr(PlayerNr.PLAYER2);
+        players.getPlayer(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
+        players.getPlayer(PLAYER2_INDEX).setPlayerNr(PlayerNr.PLAYER2);
         for (Player player : players.getList()) {
             System.out.println(player.getName());
         }
 
         gui.registerObserver(this);
-        gui.board.registerObserver(this);
+        gui.registerBoardObserver(this);
         initialBoardConfig();
     }
 
@@ -98,4 +98,15 @@ public class Game implements Observer {
         board.evolve();
         gui.setBoard(board.getBoard());
     }
+
+    @Override
+    public void enableStart(boolean enable) {
+        gui.enableStartButton(enable);
+    }
+
+    @Override
+    public void turnOver() {
+        gui.enableEvolveButton(true);
+    }
+
 }

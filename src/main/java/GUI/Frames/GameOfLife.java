@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GameOfLife extends JFrame implements ActionListener, ChangeListener, Subject {
 
-    public BoardPanel board;
+    private BoardPanel board;
     private final short[][] aGrid;
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
@@ -54,12 +54,9 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(155,155,155));
 
-        start = new JButton("Start");
-        start.setActionCommand("Start");
-        start.setToolTipText("Starts Game");
-        start.addActionListener(this);
+        start = createStartButton();
 
-        reset = createRestartButton();
+        reset = createResetButton();
 
         evolve = createEvolve();
 
@@ -124,17 +121,6 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
 
     }
 
-    private JButton createEvolve() {
-        JButton evolveButton = new JButton("Evolve");
-        evolveButton.setActionCommand("Evolve");
-        evolveButton.addActionListener(e -> {
-            // event handling
-            notifyObserver();
-            generation.setText("Generation: " + ++genCounter);
-        });
-        return evolveButton;
-    }
-
     @Override
     public void registerObserver(Observer o) {
         this.observers.add(o);
@@ -147,25 +133,62 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
         }
     }
 
+    public void registerBoardObserver(Observer o) { board.registerObserver(o); }
 
-    private JButton createRestartButton() {
-        JButton restartButton = new JButton("Reset");
-        restartButton.setActionCommand("Reset");
-        restartButton.addActionListener(e -> {
+    private JButton createStartButton() {
+        JButton startButton = new JButton("Start");
+        startButton.setActionCommand("Start");
+        startButton.addActionListener(e -> {
+            // event handling
+            board.setPreRound(false);
+            start.setEnabled(false);
+        });
+        startButton.setEnabled(false);
+        return startButton;
+    }
+
+    private JButton createResetButton() {
+        JButton resetButton = new JButton("Reset");
+        resetButton.setActionCommand("Reset");
+        resetButton.addActionListener(e -> {
             // Handle restart button event
             int confirm = JOptionPane.showConfirmDialog(null,
                     "Are you sure you want to reset the board?", "Confirm",
                     JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
             if (confirm == 0) {
                 board.clear();
+                generation.setText("Generation: 1");
+                start.setEnabled(false);
             }
         });
-        return restartButton;
+        return resetButton;
+    }
+
+    private JButton createEvolve() {
+        JButton evolveButton = new JButton("Evolve");
+        evolveButton.setActionCommand("Evolve");
+        evolveButton.addActionListener(e -> {
+            // event handling
+            notifyObserver();
+            evolveButton.setEnabled(false);
+            board.checkWinner();
+            generation.setText("Generation: " + ++genCounter);
+        });
+        evolveButton.setEnabled(false);
+        return evolveButton;
     }
 
     public void setBoard(short[][] grid) {
         board.setGrid(grid);
         board.repaint();
+    }
+
+    public void enableStartButton(boolean enable) {
+        start.setEnabled(enable);
+    }
+
+    public void enableEvolveButton(boolean enable) {
+        evolve.setEnabled(enable);
     }
 }
 
