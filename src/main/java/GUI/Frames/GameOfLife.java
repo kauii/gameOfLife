@@ -146,6 +146,7 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
 
     private JButton createStartButton() {
         JButton startButton = new JButton("Start");
+        startButton.setToolTipText("Place 4 cells to start");
         startButton.setActionCommand("Start");
         startButton.addActionListener(e -> {
             // event handling
@@ -185,6 +186,7 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
 
     private JButton createEvolve() {
         JButton evolveButton = new JButton("Evolve");
+        evolveButton.setToolTipText("Place & Kill a cell to evolve");
         evolveButton.setActionCommand("Evolve");
         evolveButton.addActionListener(e -> {
             // event handling
