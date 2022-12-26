@@ -112,22 +112,21 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     }
 
     private void initialCellPlacement(int x, int y) {
-
-        if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
-            if (countCells < 6) {
-                // Create player 1s cell and the symmetrical cell for player 2
-                ++countCells;
-                grid[y][x] = (short) 2;
-                grid[rows - 1 - y][cols - 1 - x] = (short) 3;
-                repaint();
-                notifyObserver();
+        if (inBoard(x, y)) {
+            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
+                if (countCells < 6) {
+                    // Create player 1s cell and the symmetrical cell for player 2
+                    ++countCells;
+                    grid[y][x] = (short) 2;
+                    grid[rows - 1 - y][cols - 1 - x] = (short) 3;
+                }
             }
-        }
-        else if (grid[y][x] == 2 || grid[rows - 1 - y][cols - 1 - x] == 3) {
-            // Erase player 1s cell and the symmetrical cell for player 2
-            --countCells;
-            grid[y][x] = 0;
-            grid[rows - 1 - y][cols - 1 - x] = 0;
+            else if (grid[y][x] == 2 || grid[rows - 1 - y][cols - 1 - x] == 3) {
+                // Erase player 1s cell and the symmetrical cell for player 2
+                --countCells;
+                grid[y][x] = 0;
+                grid[rows - 1 - y][cols - 1 - x] = 0;
+            }
             repaint();
             notifyObserver();
         }
@@ -198,12 +197,16 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     @Override
     public void notifyObserver() {
         for (Observer o : observers) {
+            // update grid
+            o.updateGrid(grid);
+            // check initial cell placement
             if (countCells == 6 && preRound) {
                 o.enableStart(true);
             }
+            // turn
             else {
                 o.enableStart(false);
-                o.updateGrid(grid);
+                // notify if a cell is placed & a cell is killed
                 if (cellPlaced && cellKilled) {
                     o.turnOver();
                 }

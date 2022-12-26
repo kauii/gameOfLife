@@ -87,6 +87,9 @@ public class Game implements Observer {
         player1.setLiveCells(board.getPlayerCells()[PLAYER1_INDEX]);
         player2.setLiveCells(board.getPlayerCells()[PLAYER2_INDEX]);
 
+        System.out.println(board.getPlayerCells()[PLAYER1_INDEX]);
+        System.out.println(board.getPlayerCells()[PLAYER2_INDEX]);
+
         gui.enableStartButton(enable);
     }
 
