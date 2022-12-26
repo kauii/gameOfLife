@@ -2,9 +2,6 @@ package Game;
 
 import Board.Board;
 import GUI.Frames.GameOfLife;
-
-import java.awt.*;
-
 import static Game.PlayerNr.*;
 
 public class Game implements Observer {
@@ -12,7 +9,6 @@ public class Game implements Observer {
     private Board board;
     private Player player1;
     private Player player2;
-    private Player winner;
     private final int PLAYER1_INDEX = 0;
     private final int PLAYER2_INDEX = 1;
     private GameOfLife gui;
@@ -39,16 +35,6 @@ public class Game implements Observer {
         // register observer for board panel and gof frame
         gui.registerObserver(this);
         gui.registerBoardObserver(this);
-        initialBoardConfig();
-    }
-
-    public void initialBoardConfig() {
-
-        // Place first cells
-        for (int i = 0; i < 4; i++) {
-            board.setCell(0, 0, true, PlayerNr.PLAYER1);
-        }
-
     }
 
     @Override
@@ -89,7 +75,7 @@ public class Game implements Observer {
             else if (player1Cells == 0) {
                 gui.declareWinner(player1);
             }
-            else if (player2Cells == 0) {
+            else {
                 gui.declareWinner(player2);
             }
         }

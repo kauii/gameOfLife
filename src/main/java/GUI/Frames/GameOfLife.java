@@ -7,14 +7,11 @@ import Game.Player;
 import Game.Singleton;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameOfLife extends JFrame implements ActionListener, ChangeListener, Subject {
+public class GameOfLife extends JFrame implements Subject {
 
     private BoardPanel board;
     private final short[][] aGrid;
@@ -24,8 +21,6 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
     private JButton reset;
     private JButton evolve;
     private JScrollPane scrollPane;
-    private JScrollBar xScrollBar;
-    private JScrollBar yScrollBar;
     private JLabel generation;
     private JLabel alive1;
     private JLabel alive2;
@@ -70,8 +65,6 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
         board = new BoardPanel(aGrid);
 
         scrollPane = new JScrollPane(board);
-        xScrollBar = scrollPane.getHorizontalScrollBar();
-        yScrollBar = scrollPane.getVerticalScrollBar();
 
         JPanel statistics = new JPanel();
         statistics.setLayout(new BorderLayout());
@@ -112,22 +105,6 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
         container.add(statistics, BorderLayout.EAST);
         container.add(buttonPanel, BorderLayout.SOUTH);
         container.add(scrollPane, BorderLayout.CENTER);
-    }
-
-
-
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-
     }
 
     @Override
