@@ -166,7 +166,7 @@ public class GameOfLife extends JFrame implements Subject {
             // event handling
             notifyObserver();
             evolveButton.setEnabled(false);
-            board.checkWinner();
+            board.changeActivePlayer();
             generation.setText("Generation: " + ++genCounter);
 
             // update live cells

@@ -183,7 +183,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         notifyObserver();
     }
 
-    public void checkWinner() {
+    public void changeActivePlayer() {
         cellPlaced = false;
         cellKilled = false;
         activePlayer = players.getPlayer(activePlayer.getPlayerNr() == PlayerNr.PLAYER1 ? 1 : 0);

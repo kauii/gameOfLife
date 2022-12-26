@@ -173,7 +173,7 @@ public class Menu extends JFrame {
     }
 
     private JSlider createDimSlider() {
-        JSlider dimSlider = new JSlider(10, 250);
+        JSlider dimSlider = new JSlider(10, 500);
         dimSlider.setPaintTrack(true);
         dimSlider.setMajorTickSpacing(10);
         dimSlider.setPaintLabels(false);
