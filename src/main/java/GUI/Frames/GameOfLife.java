@@ -3,6 +3,7 @@ package GUI.Frames;
 import GUI.Panels.BoardPanel;
 import Game.Observer;
 import GUI.Subject;
+import Game.Player;
 import Game.Singleton;
 
 import javax.swing.*;
@@ -211,6 +212,16 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
 
     public void enableEvolveButton(boolean enable) {
         evolve.setEnabled(enable);
+    }
+
+    public void declareWinner(Player player) {
+        if (player == null) {
+            // tie message
+            JOptionPane.showMessageDialog(this, "It's a tie!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // winner message
+            JOptionPane.showMessageDialog(this,player.getName() + " won!!","Game Over",JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }
 

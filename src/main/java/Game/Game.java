@@ -2,6 +2,9 @@ package Game;
 
 import Board.Board;
 import GUI.Frames.GameOfLife;
+
+import java.awt.*;
+
 import static Game.PlayerNr.*;
 
 public class Game implements Observer {
@@ -48,11 +51,6 @@ public class Game implements Observer {
 
     }
 
-    private void checkWinner() {
-
-    }
-
-
     @Override
     public void updateGrid(short[][] grid) {
         for (int row = 0; row < grid.length; row++) {
@@ -77,16 +75,24 @@ public class Game implements Observer {
         gui.setBoard(board.getBoard());
 
         // update number of player cells
-        player1.setLiveCells(board.getPlayerCells()[PLAYER1_INDEX]);
-        player2.setLiveCells(board.getPlayerCells()[PLAYER2_INDEX]);
+        player1Cells = board.getPlayerCells()[PLAYER1_INDEX];
+        player2Cells = board.getPlayerCells()[PLAYER2_INDEX];
+
+        player1.setLiveCells(player1Cells);
+        player2.setLiveCells(player2Cells);
 
         // check winner
-        checkWinner();
-
-        // if winner
-            // gui.winnerMessage()
-                // show game history
-
+        if (player1Cells == 0 || player2Cells == 0) {
+            if (player1Cells == 0 && player2Cells == 0) {
+                gui.declareWinner(null);
+            }
+            else if (player1Cells == 0) {
+                gui.declareWinner(player1);
+            }
+            else if (player2Cells == 0) {
+                gui.declareWinner(player2);
+            }
+        }
     }
 
     @Override
