@@ -108,7 +108,6 @@ public class Menu extends JFrame {
 
     private JButton createStartButton() {
         JButton startButton = new JButton("Start");
-        startButton.setActionCommand("Start");
         startButton.addActionListener(e -> {
             // setup game with the given information
             game.setUp(dimSlider.getValue());
@@ -121,7 +120,6 @@ public class Menu extends JFrame {
 
     private JButton createPlayerButton() {
         JButton playerButton = new JButton("add Player");
-        playerButton.setActionCommand("Player");
         playerButton.addActionListener(e -> {
             if (players.getList().size() <= 1) {
 

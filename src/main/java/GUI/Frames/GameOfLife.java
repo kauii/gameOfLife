@@ -123,8 +123,7 @@ public class GameOfLife extends JFrame implements Subject {
 
     private JButton createStartButton() {
         JButton startButton = new JButton("Start");
-        startButton.setToolTipText("Place 4 cells to start");
-        startButton.setActionCommand("Start");
+        startButton.setToolTipText("Place 6 cells to start");
         startButton.addActionListener(e -> {
             // event handling
             board.startGame();
@@ -141,7 +140,6 @@ public class GameOfLife extends JFrame implements Subject {
 
     private JButton createResetButton() {
         JButton resetButton = new JButton("Reset");
-        resetButton.setActionCommand("Reset");
         resetButton.addActionListener(e -> {
             // Handle restart button event
             int confirm = JOptionPane.showConfirmDialog(null,
@@ -164,7 +162,6 @@ public class GameOfLife extends JFrame implements Subject {
     private JButton createEvolve() {
         JButton evolveButton = new JButton("Evolve");
         evolveButton.setToolTipText("Place & Kill a cell to evolve");
-        evolveButton.setActionCommand("Evolve");
         evolveButton.addActionListener(e -> {
             // event handling
             notifyObserver();

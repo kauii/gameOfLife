@@ -114,7 +114,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private void initialCellPlacement(int x, int y) {
 
         if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
-            if (countCells < 8) {
+            if (countCells < 6) {
                 // Create player 1s cell and the symmetrical cell for player 2
                 ++countCells;
                 grid[y][x] = (short) 2;
@@ -198,7 +198,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     @Override
     public void notifyObserver() {
         for (Observer o : observers) {
-            if (countCells == 8 && preRound) {
+            if (countCells == 6 && preRound) {
                 o.enableStart(true);
             }
             else {
