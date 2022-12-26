@@ -37,10 +37,10 @@ class PlayerTest {
     }
 
     @Test
-    void addLiveCells() {
-        player.addLiveCells(5);
+    void setLiveCells() {
+        player.setLiveCells(5);
         assert (player.getLiveCells() == 5);
-        player.addLiveCells(13);
-        assert (player.getLiveCells() == 18);
+        player.setLiveCells(13);
+        assert (player.getLiveCells() == 13);
     }
 }

@@ -26,7 +26,7 @@ public class Player {
 
     public void setPlayerNr(PlayerNr pNr) { this.aNr = pNr; }
 
-    public void addLiveCells(int cells) {
-        liveCells += cells;
+    public void setLiveCells(int cells) {
+        liveCells = cells;
     }
 }

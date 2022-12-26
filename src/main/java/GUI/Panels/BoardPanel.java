@@ -19,7 +19,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
     private short[][] grid;
-    private final int cellSize = 20; // size of each cell in pixels
+    private final int cellSize = 10; // size of each cell in pixels
     private final int rows;
     private final int cols; // dimensions of the grid
     private int zoom = 1; // scale factor for the cells
@@ -70,8 +70,10 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
 
     private void play(int x, int y) {
 
+        //TODO: undo in case of miss click
+
         if (activePlayer.getPlayerNr() == PlayerNr.PLAYER1) {
-            if (inBoard(x, y) && grid[y][x] == 0) {
+            if (inBoard(x, y) && grid[y][x] == 0 || grid[y][x] == 1) {
                 if (!cellPlaced) {
                     grid[y][x] = (short) 2;
                     cellPlaced = true;
@@ -86,7 +88,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         }
         else {
 
-            if (inBoard(x, y) && grid[y][x] == 0) {
+            if (inBoard(x, y) && grid[y][x] == 0 || grid[y][x] == 1) {
                 if (!cellPlaced) {
                     grid[y][x] = (short) 3;
                     cellPlaced = true;
@@ -94,7 +96,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
             }
             else if (inBoard(x, y) && grid[y][x] == 2) {
                 if (!cellKilled) {
-                    grid[y][x] = (short) 0;
+                    grid[y][x] = (short) 1;
                     cellKilled = true;
                 }
             }
@@ -112,7 +114,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private void initialCellPlacement(int x, int y) {
 
         if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
-            if (countCells < 4) {
+            if (countCells < 8) {
                 // Create player 1s cell and the symmetrical cell for player 2
                 ++countCells;
                 grid[y][x] = (short) 2;
@@ -174,11 +176,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         for (short[] shorts : grid) {
             Arrays.fill(shorts, (short) 0);
         }
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                System.out.println(grid[row][col]);
-            }
-        }
+
         // Repaint the panel to reflect the changes
         repaint();
         countCells = 0;
@@ -200,7 +198,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     @Override
     public void notifyObserver() {
         for (Observer o : observers) {
-            if (countCells == 4 && preRound) {
+            if (countCells == 8 && preRound) {
                 o.enableStart(true);
             }
             else {

@@ -2,15 +2,19 @@ package Game;
 
 import Board.Board;
 import GUI.Frames.GameOfLife;
+import static Game.PlayerNr.*;
 
 public class Game implements Observer {
-
     Singleton players = Singleton.getInstance();
     private Board board;
+    private Player player1;
+    private Player player2;
     private Player winner;
     private final int PLAYER1_INDEX = 0;
     private final int PLAYER2_INDEX = 1;
     private GameOfLife gui;
+    private int player1Cells;
+    private int player2Cells;
 
     public void setUp(int dimension) {
 
@@ -23,19 +27,19 @@ public class Game implements Observer {
         gui = new GameOfLife(board.getBoard());
 
         // determine player 1 player 2
-        players.getPlayer(PLAYER1_INDEX).setPlayerNr(PlayerNr.PLAYER1);
-        players.getPlayer(PLAYER2_INDEX).setPlayerNr(PlayerNr.PLAYER2);
-        for (Player player : players.getList()) {
-            System.out.println(player.getName());
-        }
+        player1 = players.getPlayer(PLAYER1_INDEX);
+        player1.setPlayerNr(PLAYER1);
 
+        player2 = players.getPlayer(PLAYER2_INDEX);
+        player2.setPlayerNr(PLAYER2);
+
+        // register observer for board panel and gof frame
         gui.registerObserver(this);
         gui.registerBoardObserver(this);
         initialBoardConfig();
     }
 
     public void initialBoardConfig() {
-
 
         // Place first cells
         for (int i = 0; i < 4; i++) {
@@ -44,38 +48,10 @@ public class Game implements Observer {
 
     }
 
-    public void play() {
-
-        while (winner == null) {
-
-            for (Player player : players.getList()) {
-                // Player takes turn
-                turn(player);
-                // Simulate Generation
-                board.evolve();
-                // Check if Cells == 0
-                declareWinner();
-            }
-        }
-    }
-
-    public void turn(Player player) {
-
-
+    private void checkWinner() {
 
     }
 
-    private void declareWinner() {
-        int[] playerCells = board.getPlayerCells();
-
-        if (playerCells[PLAYER1_INDEX] == 0) {
-            winner = players.getPlayer(PLAYER2_INDEX); // declare Player2 as Winner
-
-        }
-        if (playerCells[PLAYER2_INDEX] == 0) {
-            winner = players.getPlayer(PLAYER2_INDEX); // declare Player1 as Winner
-        }
-    }
 
     @Override
     public void updateGrid(short[][] grid) {
@@ -95,12 +71,30 @@ public class Game implements Observer {
 
     @Override
     public void skipGen() {
+
+        // evolve cells
         board.evolve();
         gui.setBoard(board.getBoard());
+
+        // update number of player cells
+        player1.setLiveCells(board.getPlayerCells()[PLAYER1_INDEX]);
+        player2.setLiveCells(board.getPlayerCells()[PLAYER2_INDEX]);
+
+        // check winner
+        checkWinner();
+
+        // if winner
+            // gui.winnerMessage()
+                // show game history
+
     }
 
     @Override
     public void enableStart(boolean enable) {
+
+        player1.setLiveCells(board.getPlayerCells()[PLAYER1_INDEX]);
+        player2.setLiveCells(board.getPlayerCells()[PLAYER2_INDEX]);
+
         gui.enableStartButton(enable);
     }
 

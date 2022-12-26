@@ -26,6 +26,8 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
     private JScrollBar xScrollBar;
     private JScrollBar yScrollBar;
     private JLabel generation;
+    private JLabel alive1;
+    private JLabel alive2;
     private int genCounter;
 
 
@@ -84,13 +86,19 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
 
         generation = new JLabel("Generation: 1");
         genPanel.add(generation);
+
         player1.add(new JLabel("Player 1: "), SwingConstants.CENTER);
         player1.add(new JLabel(players.getPlayer(0).getName()));
-        player1.add(new JLabel(("Cells alive:")));
-        player1.add(new JLabel("0"));
+        player1.add(new JLabel(("Cells alive: ")));
+        alive1 = new JLabel("0");
+        player1.add(alive1);
         player1.setPreferredSize(new Dimension(genPanel.getWidth(),(container.getHeight() - genPanel.getHeight() - buttonPanel.getHeight() - 100)/2));
-        player2.add(new JLabel("Player 2"));
-        player2.add(new JLabel("Cells alive:"));
+
+        player2.add(new JLabel("Player 2: ", SwingConstants.CENTER));
+        player2.add(new JLabel(players.getPlayer(1).getName()));
+        player2.add(new JLabel("Cells alive: "));
+        alive2 = new JLabel("0");
+        player2.add(alive2);
         player2.setPreferredSize(new Dimension(genPanel.getWidth(),(container.getHeight() - genPanel.getHeight() - buttonPanel.getHeight() - 100)/2));
 
         playerPanel.add(player1, BorderLayout.NORTH);
@@ -142,6 +150,11 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
             // event handling
             board.startGame();
             start.setEnabled(false);
+
+            // update live cells
+            alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
+            alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
+
         });
         startButton.setEnabled(false);
         return startButton;
@@ -160,6 +173,10 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
                 generation.setText("Generation: 1");
                 start.setEnabled(false);
                 evolve.setEnabled(false);
+
+                // update live cells
+                alive1.setText("0");
+                alive2.setText("0");
             }
         });
         return resetButton;
@@ -174,6 +191,10 @@ public class GameOfLife extends JFrame implements ActionListener, ChangeListener
             evolveButton.setEnabled(false);
             board.checkWinner();
             generation.setText("Generation: " + ++genCounter);
+
+            // update live cells
+            alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
+            alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
         });
         evolveButton.setEnabled(false);
         return evolveButton;
