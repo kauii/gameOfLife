@@ -1,27 +1,28 @@
 package Board;
 
 /*
- *  Facade Design Pattern
- *  Each Board manipulation is handled through the Board class
- *
- *  Memento Design Pattern
- *  After the end of each turn, the state of the Board is saved in the Caretaker
- *  Enables us to show a review of the game at the end
+ * FACADE DESIGN PATTERN
+ * Each Board manipulation is handled through the Board class
  */
 
 import Game.PlayerNr;
 
-import java.util.ArrayList;
+import java.util.Stack;
 
 public class Board implements BoardInter {
     private final Grid grid;
-    private final Caretaker ct;
     private final Evolution evo;
+    private final Exporter expo;
+    private Stack<Object> stack;
+
 
     public Board(int dimension) {
         grid = new Grid(this, dimension);
-        ct = new Caretaker(grid);
+        // Save empty grid as origin
+        stack=new Stack<>();
+        captureState();
         evo = new Evolution();
+        expo = new Exporter();
     }
 
     // Exports board as 2D-short array.
@@ -29,31 +30,27 @@ public class Board implements BoardInter {
     // 2 = alive, player 1
     // 3 = alive, player 2
     public short[][] getBoard() {
-        return ct.getCurrent();
+        return expo.gridExport(grid.getGrid(this));
     }
 
-    public void setCell(int x_cor, int y_cor, boolean alive, PlayerNr playerNr) {
+    public short[][] setCell(int x_cor, int y_cor, boolean alive, PlayerNr playerNr) {
         // If playerNr == 1 -> player = false
         // If playerNr == 2 -> player = true
         boolean player = playerNr == PlayerNr.PLAYER2;
         grid.setCell(this, x_cor, y_cor, alive, player);
-    }
 
-    public int getDimension() {
-        return grid.getDimension();
+        return expo.gridExport(grid.getGrid(this));
     }
 
     public void evolve() {
         // Grid progresses one evolution
         evo.evolve(this, grid);
 
-        // Current state gets saved in Memento Design Pattern for game history
-        ct.saveState();
+        // Reset Stack
+        resetStack();
 
-    }
-
-    public ArrayList<short[][]> getHistory() {
-        return ct.getHistory();
+        // Save current state as origin
+        captureState();
     }
 
     // Get int array [player_1,player_2]
@@ -61,5 +58,29 @@ public class Board implements BoardInter {
         return grid.getPlayerCells();
     }
 
+
+    /*
+     * MEMENTO DESIGN PATTERN
+     * Caretaker function.
+     * Saves the previous states and allows undo.
+     */
+    // Saving the current state as a memento in the stack
+    private void captureState() {
+        stack.push(grid.getMemento());
+    }
+
+    // Resets stack at the end of each round
+    private void resetStack() {
+        stack = new Stack<>();
+    }
+
+    // Undo last step by reloading previous step and returning it as short[][]
+    public short[][] undo() {
+        // Will only restore if stack not empty
+        if (!stack.isEmpty()) {
+            grid.restore(stack.pop());
+        }
+        return expo.gridExport(grid.getGrid(this));
+    }
 
 }

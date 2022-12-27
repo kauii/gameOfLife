@@ -4,12 +4,15 @@ import java.util.BitSet;
 
 /*
  * Grid shall only be created by Board
- * Memento can access the get methods, Board the set methods
- * Evolution can access the getGrid and setCell methods
+ * Certain methods can only be accessed by Board or Evolution
+ *
+ * MEMENTO DESIGN PATTERN
+ * Originator function.
+ * Memento function. -> See below
  */
 
 public class Grid {
-    private final BitSet[][] grid;
+    private BitSet[][] grid;
     private final int dim;
 
     // Constructor, creates the grid
@@ -41,15 +44,10 @@ public class Grid {
         }
     }
 
-    // Returns the dimension of the grid
-    protected int getDimension() {
-        return dim;
-    }
-
     // Returns the grid as BitSet to the Memento
     protected BitSet[][] getGrid(Object o) {
-        // If call not made by Memento or Evolution, null return
-        if (!(o instanceof Memento || o instanceof Evolution)) {
+        // If call not made by Board or Evolution, null return
+        if (!(o instanceof Board || o instanceof Evolution)) {
             return null;
         }
         return grid;
@@ -76,5 +74,39 @@ public class Grid {
         }
         return new int[]{p1, p2};
     }
+
+
+    /*
+     * MEMENTO DESIGN PATTERN
+     * Memento function.
+     * Creates new Memento and resets Grid as state from Memento if required.
+     */
+
+    private class Memento {
+        BitSet[][] g;
+
+        // Constructor - Creates a clone of the current state
+        private Memento() {
+            int dim = Grid.this.grid.length;
+            g = new BitSet[dim][dim];
+            for (int i = 0; i < dim; i++) {
+                for (int j = 0; j < dim; j++) {
+                    g[i][j] = (BitSet) grid[i][j].clone();
+                }
+            }
+        }
+    }
+
+    // Creates a new Memento to be saved.
+    protected Memento getMemento() {
+        return new Memento();
+    }
+
+    // Sets Grid to the state of the Memento
+    protected void restore(Object o) {
+        Memento m = (Memento) o;
+        grid = m.g;
+    }
+
 
 }
