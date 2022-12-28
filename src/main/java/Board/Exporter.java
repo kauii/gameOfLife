@@ -4,10 +4,10 @@ import java.util.BitSet;
 
 public class Exporter {
 
-    // Convert BitSet[][] to short[][]
-    protected short[][] gridExport(BitSet[][] grid) {
+    // Convert BitSet[][] to PlayerNr[][]
+    protected PlayerNr[][] gridExport(BitSet[][] grid) {
         int dim = grid.length;
-        short[][] res = new short[dim][dim];
+        PlayerNr[][] res = new PlayerNr[dim][dim];
 
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
@@ -17,15 +17,18 @@ public class Exporter {
         return res;
     }
 
-    // Convert BitSet to short
-    private static short toShort(BitSet bitSet) {
-        short res = 0;
-        if (bitSet.get(0)) {
-            res += 2;
+    // Convert BitSet to PlayerNr
+    private static PlayerNr toShort(BitSet bitSet) {
+        // Check if cell dead
+        if (!bitSet.get(0)) {
+            return PlayerNr.DEAD;
         }
-        if (bitSet.get(1)) {
-            res++;
+
+        // Return PlayerNr if alive
+        if (!bitSet.get(1)) {
+            return PlayerNr.PLAYER1;
+        } else {
+            return PlayerNr.PLAYER2;
         }
-        return res;
     }
 }

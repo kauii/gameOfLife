@@ -1,9 +1,9 @@
 package GUI.Panels;
 
+import Board.PlayerNr;
 import Game.Observer;
 import GUI.Subject;
 import Game.Player;
-import Game.PlayerNr;
 import Game.Singleton;
 
 import javax.swing.*;

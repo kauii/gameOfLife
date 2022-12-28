@@ -5,8 +5,6 @@ package Board;
  * Each Board manipulation is handled through the Board class
  */
 
-import Game.PlayerNr;
-
 import java.util.Stack;
 
 public class Board implements BoardInter {
@@ -25,15 +23,13 @@ public class Board implements BoardInter {
         expo = new Exporter();
     }
 
-    // Exports board as 2D-short array.
-    // 0 || 1 = cell is dead
-    // 2 = alive, player 1
-    // 3 = alive, player 2
-    public short[][] getBoard() {
+    // Exports board as 2D-PlayerNr array.
+    // DEAD, PLAYER1, PLAYER2
+    public PlayerNr[][] getBoard() {
         return expo.gridExport(grid.getGrid(this));
     }
 
-    public short[][] setCell(int x_cor, int y_cor, boolean alive, PlayerNr playerNr) {
+    public PlayerNr[][] setCell(int x_cor, int y_cor, boolean alive, PlayerNr playerNr) {
         // If playerNr == 1 -> player = false
         // If playerNr == 2 -> player = true
         boolean player = playerNr == PlayerNr.PLAYER2;
@@ -74,8 +70,8 @@ public class Board implements BoardInter {
         stack = new Stack<>();
     }
 
-    // Undo last step by reloading previous step and returning it as short[][]
-    public short[][] undo() {
+    // Undo last step by reloading previous step and returning it as PlayerNr[][]
+    public PlayerNr[][] undo() {
         // Will only restore if stack not empty
         if (!stack.isEmpty()) {
             grid.restore(stack.pop());
