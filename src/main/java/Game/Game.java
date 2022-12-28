@@ -2,6 +2,11 @@ package Game;
 
 import Board.Board;
 import GUI.Frames.GameOfLife;
+import Board.PlayerNr;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static Board.PlayerNr.*;
 
 public class Game implements Observer {
@@ -37,18 +42,33 @@ public class Game implements Observer {
         gui.registerBoardObserver(this);
     }
 
+
+    public void supdateGrid(PlayerNr[][] grid) {
+        Map<PlayerNr, PlayerNr> playerMap = new HashMap<>();
+        playerMap.put(PLAYER1, PLAYER1);
+        playerMap.put(PLAYER2, PLAYER2);
+        playerMap.put(null, DEAD);
+
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[0].length; col++) {
+                PlayerNr value = playerMap.get(grid[row][col]);
+                PlayerNr[][] raw = board.setCell(row, col, value);
+            }
+        }
+    }
+
     @Override
-    public void updateGrid(short[][] grid) {
+    public void updateGrid(PlayerNr[][] grid) {
         for (int row = 0; row < grid.length; row++) {
             for (int col = 0; col < grid[0].length; col++) {
 
-                if (grid[row][col] == 2) {
-                        board.setCell(row, col, true, PLAYER1);
+                if (grid[row][col] == PLAYER1) {
+                    board.setCell(row, col, PLAYER1);
                 }
-                else if (grid[row][col] == 3) {
-                    board.setCell(row, col, true, PLAYER2);
+                else if (grid[row][col] == PLAYER2) {
+                    board.setCell(row, col, PLAYER2);
                 }
-                else { board.setCell(row, col, false, PLAYER1); } // don't matter which player
+                else { board.setCell(row, col, DEAD); } // don't matter which player
             }
         }
     }
@@ -73,10 +93,10 @@ public class Game implements Observer {
                 gui.declareWinner(null);
             }
             else if (player1Cells == 0) {
-                gui.declareWinner(player1);
+                gui.declareWinner(player2);
             }
             else {
-                gui.declareWinner(player2);
+                gui.declareWinner(player1);
             }
         }
     }

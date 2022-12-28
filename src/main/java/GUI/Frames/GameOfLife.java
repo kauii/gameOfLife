@@ -1,5 +1,6 @@
 package GUI.Frames;
 
+import Board.PlayerNr;
 import GUI.Panels.BoardPanel;
 import Game.Observer;
 import GUI.Subject;
@@ -14,7 +15,7 @@ import java.util.List;
 public class GameOfLife extends JFrame implements Subject {
 
     private BoardPanel board;
-    private final short[][] aGrid;
+    private final PlayerNr[][] aGrid;
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
     private JButton start;
@@ -27,7 +28,7 @@ public class GameOfLife extends JFrame implements Subject {
     private int genCounter;
 
 
-    public GameOfLife(short[][] grid) {
+    public GameOfLife(PlayerNr[][] grid) {
 
         aGrid = grid;
 
@@ -177,7 +178,7 @@ public class GameOfLife extends JFrame implements Subject {
         return evolveButton;
     }
 
-    public void setBoard(short[][] grid) {
+    public void setBoard(PlayerNr[][] grid) {
         board.setGrid(grid);
         board.repaint();
     }

@@ -1,10 +1,10 @@
 package GUI.Panels;
 
-import Board.PlayerNr;
 import Game.Observer;
 import GUI.Subject;
 import Game.Player;
 import Game.Singleton;
+import Board.PlayerNr;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static Board.PlayerNr.*;
+
 public class BoardPanel extends JPanel implements MouseListener, Subject {
 
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
-    private short[][] grid;
+    private PlayerNr[][] grid;
     private final int cellSize = 10; // size of each cell in pixels
     private final int rows;
     private final int cols; // dimensions of the grid
@@ -29,7 +31,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private boolean cellPlaced = false;
     private boolean cellKilled = false;
 
-    public BoardPanel(short[][] grid) {
+    public BoardPanel(PlayerNr[][] grid) {
         this.grid = grid;
         rows = grid.length;
         cols = grid[0].length;
@@ -44,11 +46,11 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 // Fill the cell with black or white depending on the value of grid[row][col]
-                if (grid[row][col] == 2) {
+                if (grid[row][col] == PLAYER1) {
                     g.setColor(players.getPlayer(0).getColor());
                     g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
                 }
-                else if (grid[row][col] == 3) {
+                else if (grid[row][col] == PLAYER2) {
                     g.setColor(players.getPlayer(1).getColor());
                     g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
                 }
@@ -72,31 +74,31 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
 
         //TODO: undo in case of miss click
 
-        if (activePlayer.getPlayerNr() == PlayerNr.PLAYER1) {
-            if (inBoard(x, y) && grid[y][x] == 0 || grid[y][x] == 1) {
+        if (activePlayer.getPlayerNr() == PLAYER1) {
+            if (inBoard(x, y) && grid[y][x] == DEAD) {
                 if (!cellPlaced) {
-                    grid[y][x] = (short) 2;
+                    grid[y][x] = PLAYER1;
                     cellPlaced = true;
                 }
             }
-            else if (inBoard(x, y) && grid[y][x] == 3) {
+            else if (inBoard(x, y) && grid[y][x] == PLAYER2) {
                 if (!cellKilled) {
-                    grid[y][x] = (short) 0;
+                    grid[y][x] = DEAD;
                     cellKilled = true;
                 }
             }
         }
         else {
 
-            if (inBoard(x, y) && grid[y][x] == 0 || grid[y][x] == 1) {
+            if (inBoard(x, y) && grid[y][x] == DEAD) {
                 if (!cellPlaced) {
-                    grid[y][x] = (short) 3;
+                    grid[y][x] = PLAYER2;
                     cellPlaced = true;
                 }
             }
-            else if (inBoard(x, y) && grid[y][x] == 2) {
+            else if (inBoard(x, y) && grid[y][x] == PLAYER1) {
                 if (!cellKilled) {
-                    grid[y][x] = (short) 1;
+                    grid[y][x] = DEAD;
                     cellKilled = true;
                 }
             }
@@ -106,26 +108,26 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         notifyObserver();
     }
 
-    public void setGrid(short[][] pGrid) {
+    public void setGrid(PlayerNr[][] pGrid) {
         grid = pGrid;
         repaint();
     }
 
     private void initialCellPlacement(int x, int y) {
         if (inBoard(x, y)) {
-            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == 0) {
+            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == DEAD) {
                 if (countCells < 6) {
                     // Create player 1s cell and the symmetrical cell for player 2
                     ++countCells;
-                    grid[y][x] = (short) 2;
-                    grid[rows - 1 - y][cols - 1 - x] = (short) 3;
+                    grid[y][x] = PLAYER1;
+                    grid[rows - 1 - y][cols - 1 - x] = PLAYER2;
                 }
             }
-            else if (grid[y][x] == 2 || grid[rows - 1 - y][cols - 1 - x] == 3) {
+            else if (grid[y][x] == PLAYER1 || grid[rows - 1 - y][cols - 1 - x] == PLAYER2) {
                 // Erase player 1s cell and the symmetrical cell for player 2
                 --countCells;
-                grid[y][x] = 0;
-                grid[rows - 1 - y][cols - 1 - x] = 0;
+                grid[y][x] = DEAD;
+                grid[rows - 1 - y][cols - 1 - x] = DEAD;
             }
             repaint();
             notifyObserver();
@@ -172,21 +174,25 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
 
     public void clear() {
         // Reset the game board to its initial state
-        for (short[] shorts : grid) {
-            Arrays.fill(shorts, (short) 0);
+        for (PlayerNr[] cell : grid) {
+            Arrays.fill(cell, DEAD);
         }
+        // Reset attributes
+        countCells = 0;
+        preRound = true;
+        cellPlaced = false;
+        cellKilled = false;
+        activePlayer = players.getPlayer(0);
 
         // Repaint the panel to reflect the changes
         repaint();
-        countCells = 0;
-        preRound = true;
         notifyObserver();
     }
 
     public void changeActivePlayer() {
         cellPlaced = false;
         cellKilled = false;
-        activePlayer = players.getPlayer(activePlayer.getPlayerNr() == PlayerNr.PLAYER1 ? 1 : 0);
+        activePlayer = players.getPlayer(activePlayer.getPlayerNr() == PLAYER1 ? 1 : 0);
     }
 
     @Override
