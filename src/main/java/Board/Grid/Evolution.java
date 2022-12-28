@@ -1,7 +1,6 @@
 package Board.Grid;
 
 import Board.Board;
-import Board.Grid.Grid;
 
 import java.util.BitSet;
 
@@ -48,12 +47,12 @@ public class Evolution {
     }
 
     // Creates a copy of the grid as not to interfere with manipulations
-    private BitSet[][] copyGrid(BitSet[][] grid){
-        int dim=grid.length;
-        BitSet[][] res=new BitSet[dim][dim];
-        for(int i=0;i<dim;i++){
-            for(int j=0;j<dim;j++){
-                res[i][j]= (BitSet) grid[i][j].clone();
+    private BitSet[][] copyGrid(BitSet[][] grid) {
+        int dim = grid.length;
+        BitSet[][] res = new BitSet[dim][dim];
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                res[i][j] = (BitSet) grid[i][j].clone();
             }
         }
 

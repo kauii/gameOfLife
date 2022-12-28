@@ -11,24 +11,21 @@ package Board;
 import Board.Grid.Evolution;
 import Board.Grid.Grid;
 
-import java.util.ArrayList;
-import java.util.Queue;
 import java.util.Stack;
 
 public class Board implements BoardInter {
     private final Grid grid;
     private final Evolution evo;
     private final Exporter expo;
-    private Stack<Object> stack;
+    private Stack<Object> MemStack;
 
 
     public Board(int dimension) {
         grid = new Grid(this, dimension);
-        // Save empty grid as origin
-        stack = new Stack<>();
-        captureState();
+        //captureState();
         evo = new Evolution();
         expo = new Exporter();
+        MemStack = new Stack<>();
     }
 
     // Exports board as 2D-PlayerNr array.
@@ -41,6 +38,8 @@ public class Board implements BoardInter {
         // If playerNr == 1 -> player = false
         // If playerNr == 2 -> player = true
         boolean player = playerNr == PlayerNr.PLAYER2;
+        // Save the current cell for undo
+        captureCell(x_cor, y_cor);
         grid.setCell(this, x_cor, y_cor, alive, player);
 
         return expo.gridExport(grid.getGrid(this));
@@ -50,8 +49,8 @@ public class Board implements BoardInter {
         // Grid progresses one evolution
         evo.evolve(this, grid);
 
-        // Save current state in history
-        captureState();
+        // Reset MemStack
+        clearStack();
     }
 
     // Get int array [player_1,player_2]
@@ -65,19 +64,20 @@ public class Board implements BoardInter {
      * Caretaker function.
      * Saves the previous states.
      */
-    // Saving the current state as a memento in the stack
-    private void captureState() {
-        stack.push(grid.getMemento());
+
+    // Saving the current state of a cell as a memento in the stack
+    private void captureCell(int x_cor, int y_cor) {
+        MemStack.push(grid.getMemento(x_cor, y_cor));
     }
 
-    // Get the history of the entire game as an ArrayList of PlayerNr[][]
-    public Stack<PlayerNr[][]> getHistory() {
-        Stack<PlayerNr[][]> hist = new Stack<>();
-        while (!stack.isEmpty()) {
-            grid.restore(stack.pop());
-            hist.push(expo.gridExport(grid.getGrid(this)));
-        }
-        return hist;
+    public PlayerNr[][] undo() {
+        grid.restore(MemStack.pop());
+
+        return expo.gridExport(grid.getGrid(this));
+    }
+
+    private void clearStack() {
+        MemStack = new Stack<>();
     }
 
 }

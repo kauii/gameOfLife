@@ -39,8 +39,8 @@ public class Grid {
     // Set value of a cell to dead or alive + player
     // Arguments: true=1, false=0
     public void setCell(Object o, int x_cor, int y_cor, boolean alive, boolean player) {
-        // Call has to be made by Board or Evolution, otherwise no action
-        if (o instanceof Board || o instanceof Evolution) {
+        // Call has to be made by Board or Evolution or Grid, otherwise no action
+        if (o instanceof Board || o instanceof Evolution || o instanceof Grid) {
 
             // Set first bit status to alive or dead
             grid[x_cor][y_cor].set(0, alive);
@@ -80,6 +80,18 @@ public class Grid {
         return new int[]{p1, p2};
     }
 
+    protected int getCell(int x_cor, int y_cor) {
+        BitSet cell = grid[x_cor][y_cor];
+        int res = 0;
+        if (cell.get(0)) {
+            res += 2;
+        }
+        if (cell.get(1)) {
+            res += 1;
+        }
+        return res;
+    }
+
 
     /*
      * MEMENTO DESIGN PATTERN
@@ -88,29 +100,38 @@ public class Grid {
      */
 
     private class Memento {
+        private final int x_cor;
+        private final int y_cor;
+        private final BitSet cell;
         BitSet[][] g;
 
         // Constructor - Creates a clone of the current state
-        private Memento() {
-            int dim = Grid.this.grid.length;
-            g = new BitSet[dim][dim];
-            for (int i = 0; i < dim; i++) {
-                for (int j = 0; j < dim; j++) {
-                    g[i][j] = (BitSet) grid[i][j].clone();
-                }
-            }
+        private Memento(int x_cor, int y_cor) {
+            this.x_cor = x_cor;
+            this.y_cor = y_cor;
+            this.cell = (BitSet) grid[x_cor][y_cor].clone();
+        }
+
+        private int[] getCoordinates() {
+            return new int[]{x_cor, y_cor};
+        }
+
+        private BitSet getCell() {
+            return cell;
         }
     }
 
     // Creates a new Memento to be saved.
-    public Memento getMemento() {
-        return new Memento();
+    public Memento getMemento(int x_cor, int y_cor) {
+        return new Memento(x_cor, y_cor);
     }
 
     // Sets Grid to the state of the Memento
     public void restore(Object o) {
         Memento m = (Memento) o;
-        grid = m.g;
+        int[] cor = m.getCoordinates();
+        BitSet cell = m.getCell();
+        setCell(this, cor[0], cor[1], cell.get(0), cell.get(1));
     }
 
 

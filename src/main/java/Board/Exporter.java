@@ -11,14 +11,14 @@ public class Exporter {
 
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                res[i][j] = toShort(grid[i][j]);
+                res[i][j] = toPlayerNr(grid[i][j]);
             }
         }
         return res;
     }
 
     // Convert BitSet to PlayerNr
-    private static PlayerNr toShort(BitSet bitSet) {
+    private static PlayerNr toPlayerNr(BitSet bitSet) {
         // Check if cell dead
         if (!bitSet.get(0)) {
             return PlayerNr.DEAD;
