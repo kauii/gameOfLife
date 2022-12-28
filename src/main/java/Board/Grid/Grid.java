@@ -1,4 +1,6 @@
-package Board;
+package Board.Grid;
+
+import Board.Board;
 
 import java.util.BitSet;
 
@@ -9,6 +11,9 @@ import java.util.BitSet;
  * MEMENTO DESIGN PATTERN
  * Originator function.
  * Memento function. -> See below
+ *
+ * COMMAND DESIGN PATTERN
+ * Receiver
  */
 
 public class Grid {
@@ -16,7 +21,7 @@ public class Grid {
     private final int dim;
 
     // Constructor, creates the grid
-    protected Grid(Object o, int dimension) {
+    public Grid(Object o, int dimension) {
         if (!(o instanceof Board)) {
             throw new IllegalCallerException("Only Board can create a new Grid!!!");
         }
@@ -33,7 +38,7 @@ public class Grid {
 
     // Set value of a cell to dead or alive + player
     // Arguments: true=1, false=0
-    protected void setCell(Object o, int x_cor, int y_cor, boolean alive, boolean player) {
+    public void setCell(Object o, int x_cor, int y_cor, boolean alive, boolean player) {
         // Call has to be made by Board or Evolution, otherwise no action
         if (o instanceof Board || o instanceof Evolution) {
 
@@ -45,7 +50,7 @@ public class Grid {
     }
 
     // Returns the grid as BitSet to the Memento
-    protected BitSet[][] getGrid(Object o) {
+    public BitSet[][] getGrid(Object o) {
         // If call not made by Board or Evolution, null return
         if (!(o instanceof Board || o instanceof Evolution)) {
             return null;
@@ -54,7 +59,7 @@ public class Grid {
     }
 
     // Get int array [player_1,player_2]
-    protected int[] getPlayerCells() {
+    public int[] getPlayerCells() {
         int p1 = 0;
         int p2 = 0;
 
@@ -98,12 +103,12 @@ public class Grid {
     }
 
     // Creates a new Memento to be saved.
-    protected Memento getMemento() {
+    public Memento getMemento() {
         return new Memento();
     }
 
     // Sets Grid to the state of the Memento
-    protected void restore(Object o) {
+    public void restore(Object o) {
         Memento m = (Memento) o;
         grid = m.g;
     }

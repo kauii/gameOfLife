@@ -1,4 +1,7 @@
-package Board;
+package Board.Grid;
+
+import Board.Board;
+import Board.Grid.Grid;
 
 import java.util.BitSet;
 
@@ -11,7 +14,7 @@ import java.util.BitSet;
 public class Evolution {
 
     // Can only be called by Board
-    protected void evolve(Object o, Grid grid) {
+    public void evolve(Object o, Grid grid) {
         // Check if called by Board -> otherwise return
         if (!(o instanceof Board)) {
             return;

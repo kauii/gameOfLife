@@ -3,8 +3,16 @@ package Board;
 /*
  * FACADE DESIGN PATTERN
  * Each Board manipulation is handled through the Board class
+ *
+ * COMMAND DESIGN PATTERN
+ * Invoker
  */
 
+import Board.Grid.Evolution;
+import Board.Grid.Grid;
+
+import java.util.ArrayList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Board implements BoardInter {
@@ -17,7 +25,7 @@ public class Board implements BoardInter {
     public Board(int dimension) {
         grid = new Grid(this, dimension);
         // Save empty grid as origin
-        stack=new Stack<>();
+        stack = new Stack<>();
         captureState();
         evo = new Evolution();
         expo = new Exporter();
@@ -42,10 +50,7 @@ public class Board implements BoardInter {
         // Grid progresses one evolution
         evo.evolve(this, grid);
 
-        // Reset Stack
-        resetStack();
-
-        // Save current state as origin
+        // Save current state in history
         captureState();
     }
 
@@ -58,25 +63,21 @@ public class Board implements BoardInter {
     /*
      * MEMENTO DESIGN PATTERN
      * Caretaker function.
-     * Saves the previous states and allows undo.
+     * Saves the previous states.
      */
     // Saving the current state as a memento in the stack
     private void captureState() {
         stack.push(grid.getMemento());
     }
 
-    // Resets stack at the end of each round
-    private void resetStack() {
-        stack = new Stack<>();
-    }
-
-    // Undo last step by reloading previous step and returning it as PlayerNr[][]
-    public PlayerNr[][] undo() {
-        // Will only restore if stack not empty
-        if (!stack.isEmpty()) {
+    // Get the history of the entire game as an ArrayList of PlayerNr[][]
+    public Stack<PlayerNr[][]> getHistory() {
+        Stack<PlayerNr[][]> hist = new Stack<>();
+        while (!stack.isEmpty()) {
             grid.restore(stack.pop());
+            hist.push(expo.gridExport(grid.getGrid(this)));
         }
-        return expo.gridExport(grid.getGrid(this));
+        return hist;
     }
 
 }
