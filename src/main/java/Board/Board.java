@@ -34,7 +34,8 @@ public class Board implements BoardInter {
         return expo.gridExport(grid.getGrid(this));
     }
 
-    public PlayerNr[][] setCell(int x_cor, int y_cor, boolean alive, PlayerNr playerNr) {
+    public PlayerNr[][] setCell(int x_cor, int y_cor, PlayerNr playerNr) {
+        boolean alive = playerNr != PlayerNr.DEAD;
         // If playerNr == 1 -> player = false
         // If playerNr == 2 -> player = true
         boolean player = playerNr == PlayerNr.PLAYER2;
