@@ -1,5 +1,6 @@
 package GUI.Panels;
 
+import Game.GridIterator;
 import Game.Observer;
 import GUI.Subject;
 import Game.Player;
@@ -10,8 +11,7 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
 import static Board.PlayerNr.*;
@@ -43,26 +43,25 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                // Fill the cell with black or white depending on the value of grid[row][col]
-                if (grid[row][col] == PLAYER1) {
-                    g.setColor(players.getPlayer(0).getColor());
-                    g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
-                }
-                else if (grid[row][col] == PLAYER2) {
-                    g.setColor(players.getPlayer(1).getColor());
-                    g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
-                }
-                else {
-                    g.setColor(Color.WHITE);
-                    g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
-                }
+        Map<PlayerNr, Color> colorMap = new HashMap<>();
+        colorMap.put(PLAYER1, players.getPlayer(0).getColor());
+        colorMap.put(PLAYER2, players.getPlayer(1).getColor());
+        colorMap.put(DEAD, Color.WHITE);
 
-                // Draw a black border around each cell
-                g.setColor(Color.BLACK);
-                g.drawRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
-            }
+        GridIterator iterator = new GridIterator(grid);
+        while (iterator.hasNext()) {
+            int row = iterator.getRow();
+            int col = iterator.getCol();
+            PlayerNr cell = iterator.next();
+
+            // Draw each cell
+            Color color = colorMap.get(cell);
+            g.setColor(color);
+            g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
+
+            // Draw a black border around each cell
+            g.setColor(Color.BLACK);
+            g.drawRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
         }
     }
 
