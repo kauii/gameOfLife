@@ -2,7 +2,7 @@ package Game;
 
 import Board.Board;
 import GUI.Frames.GameOfLife;
-import static Game.PlayerNr.*;
+import static Board.PlayerNr.*;
 
 public class Game implements Observer {
     Singleton players = Singleton.getInstance();
@@ -43,12 +43,12 @@ public class Game implements Observer {
             for (int col = 0; col < grid[0].length; col++) {
 
                 if (grid[row][col] == 2) {
-                        board.setCell(row, col, true, PlayerNr.PLAYER1);
+                        board.setCell(row, col, true, PLAYER1);
                 }
                 else if (grid[row][col] == 3) {
-                    board.setCell(row, col, true, PlayerNr.PLAYER2);
+                    board.setCell(row, col, true, PLAYER2);
                 }
-                else { board.setCell(row, col, false, PlayerNr.PLAYER1); } // don't matter which player
+                else { board.setCell(row, col, false, PLAYER1); } // don't matter which player
             }
         }
     }
