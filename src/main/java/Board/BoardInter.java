@@ -3,7 +3,7 @@ package Board;
 public interface BoardInter {
     PlayerNr[][] getBoard();
 
-    PlayerNr[][] setCell(int x_cor, int y_cor, boolean alive, PlayerNr playerNr);
+    PlayerNr[][] setCell(int x_cor, int y_cor, PlayerNr playerNr);
 
     void evolve();
 
