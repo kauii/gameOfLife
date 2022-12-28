@@ -49,9 +49,6 @@ public class Game implements Observer {
             int row = iterator.getRow();
             int col = iterator.getCol();
             PlayerNr cell = iterator.next();
-            System.out.println(row);
-            System.out.println(col);
-            System.out.println(cell);
             board.setCell(row, col, cell);
         }
     }

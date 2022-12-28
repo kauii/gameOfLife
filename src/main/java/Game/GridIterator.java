@@ -5,7 +5,7 @@ import Board.PlayerNr;
 import java.util.Iterator;
 
 public class GridIterator implements Iterator<PlayerNr> {
-    private PlayerNr[][] grid;
+    private final PlayerNr[][] grid;
     private int row;
     private int col;
 
