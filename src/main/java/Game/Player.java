@@ -1,5 +1,7 @@
 package Game;
 
+import Board.PlayerNr;
+
 import java.awt.*;
 
 public class Player {
