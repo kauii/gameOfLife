@@ -19,6 +19,9 @@ import static Board.PlayerNr.*;
 public class BoardPanel extends JPanel implements MouseListener, Subject {
 
     Singleton players = Singleton.getInstance();
+    private Player activePlayer;
+    private Player player1 = players.getPlayer(0);
+    private Player player2 = players.getPlayer(1);
     private final List<Observer> observers = new ArrayList<>();
     private PlayerNr[][] grid;
     private final int cellSize = 10; // size of each cell in pixels
@@ -27,7 +30,6 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private int zoom = 1; // scale factor for the cells
     private int countCells = 0;
     private boolean preRound = true;
-    private Player activePlayer;
     private boolean cellPlaced = false;
     private boolean cellKilled = false;
 
@@ -37,15 +39,17 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         cols = grid[0].length;
         setPreferredSize(new Dimension(cols * cellSize, rows * cellSize));
         addMouseListener(this);
-        activePlayer = players.getPlayer(0);
+        activePlayer = player1;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        // Map the enums to their colors
         Map<PlayerNr, Color> colorMap = new HashMap<>();
-        colorMap.put(PLAYER1, players.getPlayer(0).getColor());
-        colorMap.put(PLAYER2, players.getPlayer(1).getColor());
+        colorMap.put(PLAYER1, player1.getColor());
+        colorMap.put(PLAYER2, player2.getColor());
         colorMap.put(DEAD, Color.WHITE);
 
         GridIterator iterator = new GridIterator(grid);
@@ -54,7 +58,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
             int col = iterator.getCol();
             PlayerNr cell = iterator.next();
 
-            // Draw each cell
+            // Translate the value of grid[row][col] to corresponding color
             Color color = colorMap.get(cell);
             g.setColor(color);
             g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
@@ -73,7 +77,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
 
         //TODO: undo in case of miss click
 
-        if (activePlayer.getPlayerNr() == PLAYER1) {
+        if (activePlayer == player1) {
             if (inBoard(x, y) && grid[y][x] == DEAD) {
                 if (!cellPlaced) {
                     grid[y][x] = PLAYER1;
@@ -157,31 +161,17 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     @Override
     public void mouseExited(MouseEvent e) { }
 
-    // Zoom in/out methods
-    public void zoomIn() {
-        if (zoom < 5) {
-            zoom++;
-            repaint();
-        }
-    }
-    public void zoomOut() {
-        if (zoom > 1) {
-            zoom--;
-            repaint();
-        }
-    }
-
     public void clear() {
         // Reset the game board to its initial state
         for (PlayerNr[] cell : grid) {
             Arrays.fill(cell, DEAD);
         }
-        // Reset attributes
+        // Reset global variables
         countCells = 0;
         preRound = true;
         cellPlaced = false;
         cellKilled = false;
-        activePlayer = players.getPlayer(0);
+        activePlayer = player1;
 
         // Repaint the panel to reflect the changes
         repaint();
@@ -191,7 +181,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     public void changeActivePlayer() {
         cellPlaced = false;
         cellKilled = false;
-        activePlayer = players.getPlayer(activePlayer.getPlayerNr() == PLAYER1 ? 1 : 0);
+        activePlayer = (activePlayer == player1) ? player2 : player1;
     }
 
     @Override

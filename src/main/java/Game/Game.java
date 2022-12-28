@@ -32,14 +32,31 @@ public class Game implements Observer {
 
         // determine player 1 player 2
         player1 = players.getPlayer(PLAYER1_INDEX);
-        player1.setPlayerNr(PLAYER1);
 
         player2 = players.getPlayer(PLAYER2_INDEX);
-        player2.setPlayerNr(PLAYER2);
 
         // register observer for board panel and gof frame
         gui.registerObserver(this);
         gui.registerBoardObserver(this);
+    }
+
+    private void updatePlayerCells() {
+        player1Cells = board.getPlayerCells()[PLAYER1_INDEX];
+        player2Cells = board.getPlayerCells()[PLAYER2_INDEX];
+        player1.setLiveCells(player1Cells);
+        player2.setLiveCells(player2Cells);
+    }
+
+    private void checkWinner() {
+        if (player1Cells == 0 && player2Cells == 0) {
+            gui.declareWinner(null);
+        }
+        else if (player1Cells == 0) {
+            gui.declareWinner(player2);
+        }
+        else if (player2Cells == 0) {
+            gui.declareWinner(player1);
+        }
     }
 
     @Override
@@ -61,24 +78,10 @@ public class Game implements Observer {
         gui.setBoard(board.getBoard());
 
         // update number of player cells
-        player1Cells = board.getPlayerCells()[PLAYER1_INDEX];
-        player2Cells = board.getPlayerCells()[PLAYER2_INDEX];
-
-        player1.setLiveCells(player1Cells);
-        player2.setLiveCells(player2Cells);
+        updatePlayerCells();
 
         // check winner
-        if (player1Cells == 0 || player2Cells == 0) {
-            if (player1Cells == 0 && player2Cells == 0) {
-                gui.declareWinner(null);
-            }
-            else if (player1Cells == 0) {
-                gui.declareWinner(player2);
-            }
-            else {
-                gui.declareWinner(player1);
-            }
-        }
+        checkWinner();
     }
 
     @Override

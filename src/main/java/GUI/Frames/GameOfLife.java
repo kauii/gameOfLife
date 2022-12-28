@@ -46,58 +46,127 @@ public class GameOfLife extends JFrame implements Subject {
     }
 
     public void initialize(Container container) {
+
         container.setLayout(new BorderLayout());
         container.setSize(new Dimension(1024,768));
         container.setBackground(Color.white);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(155,155,155));
-
+        // create buttons for button panel
         start = createStartButton();
-
         reset = createResetButton();
-
         evolve = createEvolve();
 
+        // create button panel and add buttons
+        JPanel buttonPanel = createButtonPanel();
         buttonPanel.add(start);
         buttonPanel.add(reset);
         buttonPanel.add(evolve);
 
+        // create board panel
         board = new BoardPanel(aGrid);
-
         scrollPane = new JScrollPane(board);
 
+        // create statistics panel
         JPanel statistics = new JPanel();
         statistics.setLayout(new BorderLayout());
-        //sas
+
+        // create generation panel in statistics panel
         JPanel genPanel = new JPanel();
         genPanel.setBackground(new Color(200,200,200));
+
+        // create player panel in statistics panel
         JPanel playerPanel = new JPanel();
-        playerPanel.setLayout(new BorderLayout());
+        playerPanel.setLayout(new GridBagLayout());
+
         JPanel player1 = new JPanel();
-        player1.setBackground(Color.white);
+        player1.setLayout(new GridBagLayout());
+        player1.setBorder(BorderFactory.createLineBorder(Color.green, 6));
+
         JPanel player2 = new JPanel();
-        player2.setBackground(Color.white);
+        player2.setLayout(new GridBagLayout());
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        GridBagConstraints player1Constraints = new GridBagConstraints();
+        GridBagConstraints player2Constraints = new GridBagConstraints();
+
+        constraints.fill = GridBagConstraints.BOTH;
+        player1Constraints.fill = GridBagConstraints.VERTICAL;
+        player2Constraints.fill = GridBagConstraints.VERTICAL;
+
+        player1Constraints.anchor = GridBagConstraints.NORTH;
+        player2Constraints.anchor = GridBagConstraints.NORTH;
+
+        player1Constraints.gridx = 0;
+        player1Constraints.gridy = 0;
+
+        player2Constraints.gridx = 0;
+        player2Constraints.gridy = 0;
+
+        constraints.weighty = 0.425;
+        constraints.weightx = 1;
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+
 
         generation = new JLabel("Generation: 1");
         genPanel.add(generation);
 
-        player1.add(new JLabel("Player 1: "), SwingConstants.CENTER);
-        player1.add(new JLabel(players.getPlayer(0).getName()));
-        player1.add(new JLabel(("Cells alive: ")));
+        player1.add(new JLabel("Player 1: "), player1Constraints);
+
+        player1Constraints.gridy = 1;
+
+        player1.add(new JLabel(players.getPlayer(0).getName()), player1Constraints);
+
+        player1Constraints.gridy = 2;
+        player1.add(new JLabel(" "), player1Constraints);
+
+        player1Constraints.gridy = 3;
+
+        player1.add(new JLabel(("Cells alive: ")), player1Constraints);
+
+        player1Constraints.gridy = 4;
+
         alive1 = new JLabel("0");
-        player1.add(alive1);
-        player1.setPreferredSize(new Dimension(genPanel.getWidth(),(container.getHeight() - genPanel.getHeight() - buttonPanel.getHeight() - 100)/2));
+        player1.add(alive1, player1Constraints);
+        player1Constraints.gridy = 5;
+        player1.add(new JLabel((" ")), player1Constraints);
+        player1Constraints.gridy = 6;
+        player1.add(new JLabel("Cell placed"), player1Constraints);
+        player1Constraints.gridy = 7;
+        player1.add(new JLabel("Cell killed"), player1Constraints);
 
-        player2.add(new JLabel("Player 2: ", SwingConstants.CENTER));
-        player2.add(new JLabel(players.getPlayer(1).getName()));
-        player2.add(new JLabel("Cells alive: "));
+        player2.add(new JLabel("Player 2: "), player2Constraints);
+
+        player2Constraints.gridy = 1;
+
+        player2.add(new JLabel(players.getPlayer(1).getName()), player2Constraints);
+
+        player2Constraints.gridy = 2;
+        player2.add(new JLabel((" ")), player2Constraints);
+
+        player2Constraints.gridy = 3;
+        player2.add(new JLabel("Cells alive: "), player2Constraints);
+
+        player2Constraints.gridy = 4;
+
         alive2 = new JLabel("0");
-        player2.add(alive2);
-        player2.setPreferredSize(new Dimension(genPanel.getWidth(),(container.getHeight() - genPanel.getHeight() - buttonPanel.getHeight() - 100)/2));
+        player2.add(alive2, player2Constraints);
 
-        playerPanel.add(player1, BorderLayout.NORTH);
-        playerPanel.add(player2, BorderLayout.SOUTH);
+        player2Constraints.gridy = 5;
+        player2.add(new JLabel(" "), player2Constraints);
+        player2Constraints.gridy = 6;
+        player2.add(new JLabel("Cell placed"), player2Constraints);
+        player2Constraints.gridy = 7;
+        player2.add(new JLabel("Cell killed"), player2Constraints);
+
+        playerPanel.add(player1, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.weighty = 0.575;
+
+        playerPanel.add(player2, constraints);
 
 
         statistics.add(genPanel, BorderLayout.NORTH);
@@ -176,6 +245,12 @@ public class GameOfLife extends JFrame implements Subject {
         });
         evolveButton.setEnabled(false);
         return evolveButton;
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(155,155,155));
+        return buttonPanel;
     }
 
     public void setBoard(PlayerNr[][] grid) {
