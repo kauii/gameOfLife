@@ -44,27 +44,28 @@ public class Game implements Observer {
 
 
     public void supdateGrid(PlayerNr[][] grid) {
-        Map<PlayerNr, PlayerNr> playerMap = new HashMap<>();
-        playerMap.put(PLAYER1, PLAYER1);
-        playerMap.put(PLAYER2, PLAYER2);
-        playerMap.put(null, DEAD);
-
-        for (int row = 0; row < grid.length; row++) {
-            for (int col = 0; col < grid[0].length; col++) {
-                PlayerNr value = playerMap.get(grid[row][col]);
-                PlayerNr[][] raw = board.setCell(row, col, value);
-            }
-        }
-    }
-
-    @Override
-    public void updateGrid(PlayerNr[][] grid) {
         GridIterator iterator = new GridIterator(grid);
         while (iterator.hasNext()) {
             PlayerNr cell = iterator.next();
             int row = iterator.getRow();
             int col = iterator.getCol();
             board.setCell(row, col, cell);
+        }
+    }
+
+    @Override
+    public void updateGrid(PlayerNr[][] grid) {
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[0].length; col++) {
+
+                if (grid[row][col] == PLAYER1) {
+                    board.setCell(row, col, PLAYER1);
+                } else if (grid[row][col] == PLAYER2) {
+                    board.setCell(row, col, PLAYER2);
+                } else {
+                    board.setCell(row, col, DEAD);
+                } // don't matter which player
+            }
         }
     }
 
