@@ -24,14 +24,18 @@ public class GridIterator implements Iterator<PlayerNr> {
     public PlayerNr next() {
         PlayerNr cell = grid[row][col];
         col++;
-        if(col >= grid[row].length) {
+        if (col >= grid[row].length) {
             col = 0;
             row++;
         }
         return cell;
     }
 
-    public int getRow() { return row; }
+    public int getRow() {
+        return row;
+    }
 
-    public int getCol() { return col; }
+    public int getCol() {
+        return col;
+    }
 }

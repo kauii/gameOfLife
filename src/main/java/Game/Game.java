@@ -42,30 +42,17 @@ public class Game implements Observer {
         gui.registerBoardObserver(this);
     }
 
-
-    public void supdateGrid(PlayerNr[][] grid) {
-        GridIterator iterator = new GridIterator(grid);
-        while (iterator.hasNext()) {
-            PlayerNr cell = iterator.next();
-            int row = iterator.getRow();
-            int col = iterator.getCol();
-            board.setCell(row, col, cell);
-        }
-    }
-
     @Override
     public void updateGrid(PlayerNr[][] grid) {
-        for (int row = 0; row < grid.length; row++) {
-            for (int col = 0; col < grid[0].length; col++) {
-
-                if (grid[row][col] == PLAYER1) {
-                    board.setCell(row, col, PLAYER1);
-                } else if (grid[row][col] == PLAYER2) {
-                    board.setCell(row, col, PLAYER2);
-                } else {
-                    board.setCell(row, col, DEAD);
-                } // don't matter which player
-            }
+        GridIterator iterator = new GridIterator(grid);
+        while (iterator.hasNext()) {
+            int row = iterator.getRow();
+            int col = iterator.getCol();
+            PlayerNr cell = iterator.next();
+            System.out.println(row);
+            System.out.println(col);
+            System.out.println(cell);
+            board.setCell(row, col, cell);
         }
     }
 
