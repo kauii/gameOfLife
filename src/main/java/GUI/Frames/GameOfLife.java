@@ -156,20 +156,7 @@ public class GameOfLife extends JFrame implements Subject {
                     "Are you sure you want to reset the board?", "Confirm",
                     JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
             if (confirm == 0) {
-                board.clear();
-                generation.setText("Generation: 1");
-                start.setEnabled(false);
-                evolve.setEnabled(false);
-
-                if (active == players.getPlayer(0)) {
-                    resetPanel(players.getPlayer(0));
-                } else {
-                    resetPanel(players.getPlayer(1));
-                }
-
-                // update live cells
-                alive1.setText("0");
-                alive2.setText("0");
+                resetAll();
             }
         });
         return resetButton;
@@ -180,7 +167,6 @@ public class GameOfLife extends JFrame implements Subject {
         evolveButton.setToolTipText("Place & Kill a cell to evolve");
         evolveButton.addActionListener(e -> {
             // event handling
-            notifyObserver();
             evolveButton.setEnabled(false);
             board.changeActivePlayer();
             generation.setText("Generation: " + ++genCounter);
@@ -191,6 +177,8 @@ public class GameOfLife extends JFrame implements Subject {
             // update live cells
             alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
             alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
+
+            notifyObserver();
         });
         evolveButton.setEnabled(false);
         return evolveButton;
@@ -205,6 +193,16 @@ public class GameOfLife extends JFrame implements Subject {
     public void setBoard(PlayerNr[][] grid) {
         board.setGrid(grid);
         board.repaint();
+    }
+
+    public void colorPlaced() {
+        placed1.setForeground(new Color (0,200,0));
+        placed2.setForeground(new Color (0,200,0));
+    }
+
+    public void colorKilled() {
+        killed1.setForeground(new Color (0,200,0));
+        killed2.setForeground(new Color (0,200,0));
     }
 
     private JPanel createPlayerPanel(Player player) {
@@ -284,6 +282,23 @@ public class GameOfLife extends JFrame implements Subject {
         }
     }
 
+    private void resetAll() {
+        board.clear();
+        generation.setText("Generation: 1");
+        start.setEnabled(false);
+        evolve.setEnabled(false);
+
+        if (active == players.getPlayer(0)) {
+            resetPanel(players.getPlayer(0));
+        } else {
+            resetPanel(players.getPlayer(1));
+        }
+
+        // update live cells
+        alive1.setText("0");
+        alive2.setText("0");
+    }
+
     private void resetPanel(Player player) {
         if (player == players.getPlayer(0)) {
             player1Panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
@@ -306,6 +321,11 @@ public class GameOfLife extends JFrame implements Subject {
     }
 
     public void declareWinner(Player player) {
+        // update final statistics
+        generation.setText("Generation: " + ++genCounter);
+        alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
+        alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
+
         if (player == null) {
             // tie message
             JOptionPane.showMessageDialog(this, "It's a tie!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
@@ -313,6 +333,16 @@ public class GameOfLife extends JFrame implements Subject {
             // winner message
             JOptionPane.showMessageDialog(this,player.getName() + " won!!","Game Over",JOptionPane.INFORMATION_MESSAGE);
         }
+        String[] options = new String[] {"New Round", "Exit"};
+        int response = JOptionPane.showOptionDialog(this, "What do you want to do?", "Game Over", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null, options, options[0]);
+        if (response == 0) {
+            resetAll();
+        }
+        if (response == 1) {
+            dispose();
+            System.exit(0);
+        }
     }
+
 }
 

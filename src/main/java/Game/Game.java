@@ -98,4 +98,14 @@ public class Game implements Observer {
         gui.enableEvolveButton(true);
     }
 
+    @Override
+    public void colorPlaced() {
+        gui.colorPlaced();
+    }
+
+    @Override
+    public void colorKilled() {
+        gui.colorKilled();
+    }
+
 }

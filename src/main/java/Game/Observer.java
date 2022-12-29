@@ -11,4 +11,8 @@ public interface Observer {
 
     void turnOver();
 
+    void colorPlaced();
+
+    void colorKilled();
+
 }
