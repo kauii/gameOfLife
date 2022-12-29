@@ -21,11 +21,17 @@ public class GameOfLife extends JFrame implements Subject {
     private JButton start;
     private JButton reset;
     private JButton evolve;
-    private JScrollPane scrollPane;
     private JLabel generation;
+    private JPanel player1Panel;
+    private JPanel player2Panel;
     private JLabel alive1;
     private JLabel alive2;
+    private JLabel placed1;
+    private JLabel killed1;
+    private JLabel placed2;
+    private JLabel killed2;
     private int genCounter;
+    private Player active;
 
 
     public GameOfLife(PlayerNr[][] grid) {
@@ -64,7 +70,7 @@ public class GameOfLife extends JFrame implements Subject {
 
         // create board panel
         board = new BoardPanel(aGrid);
-        scrollPane = new JScrollPane(board);
+        JScrollPane scrollPane = new JScrollPane(board);
 
         // create statistics panel
         JPanel statistics = new JPanel();
@@ -74,104 +80,35 @@ public class GameOfLife extends JFrame implements Subject {
         JPanel genPanel = new JPanel();
         genPanel.setBackground(new Color(200,200,200));
 
+        // create & add generation label
+        generation = new JLabel("Generation: 1");
+        genPanel.add(generation);
+
         // create player panel in statistics panel
         JPanel playerPanel = new JPanel();
         playerPanel.setLayout(new GridBagLayout());
 
-        JPanel player1 = new JPanel();
-        player1.setLayout(new GridBagLayout());
-        player1.setBorder(BorderFactory.createLineBorder(Color.green, 6));
+        // separate main player panel into two specific player panels
+        player1Panel = createPlayerPanel(players.getPlayer(0));
+        player2Panel = createPlayerPanel(players.getPlayer(1));
 
-        JPanel player2 = new JPanel();
-        player2.setLayout(new GridBagLayout());
-
+        // manage layout of player panels & add to main panel
         GridBagConstraints constraints = new GridBagConstraints();
-        GridBagConstraints player1Constraints = new GridBagConstraints();
-        GridBagConstraints player2Constraints = new GridBagConstraints();
-
         constraints.fill = GridBagConstraints.BOTH;
-        player1Constraints.fill = GridBagConstraints.VERTICAL;
-        player2Constraints.fill = GridBagConstraints.VERTICAL;
-
-        player1Constraints.anchor = GridBagConstraints.NORTH;
-        player2Constraints.anchor = GridBagConstraints.NORTH;
-
-        player1Constraints.gridx = 0;
-        player1Constraints.gridy = 0;
-
-        player2Constraints.gridx = 0;
-        player2Constraints.gridy = 0;
-
-        constraints.weighty = 0.425;
         constraints.weightx = 1;
-
         constraints.gridx = 0;
         constraints.gridy = 0;
-
-
-        generation = new JLabel("Generation: 1");
-        genPanel.add(generation);
-
-        player1.add(new JLabel("Player 1: "), player1Constraints);
-
-        player1Constraints.gridy = 1;
-
-        player1.add(new JLabel(players.getPlayer(0).getName()), player1Constraints);
-
-        player1Constraints.gridy = 2;
-        player1.add(new JLabel(" "), player1Constraints);
-
-        player1Constraints.gridy = 3;
-
-        player1.add(new JLabel(("Cells alive: ")), player1Constraints);
-
-        player1Constraints.gridy = 4;
-
-        alive1 = new JLabel("0");
-        player1.add(alive1, player1Constraints);
-        player1Constraints.gridy = 5;
-        player1.add(new JLabel((" ")), player1Constraints);
-        player1Constraints.gridy = 6;
-        player1.add(new JLabel("Cell placed"), player1Constraints);
-        player1Constraints.gridy = 7;
-        player1.add(new JLabel("Cell killed"), player1Constraints);
-
-        player2.add(new JLabel("Player 2: "), player2Constraints);
-
-        player2Constraints.gridy = 1;
-
-        player2.add(new JLabel(players.getPlayer(1).getName()), player2Constraints);
-
-        player2Constraints.gridy = 2;
-        player2.add(new JLabel((" ")), player2Constraints);
-
-        player2Constraints.gridy = 3;
-        player2.add(new JLabel("Cells alive: "), player2Constraints);
-
-        player2Constraints.gridy = 4;
-
-        alive2 = new JLabel("0");
-        player2.add(alive2, player2Constraints);
-
-        player2Constraints.gridy = 5;
-        player2.add(new JLabel(" "), player2Constraints);
-        player2Constraints.gridy = 6;
-        player2.add(new JLabel("Cell placed"), player2Constraints);
-        player2Constraints.gridy = 7;
-        player2.add(new JLabel("Cell killed"), player2Constraints);
-
-        playerPanel.add(player1, constraints);
-
-        constraints.gridx = 0;
+        constraints.weighty = 0.425;
+        playerPanel.add(player1Panel, constraints);
         constraints.gridy = 1;
         constraints.weighty = 0.575;
+        playerPanel.add(player2Panel, constraints);
 
-        playerPanel.add(player2, constraints);
-
-
+        // add generation and player panel to statistics panel
         statistics.add(genPanel, BorderLayout.NORTH);
         statistics.add(playerPanel, BorderLayout.CENTER);
 
+        // add all main panels to the container
         container.add(statistics, BorderLayout.EAST);
         container.add(buttonPanel, BorderLayout.SOUTH);
         container.add(scrollPane, BorderLayout.CENTER);
@@ -199,6 +136,9 @@ public class GameOfLife extends JFrame implements Subject {
             board.startGame();
             start.setEnabled(false);
 
+            active = players.getPlayer(0);
+            activePanel(active);
+
             // update live cells
             alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
             alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
@@ -221,6 +161,12 @@ public class GameOfLife extends JFrame implements Subject {
                 start.setEnabled(false);
                 evolve.setEnabled(false);
 
+                if (active == players.getPlayer(0)) {
+                    resetPanel(players.getPlayer(0));
+                } else {
+                    resetPanel(players.getPlayer(1));
+                }
+
                 // update live cells
                 alive1.setText("0");
                 alive2.setText("0");
@@ -239,6 +185,9 @@ public class GameOfLife extends JFrame implements Subject {
             board.changeActivePlayer();
             generation.setText("Generation: " + ++genCounter);
 
+            active = (active == players.getPlayer(0)) ? players.getPlayer(1) : players.getPlayer(0);
+            activePanel(active);
+
             // update live cells
             alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
             alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
@@ -256,6 +205,96 @@ public class GameOfLife extends JFrame implements Subject {
     public void setBoard(PlayerNr[][] grid) {
         board.setGrid(grid);
         board.repaint();
+    }
+
+    private JPanel createPlayerPanel(Player player) {
+        JPanel playerPanel = new JPanel();
+        playerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+
+        // layout manager
+        playerPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        constraints.fill = GridBagConstraints.VERTICAL;
+        constraints.anchor = GridBagConstraints.NORTH;
+        constraints.gridx = 0;
+
+        // create and add general labels
+        JLabel name = new JLabel(player.getName());
+        JLabel cellLabel = new JLabel("Cells alive: ");
+
+        constraints.gridy = 1;
+        playerPanel.add(name, constraints);
+        constraints.gridy = 2;
+        playerPanel.add(new JLabel(" "), constraints);
+        constraints.gridy = 3;
+        playerPanel.add(cellLabel, constraints);
+        constraints.gridy = 5;
+        playerPanel.add(new JLabel(" "), constraints);
+
+        // add specific labels
+        if (player == players.getPlayer(0)) {
+            alive1 = new JLabel("0");
+            placed1 = new JLabel(" ");
+            killed1 = new JLabel(" ");
+
+            constraints.gridy = 0;
+            playerPanel.add(new JLabel("Player 1:"), constraints);
+            constraints.gridy = 4;
+            playerPanel.add(alive1, constraints);
+            constraints.gridy = 6;
+            playerPanel.add(placed1, constraints);
+            constraints.gridy = 7;
+            playerPanel.add(killed1, constraints);
+        }
+        else {
+            alive2 = new JLabel("0");
+            placed2 = new JLabel(" ");
+            killed2 = new JLabel(" ");
+
+            constraints.gridy = 0;
+            playerPanel.add(new JLabel("Player 2:"), constraints);
+            constraints.gridy = 4;
+            playerPanel.add(alive2, constraints);
+            constraints.gridy = 6;
+            playerPanel.add(placed2, constraints);
+            constraints.gridy = 7;
+            playerPanel.add(killed2, constraints);
+        }
+
+        return playerPanel;
+    }
+
+    private void activePanel(Player player) {
+        if (player == players.getPlayer(0)) {
+            player1Panel.setBorder(BorderFactory.createLineBorder(player.getColor(), 6));
+            placed1.setText("Cell placed");
+            placed1.setForeground(Color.red);
+            killed1.setText("Cell killed");
+            killed1.setForeground(Color.red);
+            resetPanel(players.getPlayer(1));
+        }
+        else {
+            player2Panel.setBorder(BorderFactory.createLineBorder(player.getColor(), 6));
+            placed2.setText("Cell placed");
+            placed2.setForeground(Color.RED);
+            killed2.setText("Cell killed");
+            killed2.setForeground(Color.red);
+            resetPanel(players.getPlayer(0));
+        }
+    }
+
+    private void resetPanel(Player player) {
+        if (player == players.getPlayer(0)) {
+            player1Panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+            placed1.setText(" ");
+            killed1.setText(" ");
+        }
+        else {
+            player2Panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+            placed2.setText(" ");
+            killed2.setText(" ");
+        }
     }
 
     public void enableStartButton(boolean enable) {
