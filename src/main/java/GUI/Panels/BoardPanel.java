@@ -74,9 +74,6 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     }
 
     private void play(int x, int y) {
-
-        //TODO: undo in case of miss click
-
         if (activePlayer == player1) {
             if (inBoard(x, y) && grid[y][x] == DEAD) {
                 if (!cellPlaced) {

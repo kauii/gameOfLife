@@ -21,6 +21,7 @@ public class GameOfLife extends JFrame implements Subject {
     private JButton start;
     private JButton reset;
     private JButton evolve;
+    private JButton undo;
     private JLabel generation;
     private JPanel player1Panel;
     private JPanel player2Panel;
@@ -61,7 +62,7 @@ public class GameOfLife extends JFrame implements Subject {
         start = createStartButton();
         reset = createResetButton();
         evolve = createEvolve();
-        JButton undo = createUndoButton();
+        undo = createUndoButton();
 
         // create button panel and add buttons
         JPanel buttonPanel = createButtonPanel();
@@ -194,10 +195,11 @@ public class GameOfLife extends JFrame implements Subject {
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener(e -> {
             // event handling
+            undoButton.setEnabled(false);
             notifyObserver();
 
         });
-
+        undoButton.setEnabled(false);
         return undoButton;
     }
 
@@ -335,6 +337,7 @@ public class GameOfLife extends JFrame implements Subject {
 
     public void enableEvolveButton(boolean enable) {
         evolve.setEnabled(enable);
+        undo.setEnabled(enable);
     }
 
     public void declareWinner(Player player) {
