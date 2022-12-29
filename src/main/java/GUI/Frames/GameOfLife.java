@@ -61,12 +61,14 @@ public class GameOfLife extends JFrame implements Subject {
         start = createStartButton();
         reset = createResetButton();
         evolve = createEvolve();
+        JButton undo = createUndoButton();
 
         // create button panel and add buttons
         JPanel buttonPanel = createButtonPanel();
         buttonPanel.add(start);
         buttonPanel.add(reset);
         buttonPanel.add(evolve);
+        buttonPanel.add(undo);
 
         // create board panel
         board = new BoardPanel(aGrid);
@@ -122,7 +124,11 @@ public class GameOfLife extends JFrame implements Subject {
     @Override
     public void notifyObserver() {
         for (Observer o : observers) {
-            o.skipGen();
+            if (!evolve.isEnabled()) {
+                o.skipGen();
+            } else {
+                o.undo();
+            }
         }
     }
 
@@ -182,6 +188,17 @@ public class GameOfLife extends JFrame implements Subject {
         });
         evolveButton.setEnabled(false);
         return evolveButton;
+    }
+
+    private JButton createUndoButton() {
+        JButton undoButton = new JButton("Undo");
+        undoButton.addActionListener(e -> {
+            // event handling
+            notifyObserver();
+
+        });
+
+        return undoButton;
     }
 
     private JPanel createButtonPanel() {
@@ -331,7 +348,7 @@ public class GameOfLife extends JFrame implements Subject {
             JOptionPane.showMessageDialog(this, "It's a tie!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
         } else {
             // winner message
-            JOptionPane.showMessageDialog(this,player.getName() + " won!!","Game Over",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this,player.getName() + " won!","Game Over",JOptionPane.INFORMATION_MESSAGE);
         }
         String[] options = new String[] {"New Round", "Exit"};
         int response = JOptionPane.showOptionDialog(this, "What do you want to do?", "Game Over", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null, options, options[0]);

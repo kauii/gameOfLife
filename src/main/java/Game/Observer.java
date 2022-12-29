@@ -15,4 +15,5 @@ public interface Observer {
 
     void colorKilled();
 
+    void undo();
 }

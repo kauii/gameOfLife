@@ -108,4 +108,9 @@ public class Game implements Observer {
         gui.colorKilled();
     }
 
+    @Override
+    public void undo() {
+        gui.setBoard(board.undo());
+    }
+
 }
