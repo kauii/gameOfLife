@@ -87,6 +87,8 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
                     cellKilled = true;
                 }
             }
+            repaint();
+            notifyObserver();
         }
         else {
 
@@ -102,10 +104,9 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
                     cellKilled = true;
                 }
             }
+            repaint();
+            notifyObserver();
         }
-
-        repaint();
-        notifyObserver();
     }
 
     public void setGrid(PlayerNr[][] pGrid) {

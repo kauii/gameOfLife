@@ -125,7 +125,7 @@ public class GameOfLife extends JFrame implements Subject {
     @Override
     public void notifyObserver() {
         for (Observer o : observers) {
-            if (!evolve.isEnabled()) {
+            if (undo.isEnabled()) {
                 o.skipGen();
             } else {
                 o.undo();
@@ -337,6 +337,9 @@ public class GameOfLife extends JFrame implements Subject {
 
     public void enableEvolveButton(boolean enable) {
         evolve.setEnabled(enable);
+    }
+
+    public void enableUndoButton(boolean enable) {
         undo.setEnabled(enable);
     }
 
@@ -363,6 +366,5 @@ public class GameOfLife extends JFrame implements Subject {
             System.exit(0);
         }
     }
-
 }
 

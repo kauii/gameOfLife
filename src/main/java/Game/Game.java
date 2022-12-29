@@ -101,11 +101,14 @@ public class Game implements Observer {
     @Override
     public void colorPlaced() {
         gui.colorPlaced();
+        System.out.println("WTF");
+        gui.enableUndoButton(true);
     }
 
     @Override
     public void colorKilled() {
         gui.colorKilled();
+        gui.enableUndoButton(true);
     }
 
     @Override
