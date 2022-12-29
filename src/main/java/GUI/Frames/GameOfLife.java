@@ -46,6 +46,7 @@ public class GameOfLife extends JFrame implements Subject {
 
         setSize(1024,768);
         setVisible(true);
+        setLocationRelativeTo(null);
         setResizable(true);
 
         ImageIcon image = new ImageIcon("logo.png");

@@ -26,6 +26,7 @@ public class Menu extends JFrame {
         setTitle("Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 300);
+        setLocationRelativeTo(null);
         setResizable(false);
 
         // set custom icon
