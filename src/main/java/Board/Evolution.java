@@ -9,7 +9,7 @@ package Board;
 class Evolution {
 
     // Can only be called by Board
-    public void evolve(Object o, Grid grid) {
+    protected void evolve(Object o, Grid grid) {
         // Check if called by Board -> otherwise return
         if (!(o instanceof Board)) {
             return;
