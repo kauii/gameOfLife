@@ -1,7 +1,4 @@
-package Board.Grid;
-
-import Board.Board;
-import Board.Cell;
+package Board;
 
 /*
  * Grid shall only be created by Board
@@ -15,12 +12,12 @@ import Board.Cell;
  * Receiver
  */
 
-public class Grid {
+class Grid {
     private final Cell[][] grid;
     private final int dim;
 
     // Constructor, creates the grid
-    public Grid(Object o, int dimension) {
+    Grid(Object o, int dimension) {
         if (!(o instanceof Board)) {
             throw new IllegalCallerException("Only Board can create a new Grid!!!");
         }
@@ -37,26 +34,18 @@ public class Grid {
 
     // Set value of a cell to dead or alive + player
     // Arguments: true=1, false=0
-    public void setCell(Object o, int x_cor, int y_cor, Cell player) {
-        // Call has to be made by Board or Evolution or Grid, otherwise no action
-        if (o instanceof Board || o instanceof Evolution || o instanceof Grid) {
-
-            // Set first bit status to alive or dead
-            grid[x_cor][y_cor] = player;
-        }
+    protected void setCell(int x_cor, int y_cor, Cell player) {
+        // Set first bit status to alive or dead
+        grid[x_cor][y_cor] = player;
     }
 
     // Returns the grid as BitSet to the Memento
-    public Cell[][] getGrid(Object o) {
-        // If call not made by Board or Evolution, null return
-        if (!(o instanceof Board || o instanceof Evolution)) {
-            return null;
-        }
+    protected Cell[][] getGrid() {
         return grid;
     }
 
     // Get int array [player_1,player_2]
-    public int[] getPlayerCells() {
+    protected int[] getPlayerCells() {
         int p1 = 0;
         int p2 = 0;
 
@@ -106,16 +95,16 @@ public class Grid {
     }
 
     // Creates a new Memento to be saved.
-    public Memento getMemento(int x_cor, int y_cor) {
+    protected Memento getMemento(int x_cor, int y_cor) {
         return new Memento(x_cor, y_cor);
     }
 
     // Sets Grid to the state of the Memento
-    public void restore(Object o) {
+    protected void restore(Object o) {
         Memento m = (Memento) o;
         int[] cor = m.getCoordinates();
         Cell cell = m.getCell();
-        setCell(this, cor[0], cor[1], cell);
+        setCell(cor[0], cor[1], cell);
     }
 
 

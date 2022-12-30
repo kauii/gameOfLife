@@ -1,7 +1,4 @@
-package Board.Grid;
-
-import Board.Board;
-import Board.Cell;
+package Board;
 
 /*
  * Evolution class to progress to the next evolution
@@ -9,7 +6,7 @@ import Board.Cell;
  * Iterating through a copy of the grid and setting new cells directly in the grid
  */
 
-public class Evolution {
+class Evolution {
 
     // Can only be called by Board
     public void evolve(Object o, Grid grid) {
@@ -18,7 +15,7 @@ public class Evolution {
             return;
         }
         // Create copy of grid for iteration
-        Cell[][] old_grid = grid.getGrid(this).clone(); //copyGrid(grid.getGrid(this));
+        Cell[][] old_grid = grid.getGrid().clone(); //copyGrid(grid.getGrid(this));
         //BitSet[][] old_grid = grid.getGrid(this).clone();
         int dim = old_grid.length;
         int[] neighbours;
@@ -28,20 +25,20 @@ public class Evolution {
             for (int y = 0; y < dim; y++) {
                 neighbours = getNeighbours(old_grid, x, y);
                 // If alive (index 0 == 1)
-                if (old_grid[x][y]!= Cell.DEAD) {
+                if (old_grid[x][y] != Cell.DEAD) {
                     // If less than 2 or more than 3 neighbours -> kill cell
                     if (neighbours[0] < 2 || neighbours[0] > 3) {
-                        grid.setCell(this, x, y, Cell.DEAD);
+                        grid.setCell(x, y, Cell.DEAD);
                     }
                     // else -> do nothing
                 } else {
                     // If neighbours == 3 -> create new cell
                     if (neighbours[0] == 3) {
                         // Create cell for player with most cells nearby
-                        if(neighbours[1]==0){
-                            grid.setCell(this,x,y, Cell.PLAYER1);
-                        }else{
-                            grid.setCell(this,x,y, Cell.PLAYER2);
+                        if (neighbours[1] == 0) {
+                            grid.setCell(x, y, Cell.PLAYER1);
+                        } else {
+                            grid.setCell(x, y, Cell.PLAYER2);
                         }
                     }
                 }

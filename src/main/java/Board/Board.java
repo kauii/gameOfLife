@@ -5,9 +5,6 @@ package Board;
  * Each Board manipulation is handled through the Board class
  */
 
-import Board.Grid.Evolution;
-import Board.Grid.Grid;
-
 import java.util.Stack;
 
 public class Board implements BoardInter {
@@ -33,9 +30,9 @@ public class Board implements BoardInter {
     public Cell[][] setCell(int x_cor, int y_cor, Cell cell) {
         // Save the current cell for undo
         captureCell(x_cor, y_cor);
-        grid.setCell(this, x_cor, y_cor, cell);
+        grid.setCell(x_cor, y_cor, cell);
 
-        return grid.getGrid(this);
+        return grid.getGrid();
     }
 
     public void evolve() {
@@ -68,7 +65,7 @@ public class Board implements BoardInter {
             grid.restore(MemStack.pop());
         } catch (Exception ignored) {
         }
-        return grid.getGrid(this);
+        return grid.getGrid();
     }
 
     public void clearStack() {
