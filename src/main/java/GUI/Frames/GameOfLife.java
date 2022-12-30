@@ -100,6 +100,9 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             if (Objects.equals(command, undo.getActionCommand())) {
                 o.undo();
             }
+            if (Objects.equals(command, start.getActionCommand())) {
+                o.clearStack();
+            }
         }
     }
 

@@ -4,11 +4,6 @@ import Board.Board;
 import GUI.Frames.GameOfLife;
 import Board.PlayerNr;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static Board.PlayerNr.*;
-
 public class Game implements Observer {
     Singleton players = Singleton.getInstance();
     private Board board;
@@ -87,8 +82,12 @@ public class Game implements Observer {
 
     @Override
     public void undo() {
-        board.undo();
-        gui.setBoard(board.getBoard());
+        gui.setBoard(board.undo());
+    }
+
+    @Override
+    public void clearStack() {
+        board.clearStack();
     }
 
 }

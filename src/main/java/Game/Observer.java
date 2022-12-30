@@ -7,4 +7,6 @@ public interface Observer {
 
     void skipGen();
     void undo();
+
+    void clearStack();
 }
