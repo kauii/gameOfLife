@@ -37,7 +37,6 @@ public class Game implements Observer {
 
         // register observer for board panel and gof frame
         gui.registerObserver(this);
-        gui.registerBoardObserver(this);
     }
 
     private void updatePlayerCells() {
@@ -84,32 +83,6 @@ public class Game implements Observer {
         checkWinner();
     }
 
-    @Override
-    public void enableStart(boolean enable) {
-
-        player1.setLiveCells(board.getPlayerCells()[PLAYER1_INDEX]);
-        player2.setLiveCells(board.getPlayerCells()[PLAYER2_INDEX]);
-
-        gui.enableStartButton(enable);
-    }
-
-    @Override
-    public void turnOver() {
-        gui.enableEvolveButton(true);
-    }
-
-    @Override
-    public void colorPlaced() {
-        gui.colorPlaced();
-        System.out.println("WTF");
-        gui.enableUndoButton(true);
-    }
-
-    @Override
-    public void colorKilled() {
-        gui.colorKilled();
-        gui.enableUndoButton(true);
-    }
 
     @Override
     public void undo() {

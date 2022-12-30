@@ -9,10 +9,12 @@ import Game.Singleton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class GameOfLife extends JFrame implements Subject {
+public class GameOfLife extends JFrame implements Subject, JObserver {
 
     private BoardPanel board;
     private final PlayerNr[][] aGrid;
@@ -76,6 +78,9 @@ public class GameOfLife extends JFrame implements Subject {
         board = new BoardPanel(aGrid);
         JScrollPane scrollPane = new JScrollPane(board);
 
+        // register observer
+        board.registerObserver(this);
+
         // create statistics panel
         JPanel statistics = new JPanel();
         statistics.setLayout(new BorderLayout());
@@ -124,20 +129,19 @@ public class GameOfLife extends JFrame implements Subject {
     }
 
     @Override
-    public void notifyObserver() {
+    public void notifyObserver(ActionEvent e) {
+        String command = e.getActionCommand();
         for (Observer o : observers) {
-            if (undo.isEnabled()) {
+            o.updateGrid(board.getBoard());
+            if (Objects.equals(command, evolve.getActionCommand())) {
                 o.skipGen();
-            } else {
-                o.undo();
             }
         }
     }
 
-    public void registerBoardObserver(Observer o) { board.registerObserver(o); }
-
     private JButton createStartButton() {
         JButton startButton = new JButton("Start");
+        startButton.setActionCommand("Start");
         startButton.setToolTipText("Place 6 cells to start");
         startButton.addActionListener(e -> {
             // event handling
@@ -151,6 +155,7 @@ public class GameOfLife extends JFrame implements Subject {
             alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
             alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
 
+            notifyObserver(e);
         });
         startButton.setEnabled(false);
         return startButton;
@@ -158,6 +163,7 @@ public class GameOfLife extends JFrame implements Subject {
 
     private JButton createResetButton() {
         JButton resetButton = new JButton("Reset");
+        resetButton.setActionCommand("Reset");
         resetButton.addActionListener(e -> {
             // Handle restart button event
             int confirm = JOptionPane.showConfirmDialog(null,
@@ -172,6 +178,7 @@ public class GameOfLife extends JFrame implements Subject {
 
     private JButton createEvolve() {
         JButton evolveButton = new JButton("Evolve");
+        evolveButton.setActionCommand("Evolve");
         evolveButton.setToolTipText("Place & Kill a cell to evolve");
         evolveButton.addActionListener(e -> {
             // event handling
@@ -186,7 +193,7 @@ public class GameOfLife extends JFrame implements Subject {
             alive1.setText(String.valueOf(players.getPlayer(0).getLiveCells()));
             alive2.setText(String.valueOf(players.getPlayer(1).getLiveCells()));
 
-            notifyObserver();
+            notifyObserver(e);
         });
         evolveButton.setEnabled(false);
         return evolveButton;
@@ -197,7 +204,7 @@ public class GameOfLife extends JFrame implements Subject {
         undoButton.addActionListener(e -> {
             // event handling
             undoButton.setEnabled(false);
-            notifyObserver();
+            notifyObserver(e);
 
         });
         undoButton.setEnabled(false);
@@ -215,11 +222,23 @@ public class GameOfLife extends JFrame implements Subject {
         board.repaint();
     }
 
+    @Override
+    public void enableStart(boolean enable) {
+        start.setEnabled(enable);
+    }
+
+    @Override
+    public void enableEvolve(boolean enable) {
+        evolve.setEnabled(enable);
+    }
+
+    @Override
     public void colorPlaced() {
         placed1.setForeground(new Color (0,200,0));
         placed2.setForeground(new Color (0,200,0));
     }
 
+    @Override
     public void colorKilled() {
         killed1.setForeground(new Color (0,200,0));
         killed2.setForeground(new Color (0,200,0));
@@ -330,14 +349,6 @@ public class GameOfLife extends JFrame implements Subject {
             placed2.setText(" ");
             killed2.setText(" ");
         }
-    }
-
-    public void enableStartButton(boolean enable) {
-        start.setEnabled(enable);
-    }
-
-    public void enableEvolveButton(boolean enable) {
-        evolve.setEnabled(enable);
     }
 
     public void enableUndoButton(boolean enable) {

@@ -1,5 +1,6 @@
 package GUI.Panels;
 
+import GUI.Frames.JObserver;
 import Game.GridIterator;
 import Game.Observer;
 import GUI.Subject;
@@ -16,13 +17,13 @@ import java.util.List;
 
 import static Board.PlayerNr.*;
 
-public class BoardPanel extends JPanel implements MouseListener, Subject {
+public class BoardPanel extends JPanel implements MouseListener,JSubject {
 
     Singleton players = Singleton.getInstance();
     private Player activePlayer;
     private Player player1 = players.getPlayer(0);
     private Player player2 = players.getPlayer(1);
-    private final List<Observer> observers = new ArrayList<>();
+    private final List<JObserver> observers = new ArrayList<>();
     private PlayerNr[][] grid;
     private final int cellSize = 10; // size of each cell in pixels
     private final int rows;
@@ -182,16 +183,18 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         activePlayer = (activePlayer == player1) ? player2 : player1;
     }
 
+    public PlayerNr[][] getBoard() {
+        return grid;
+    }
+
     @Override
-    public void registerObserver(Observer o) {
+    public void registerObserver(JObserver o) {
         this.observers.add(o);
     }
 
     @Override
     public void notifyObserver() {
-        for (Observer o : observers) {
-            // update grid
-            o.updateGrid(grid);
+        for (JObserver o : observers) {
             // check initial cell placement
             if (countCells == 6 && preRound) {
                 o.enableStart(true);
@@ -207,7 +210,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
                 }
                 // notify if a cell is placed & a cell is killed
                 if (cellPlaced && cellKilled) {
-                    o.turnOver();
+                    o.enableEvolve(true);
                 }
             }
         }
