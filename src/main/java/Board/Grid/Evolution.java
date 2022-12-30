@@ -49,17 +49,6 @@ public class Evolution {
         }
     }
 
-    // Creates a copy of the grid as not to interfere with manipulations
-    private PlayerNr[][] copyGrid(PlayerNr[][] grid) {
-        int dim = grid.length;
-        PlayerNr[][] res = new PlayerNr[dim][dim];
-        for (int i = 0; i < dim; i++) {
-            System.arraycopy(grid[i], 0, res[i], 0, dim);
-        }
-
-        return res;
-    }
-
     // Get the number of neighbours and the player with the majority of cells
     private int[] getNeighbours(PlayerNr[][] old_grid, int x_cor, int y_cor) {
         int[] res = new int[2];       // [number of neighbours, player most cells]

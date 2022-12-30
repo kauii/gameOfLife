@@ -16,7 +16,7 @@ import Board.PlayerNr;
  */
 
 public class Grid {
-    private PlayerNr[][] grid;
+    private final PlayerNr[][] grid;
     private final int dim;
 
     // Constructor, creates the grid
@@ -77,10 +77,6 @@ public class Grid {
         return new int[]{p1, p2};
     }
 
-    protected PlayerNr getCell(int x_cor, int y_cor) {
-        return grid[x_cor][y_cor];
-    }
-
 
     /*
      * MEMENTO DESIGN PATTERN
@@ -92,7 +88,6 @@ public class Grid {
         private final int x_cor;
         private final int y_cor;
         private final PlayerNr cell;
-        PlayerNr[][] g;
 
         // Constructor - Creates a clone of the current state
         private Memento(int x_cor, int y_cor) {

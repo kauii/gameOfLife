@@ -16,20 +16,15 @@ import java.util.Stack;
 public class Board implements BoardInter {
     private final Grid grid;
     private final Evolution evo;
-    //private final Exporter expo;
     private Stack<Object> MemStack;
-    private PlayerNr[][] expoBoard;
 
 
     public Board(int dimension) {
         grid = new Grid(this, dimension);
         //captureState();
         evo = new Evolution();
-        //expo = new Exporter();
         MemStack = new Stack<>();
 
-        // Create export Board
-        //expoBoard = expo.gridExport(grid.getGrid(this));
     }
 
     // Exports board as 2D-PlayerNr array.
@@ -43,7 +38,7 @@ public class Board implements BoardInter {
         captureCell(x_cor, y_cor);
         grid.setCell(this, x_cor, y_cor, playerNr);
 
-        return expoBoard;
+        return grid.getGrid(this);
     }
 
     public void evolve() {
