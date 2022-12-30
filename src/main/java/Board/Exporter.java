@@ -4,6 +4,12 @@ import java.util.BitSet;
 
 public class Exporter {
 
+    private PlayerNr[][] expoGrid;
+
+    public Exporter(int dim){
+        expoGrid=new PlayerNr[dim][dim];
+    }
+
     // Convert BitSet[][] to PlayerNr[][]
     protected PlayerNr[][] gridExport(BitSet[][] grid) {
         int dim = grid.length;
