@@ -5,7 +5,6 @@ import GUI.JObserver;
 import GUI.Panels.BoardPanel;
 import GUI.Panels.StatisticsPanel;
 import Game.Observer;
-import GUI.Subject;
 import Game.Player;
 import Game.Singleton;
 
