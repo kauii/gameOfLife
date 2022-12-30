@@ -24,7 +24,7 @@ public class Board implements BoardInter {
     // Exports board as 2D-PlayerNr array.
     // DEAD, PLAYER1, PLAYER2
     public Cell[][] getBoard() {
-        return grid.getGrid(this);
+        return grid.getGrid();
     }
 
     public Cell[][] setCell(int x_cor, int y_cor, Cell cell) {
