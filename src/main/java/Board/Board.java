@@ -16,7 +16,7 @@ import java.util.Stack;
 public class Board implements BoardInter {
     private final Grid grid;
     private final Evolution evo;
-    private final Exporter expo;
+    //private final Exporter expo;
     private Stack<Object> MemStack;
     private PlayerNr[][] expoBoard;
 
@@ -25,27 +25,23 @@ public class Board implements BoardInter {
         grid = new Grid(this, dimension);
         //captureState();
         evo = new Evolution();
-        expo = new Exporter();
+        //expo = new Exporter();
         MemStack = new Stack<>();
 
         // Create export Board
-        expoBoard = expo.gridExport(grid.getGrid(this));
+        //expoBoard = expo.gridExport(grid.getGrid(this));
     }
 
     // Exports board as 2D-PlayerNr array.
     // DEAD, PLAYER1, PLAYER2
     public PlayerNr[][] getBoard() {
-        return expo.gridExport(grid.getGrid(this));
+        return grid.getGrid(this);
     }
 
     public PlayerNr[][] setCell(int x_cor, int y_cor, PlayerNr playerNr) {
-        boolean alive = playerNr != PlayerNr.DEAD;
-        // If playerNr == 1 -> player = false
-        // If playerNr == 2 -> player = true
-        boolean player = playerNr == PlayerNr.PLAYER2;
         // Save the current cell for undo
         captureCell(x_cor, y_cor);
-        grid.setCell(this, x_cor, y_cor, alive, player);
+        grid.setCell(this, x_cor, y_cor, playerNr);
 
         return expoBoard;
     }
@@ -78,7 +74,7 @@ public class Board implements BoardInter {
     public PlayerNr[][] undo() {
         grid.restore(MemStack.pop());
 
-        return expo.gridExport(grid.getGrid(this));
+        return grid.getGrid(this);
     }
 
     private void clearStack() {

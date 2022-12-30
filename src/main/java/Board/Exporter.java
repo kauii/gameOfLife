@@ -6,8 +6,8 @@ public class Exporter {
 
     private PlayerNr[][] expoGrid;
 
-    public Exporter(int dim){
-        expoGrid=new PlayerNr[dim][dim];
+    public Exporter(){
+        //expoGrid=new PlayerNr[dim][dim];
     }
 
     // Convert BitSet[][] to PlayerNr[][]

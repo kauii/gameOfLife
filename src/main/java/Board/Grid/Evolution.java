@@ -1,8 +1,7 @@
 package Board.Grid;
 
 import Board.Board;
-
-import java.util.BitSet;
+import Board.PlayerNr;
 
 /*
  * Evolution class to progress to the next evolution
@@ -19,7 +18,7 @@ public class Evolution {
             return;
         }
         // Create copy of grid for iteration
-        BitSet[][] old_grid = copyGrid(grid.getGrid(this));
+        PlayerNr[][] old_grid = grid.getGrid(this).clone(); //copyGrid(grid.getGrid(this));
         //BitSet[][] old_grid = grid.getGrid(this).clone();
         int dim = old_grid.length;
         int[] neighbours;
@@ -29,17 +28,21 @@ public class Evolution {
             for (int y = 0; y < dim; y++) {
                 neighbours = getNeighbours(old_grid, x, y);
                 // If alive (index 0 == 1)
-                if (old_grid[x][y].get(0)) {
+                if (old_grid[x][y]!=PlayerNr.DEAD) {
                     // If less than 2 or more than 3 neighbours -> kill cell
                     if (neighbours[0] < 2 || neighbours[0] > 3) {
-                        grid.setCell(this, x, y, false, false);
+                        grid.setCell(this, x, y, PlayerNr.DEAD);
                     }
                     // else -> do nothing
                 } else {
                     // If neighbours == 3 -> create new cell
                     if (neighbours[0] == 3) {
                         // Create cell for player with most cells nearby
-                        grid.setCell(this, x, y, true, neighbours[1] != 0);
+                        if(neighbours[1]==0){
+                            grid.setCell(this,x,y,PlayerNr.PLAYER1);
+                        }else{
+                            grid.setCell(this,x,y,PlayerNr.PLAYER2);
+                        }
                     }
                 }
             }
@@ -47,20 +50,18 @@ public class Evolution {
     }
 
     // Creates a copy of the grid as not to interfere with manipulations
-    private BitSet[][] copyGrid(BitSet[][] grid) {
+    private PlayerNr[][] copyGrid(PlayerNr[][] grid) {
         int dim = grid.length;
-        BitSet[][] res = new BitSet[dim][dim];
+        PlayerNr[][] res = new PlayerNr[dim][dim];
         for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                res[i][j] = (BitSet) grid[i][j].clone();
-            }
+            System.arraycopy(grid[i], 0, res[i], 0, dim);
         }
 
         return res;
     }
 
     // Get the number of neighbours and the player with the majority of cells
-    private int[] getNeighbours(BitSet[][] old_grid, int x_cor, int y_cor) {
+    private int[] getNeighbours(PlayerNr[][] old_grid, int x_cor, int y_cor) {
         int[] res = new int[2];       // [number of neighbours, player most cells]
         // Cell counter
         int neighbours = 0;
@@ -68,7 +69,7 @@ public class Evolution {
         int player_1 = 0;
         int player_2 = 0;
         // Cell status
-        int status;
+        PlayerNr status;
 
         // Iterate through all eight neighbouring cells
         for (int i = -1; i <= 1; i++) {
@@ -77,10 +78,10 @@ public class Evolution {
                 if (!(i == 0 && j == 0)) {
                     status = getCellStatus(old_grid, x_cor + i, y_cor + j);
                     // Check if cell alive and act accordingly
-                    if (status == 1) {
+                    if (status == PlayerNr.PLAYER1) {
                         neighbours++;
                         player_1++;
-                    } else if (status == 2) {
+                    } else if (status == PlayerNr.PLAYER2) {
                         neighbours++;
                         player_2++;
                     }
@@ -97,22 +98,12 @@ public class Evolution {
     }
 
     // Get the status and player of a specific cell (0=dead, 1=player_1, 2=player_2
-    private int getCellStatus(BitSet[][] old_grid, int x_cor, int y_cor) {
+    private PlayerNr getCellStatus(PlayerNr[][] old_grid, int x_cor, int y_cor) {
         // Try-catch
         try {
-            // If cell not alive
-            if (!old_grid[x_cor][y_cor].get(0)) {
-                return 0;
-            } else {
-                // If player !true -> player 1
-                if (!old_grid[x_cor][y_cor].get(1)) {
-                    return 1;
-                } else {
-                    return 2;
-                }
-            }
+            return old_grid[x_cor][y_cor];
         } catch (ArrayIndexOutOfBoundsException e) {
-            return 0;
+            return PlayerNr.DEAD;
         }
 
     }
