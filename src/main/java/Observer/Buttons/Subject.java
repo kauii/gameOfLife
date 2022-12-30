@@ -1,6 +1,4 @@
-package GUI.Frames;
-
-import Game.Observer;
+package Observer.Buttons;
 
 import java.awt.event.ActionEvent;
 

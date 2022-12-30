@@ -3,8 +3,10 @@ package Game;
 import Board.Board;
 import GUI.Frames.GameOfLife;
 import Board.Cell;
+import Observer.Buttons.Observer;
+import Observer.Board.CellObserver;
 
-public class Game implements Observer {
+public class Game implements Observer, CellObserver {
     Singleton players = Singleton.getInstance();
     private Board board;
     private Player player1;
@@ -32,6 +34,7 @@ public class Game implements Observer {
 
         // register observer for board panel and gof frame
         gui.registerObserver(this);
+        gui.registerCellObserver(this);
     }
 
     private void updatePlayerCells() {
@@ -53,17 +56,7 @@ public class Game implements Observer {
         }
     }
 
-    @Override
-    public void updateGrid(Cell[][] grid) {
-        GridIterator iterator = new GridIterator(grid);
-        while (iterator.hasNext()) {
-            int row = iterator.getRow();
-            int col = iterator.getCol();
-            Cell cell = iterator.next();
-            board.setCell(row, col, cell);
-        }
-        updatePlayerCells();
-    }
+
 
     @Override
     public void skipGen() {
@@ -79,7 +72,6 @@ public class Game implements Observer {
         checkWinner();
     }
 
-
     @Override
     public void undo() {
         gui.setBoard(board.undo());
@@ -90,4 +82,10 @@ public class Game implements Observer {
         board.clearStack();
     }
 
+    @Override
+    public void updateCell(int row, int col, Cell cell) {
+        System.out.println("setCell("+row+","+col+","+cell+")");
+        board.setCell(row, col, cell);
+        updatePlayerCells();
+    }
 }

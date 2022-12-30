@@ -1,6 +1,6 @@
 package GUI.Panels;
 
-import GUI.JObserver;
+import Observer.Board.JObserver;
 import Game.Player;
 import Game.Singleton;
 

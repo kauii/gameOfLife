@@ -1,9 +1,8 @@
-package Game;
+package Observer.Buttons;
 
 import Board.Cell;
 
 public interface Observer {
-    void updateGrid(Cell[][] grid);
 
     void skipGen();
     void undo();

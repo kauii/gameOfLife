@@ -1,6 +1,6 @@
 package GUI.Panels;
 
-import GUI.JObserver;
+import Observer.Board.*;
 import Game.GridIterator;
 import Game.Player;
 import Game.Singleton;
@@ -15,13 +15,14 @@ import java.util.List;
 
 import static Board.Cell.*;
 
-public class BoardPanel extends JPanel implements MouseListener,JSubject {
+public class BoardPanel extends JPanel implements MouseListener, JSubject, CellSubject {
 
     Singleton players = Singleton.getInstance();
     private Player activePlayer;
     private Player player1 = players.getPlayer(0);
     private Player player2 = players.getPlayer(1);
     private final List<JObserver> observers = new ArrayList<>();
+    private final List<CellObserver> cellObservers = new ArrayList<>();
     private Cell[][] grid;
     private final int cellSize = 10; // size of each cell in pixels
     private final int rows;
@@ -78,16 +79,17 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
                 if (!cellPlaced) {
                     grid[y][x] = PLAYER1;
                     cellPlaced = true;
+                    notifyCellObserver(y,x,PLAYER1);
                 }
             }
             else if (inBoard(x, y) && grid[y][x] == PLAYER2) {
                 if (!cellKilled) {
                     grid[y][x] = DEAD;
                     cellKilled = true;
+                    notifyCellObserver(y,x,DEAD);
                 }
             }
             repaint();
-            notifyObserver();
         }
         else {
 
@@ -95,17 +97,19 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
                 if (!cellPlaced) {
                     grid[y][x] = PLAYER2;
                     cellPlaced = true;
+                    notifyCellObserver(y,x,PLAYER2);
                 }
             }
             else if (inBoard(x, y) && grid[y][x] == PLAYER1) {
                 if (!cellKilled) {
                     grid[y][x] = DEAD;
                     cellKilled = true;
+                    notifyCellObserver(y,x,DEAD);
                 }
             }
             repaint();
-            notifyObserver();
         }
+        notifyObserver();
     }
 
     public void setGrid(Cell[][] pGrid) {
@@ -121,6 +125,8 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
                     ++countCells;
                     grid[y][x] = PLAYER1;
                     grid[rows - 1 - y][cols - 1 - x] = PLAYER2;
+                    notifyCellObserver(y,x,PLAYER1);
+                    notifyCellObserver(rows - 1 - y, cols - 1 - x, PLAYER2);
                 }
             }
             else if (grid[y][x] == PLAYER1 || grid[rows - 1 - y][cols - 1 - x] == PLAYER2) {
@@ -128,6 +134,8 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
                 --countCells;
                 grid[y][x] = DEAD;
                 grid[rows - 1 - y][cols - 1 - x] = DEAD;
+                notifyCellObserver(y,x,DEAD);
+                notifyCellObserver(rows - 1 - y, cols - 1 - x, DEAD);
             }
             repaint();
             notifyObserver();
@@ -213,6 +221,18 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
                     o.enableEvolve(true);
                 }
             }
+        }
+    }
+
+    @Override
+    public void registerCellObserver(CellObserver o) {
+        this.cellObservers.add(o);
+    }
+
+    @Override
+    public void notifyCellObserver(int row, int col, Cell cell) {
+        for (CellObserver o : cellObservers) {
+            o.updateCell(row, col, cell);
         }
     }
 }

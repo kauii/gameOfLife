@@ -1,4 +1,4 @@
-package GUI;
+package Observer.Board;
 
 // This observer is only for updating the GUI
 

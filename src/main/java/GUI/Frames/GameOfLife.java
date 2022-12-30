@@ -1,10 +1,11 @@
 package GUI.Frames;
 
 import Board.Cell;
-import GUI.JObserver;
+import Observer.Board.JObserver;
 import GUI.Panels.BoardPanel;
 import GUI.Panels.StatisticsPanel;
-import Game.Observer;
+import Observer.Board.CellObserver;
+import Observer.Buttons.*;
 import Game.Player;
 import Game.Singleton;
 
@@ -93,7 +94,6 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     public void notifyObserver(ActionEvent e) {
         String command = e.getActionCommand();
         for (Observer o : observers) {
-            o.updateGrid(board.getBoard());
             if (Objects.equals(command, evolve.getActionCommand())) {
                 o.skipGen();
             }
@@ -225,8 +225,8 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         // update live cells
         statistics.setAlive(null);
     }
-    public void enableUndoButton(boolean enable) {
-        undo.setEnabled(enable);
+    public void registerCellObserver(CellObserver o) {
+        board.registerCellObserver(o);
     }
 
     public void declareWinner(Player player) {
