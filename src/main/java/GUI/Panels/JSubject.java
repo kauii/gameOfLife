@@ -1,6 +1,6 @@
 package GUI.Panels;
 
-import GUI.Frames.JObserver;
+import GUI.JObserver;
 
 public interface JSubject {
     void registerObserver(JObserver o);
