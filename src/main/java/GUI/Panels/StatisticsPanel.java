@@ -162,15 +162,15 @@ public class StatisticsPanel extends JPanel implements JObserver {
     }
 
     @Override
-    public void colorPlaced() {
-        placed1.setForeground(new Color (0,200,0));
-        placed2.setForeground(new Color (0,200,0));
+    public void colorPlaced(Color color) {
+        placed1.setForeground(color);
+        placed2.setForeground(color);
     }
 
     @Override
-    public void colorKilled() {
-        killed1.setForeground(new Color (0,200,0));
-        killed2.setForeground(new Color (0,200,0));
+    public void colorKilled(Color color) {
+        killed1.setForeground(color);
+        killed2.setForeground(color);
     }
 
     @Override

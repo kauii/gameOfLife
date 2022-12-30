@@ -2,6 +2,8 @@ package Observer.Board;
 
 // This observer is only for updating the GUI
 
+import java.awt.*;
+
 public interface JObserver {
 
     void enableStart(boolean enable);
@@ -10,7 +12,7 @@ public interface JObserver {
 
     void enableUndo(boolean enable);
 
-    void colorPlaced();
+    void colorPlaced(Color color);
 
-    void colorKilled();
+    void colorKilled(Color color);
 }

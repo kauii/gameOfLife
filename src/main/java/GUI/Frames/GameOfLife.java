@@ -173,7 +173,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener(e -> {
             // event handling
-            undoButton.setEnabled(false);
+            board.undoLastAction();
             notifyObserver(e);
 
         });
@@ -206,12 +206,12 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     public void enableUndo(boolean enable) { undo.setEnabled(enable); }
 
     @Override
-    public void colorPlaced() {
+    public void colorPlaced(Color color) {
 
     }
 
     @Override
-    public void colorKilled() {
+    public void colorKilled(Color color) {
 
     }
     private void resetAll() {

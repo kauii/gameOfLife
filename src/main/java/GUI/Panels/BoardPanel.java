@@ -32,6 +32,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
     private boolean preRound = true;
     private boolean cellPlaced = false;
     private boolean cellKilled = false;
+    private boolean lastAction = true;
 
     public BoardPanel(Cell[][] grid) {
         this.grid = grid;
@@ -79,6 +80,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
                 if (!cellPlaced) {
                     grid[y][x] = PLAYER1;
                     cellPlaced = true;
+                    lastAction = true;
                     notifyCellObserver(y,x,PLAYER1);
                 }
             }
@@ -86,6 +88,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
                 if (!cellKilled) {
                     grid[y][x] = DEAD;
                     cellKilled = true;
+                    lastAction = false;
                     notifyCellObserver(y,x,DEAD);
                 }
             }
@@ -97,6 +100,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
                 if (!cellPlaced) {
                     grid[y][x] = PLAYER2;
                     cellPlaced = true;
+                    lastAction = true;
                     notifyCellObserver(y,x,PLAYER2);
                 }
             }
@@ -104,6 +108,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
                 if (!cellKilled) {
                     grid[y][x] = DEAD;
                     cellKilled = true;
+                    lastAction = false;
                     notifyCellObserver(y,x,DEAD);
                 }
             }
@@ -144,6 +149,21 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
 
     public void startGame() {
         preRound = false;
+    }
+
+    public void undoLastAction() {
+        if (lastAction) {
+            cellPlaced = false;
+            if (cellKilled) {
+                lastAction = false;
+            }
+        } else {
+            cellKilled = false;
+            if (cellPlaced) {
+                lastAction = true;
+            }
+        }
+        notifyObserver();
     }
 
     // MouseListener methods
@@ -209,16 +229,25 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
             else {
                 o.enableStart(false);
                 if (cellPlaced) {
-                    o.colorPlaced();
+                    o.colorPlaced(new Color (0,200,0));
                     o.enableUndo(true);
                 }
                 if  (cellKilled) {
-                    o.colorKilled();
+                    o.colorKilled(new Color (0,200,0));
                     o.enableUndo(true);
                 }
                 // notify if a cell is placed & a cell is killed
                 if (cellPlaced && cellKilled) {
                     o.enableEvolve(true);
+                }
+                if (!cellPlaced && !cellKilled) {
+                    o.enableUndo(false);
+                }
+                if (!cellPlaced) {
+                    o.colorPlaced(Color.RED);
+                }
+                if (!cellKilled) {
+                    o.colorKilled(Color.RED);
                 }
             }
         }
