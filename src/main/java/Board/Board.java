@@ -3,9 +3,6 @@ package Board;
 /*
  * FACADE DESIGN PATTERN
  * Each Board manipulation is handled through the Board class
- *
- * COMMAND DESIGN PATTERN
- * Invoker
  */
 
 import Board.Grid.Evolution;
@@ -58,7 +55,7 @@ public class Board implements BoardInter {
     /*
      * MEMENTO DESIGN PATTERN
      * Caretaker function.
-     * Saves the previous states.
+     * Saves the previous state from changed cells.
      */
 
     // Saving the current state of a cell as a memento in the stack
@@ -69,11 +66,12 @@ public class Board implements BoardInter {
     public PlayerNr[][] undo() {
         try {
             grid.restore(MemStack.pop());
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
         return grid.getGrid(this);
     }
 
-    private void clearStack() {
+    public void clearStack() {
         MemStack = new Stack<>();
     }
 
