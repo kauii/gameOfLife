@@ -1,6 +1,6 @@
 package Game;
 
-import Board.PlayerNr;
+import Board.Cell;
 
 import java.awt.*;
 
@@ -10,7 +10,7 @@ public class Player {
     private final Color color;
     private int liveCells;
 
-    private PlayerNr aNr;
+    private Cell aNr;
 
     public Player(String name, Color color) {
         this.name = name;
@@ -22,11 +22,11 @@ public class Player {
 
     public Color getColor() { return color; }
 
-    public PlayerNr getPlayerNr() { return aNr; }
+    public Cell getPlayerNr() { return aNr; }
 
     public int getLiveCells() { return liveCells; }
 
-    public void setPlayerNr(PlayerNr pNr) { this.aNr = pNr; }
+    public void setPlayerNr(Cell pNr) { this.aNr = pNr; }
 
     public void setLiveCells(int cells) {
         liveCells = cells;

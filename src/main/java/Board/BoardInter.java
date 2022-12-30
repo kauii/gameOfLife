@@ -1,14 +1,14 @@
 package Board;
 
 public interface BoardInter {
-    PlayerNr[][] getBoard();
+    Cell[][] getBoard();
 
-    PlayerNr[][] setCell(int x_cor, int y_cor, PlayerNr playerNr);
+    Cell[][] setCell(int x_cor, int y_cor, Cell cell);
 
     void evolve();
 
     int[] getPlayerCells();
 
-    PlayerNr[][] undo();
+    Cell[][] undo();
 
 }

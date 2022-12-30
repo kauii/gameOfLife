@@ -1,7 +1,7 @@
 package Board.Grid;
 
 import Board.Board;
-import Board.PlayerNr;
+import Board.Cell;
 
 /*
  * Evolution class to progress to the next evolution
@@ -18,7 +18,7 @@ public class Evolution {
             return;
         }
         // Create copy of grid for iteration
-        PlayerNr[][] old_grid = grid.getGrid(this).clone(); //copyGrid(grid.getGrid(this));
+        Cell[][] old_grid = grid.getGrid(this).clone(); //copyGrid(grid.getGrid(this));
         //BitSet[][] old_grid = grid.getGrid(this).clone();
         int dim = old_grid.length;
         int[] neighbours;
@@ -28,10 +28,10 @@ public class Evolution {
             for (int y = 0; y < dim; y++) {
                 neighbours = getNeighbours(old_grid, x, y);
                 // If alive (index 0 == 1)
-                if (old_grid[x][y]!=PlayerNr.DEAD) {
+                if (old_grid[x][y]!= Cell.DEAD) {
                     // If less than 2 or more than 3 neighbours -> kill cell
                     if (neighbours[0] < 2 || neighbours[0] > 3) {
-                        grid.setCell(this, x, y, PlayerNr.DEAD);
+                        grid.setCell(this, x, y, Cell.DEAD);
                     }
                     // else -> do nothing
                 } else {
@@ -39,9 +39,9 @@ public class Evolution {
                     if (neighbours[0] == 3) {
                         // Create cell for player with most cells nearby
                         if(neighbours[1]==0){
-                            grid.setCell(this,x,y,PlayerNr.PLAYER1);
+                            grid.setCell(this,x,y, Cell.PLAYER1);
                         }else{
-                            grid.setCell(this,x,y,PlayerNr.PLAYER2);
+                            grid.setCell(this,x,y, Cell.PLAYER2);
                         }
                     }
                 }
@@ -50,7 +50,7 @@ public class Evolution {
     }
 
     // Get the number of neighbours and the player with the majority of cells
-    private int[] getNeighbours(PlayerNr[][] old_grid, int x_cor, int y_cor) {
+    private int[] getNeighbours(Cell[][] old_grid, int x_cor, int y_cor) {
         int[] res = new int[2];       // [number of neighbours, player most cells]
         // Cell counter
         int neighbours = 0;
@@ -58,7 +58,7 @@ public class Evolution {
         int player_1 = 0;
         int player_2 = 0;
         // Cell status
-        PlayerNr status;
+        Cell status;
 
         // Iterate through all eight neighbouring cells
         for (int i = -1; i <= 1; i++) {
@@ -67,10 +67,10 @@ public class Evolution {
                 if (!(i == 0 && j == 0)) {
                     status = getCellStatus(old_grid, x_cor + i, y_cor + j);
                     // Check if cell alive and act accordingly
-                    if (status == PlayerNr.PLAYER1) {
+                    if (status == Cell.PLAYER1) {
                         neighbours++;
                         player_1++;
-                    } else if (status == PlayerNr.PLAYER2) {
+                    } else if (status == Cell.PLAYER2) {
                         neighbours++;
                         player_2++;
                     }
@@ -87,12 +87,12 @@ public class Evolution {
     }
 
     // Get the status and player of a specific cell (0=dead, 1=player_1, 2=player_2
-    private PlayerNr getCellStatus(PlayerNr[][] old_grid, int x_cor, int y_cor) {
+    private Cell getCellStatus(Cell[][] old_grid, int x_cor, int y_cor) {
         // Try-catch
         try {
             return old_grid[x_cor][y_cor];
         } catch (ArrayIndexOutOfBoundsException e) {
-            return PlayerNr.DEAD;
+            return Cell.DEAD;
         }
 
     }

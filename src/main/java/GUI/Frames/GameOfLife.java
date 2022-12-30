@@ -1,6 +1,6 @@
 package GUI.Frames;
 
-import Board.PlayerNr;
+import Board.Cell;
 import GUI.JObserver;
 import GUI.Panels.BoardPanel;
 import GUI.Panels.StatisticsPanel;
@@ -19,7 +19,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
 
     private BoardPanel board;
     private StatisticsPanel statistics;
-    private final PlayerNr[][] aGrid;
+    private final Cell[][] aGrid;
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
     private JButton start;
@@ -29,7 +29,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     private Player active;
 
 
-    public GameOfLife(PlayerNr[][] grid) {
+    public GameOfLife(Cell[][] grid) {
 
         aGrid = grid;
 
@@ -183,7 +183,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         return buttonPanel;
     }
 
-    public void setBoard(PlayerNr[][] grid) {
+    public void setBoard(Cell[][] grid) {
         board.setGrid(grid);
         board.repaint();
     }

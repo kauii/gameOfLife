@@ -2,7 +2,7 @@ package Game;
 
 import Board.Board;
 import GUI.Frames.GameOfLife;
-import Board.PlayerNr;
+import Board.Cell;
 
 public class Game implements Observer {
     Singleton players = Singleton.getInstance();
@@ -54,12 +54,12 @@ public class Game implements Observer {
     }
 
     @Override
-    public void updateGrid(PlayerNr[][] grid) {
+    public void updateGrid(Cell[][] grid) {
         GridIterator iterator = new GridIterator(grid);
         while (iterator.hasNext()) {
             int row = iterator.getRow();
             int col = iterator.getCol();
-            PlayerNr cell = iterator.next();
+            Cell cell = iterator.next();
             board.setCell(row, col, cell);
         }
         updatePlayerCells();

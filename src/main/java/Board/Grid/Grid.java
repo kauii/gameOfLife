@@ -1,7 +1,7 @@
 package Board.Grid;
 
 import Board.Board;
-import Board.PlayerNr;
+import Board.Cell;
 
 /*
  * Grid shall only be created by Board
@@ -16,7 +16,7 @@ import Board.PlayerNr;
  */
 
 public class Grid {
-    private final PlayerNr[][] grid;
+    private final Cell[][] grid;
     private final int dim;
 
     // Constructor, creates the grid
@@ -26,18 +26,18 @@ public class Grid {
         }
         dim = dimension;
         // Create 2D-BitSet array
-        grid = new PlayerNr[dimension][dimension];
+        grid = new Cell[dimension][dimension];
         // Initialized all as DEAD
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
-                grid[i][j] = PlayerNr.DEAD;
+                grid[i][j] = Cell.DEAD;
             }
         }
     }
 
     // Set value of a cell to dead or alive + player
     // Arguments: true=1, false=0
-    public void setCell(Object o, int x_cor, int y_cor, PlayerNr player) {
+    public void setCell(Object o, int x_cor, int y_cor, Cell player) {
         // Call has to be made by Board or Evolution or Grid, otherwise no action
         if (o instanceof Board || o instanceof Evolution || o instanceof Grid) {
 
@@ -47,7 +47,7 @@ public class Grid {
     }
 
     // Returns the grid as BitSet to the Memento
-    public PlayerNr[][] getGrid(Object o) {
+    public Cell[][] getGrid(Object o) {
         // If call not made by Board or Evolution, null return
         if (!(o instanceof Board || o instanceof Evolution)) {
             return null;
@@ -64,9 +64,9 @@ public class Grid {
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 // If cell alive
-                if (grid[i][j] != PlayerNr.DEAD) {
+                if (grid[i][j] != Cell.DEAD) {
                     // Check if player 1
-                    if (grid[i][j] == PlayerNr.PLAYER1) {
+                    if (grid[i][j] == Cell.PLAYER1) {
                         p1++;
                     } else {
                         p2++;
@@ -87,7 +87,7 @@ public class Grid {
     private class Memento {
         private final int x_cor;
         private final int y_cor;
-        private final PlayerNr cell;
+        private final Cell cell;
 
         // Constructor - Creates a clone of the current state
         private Memento(int x_cor, int y_cor) {
@@ -100,7 +100,7 @@ public class Grid {
             return new int[]{x_cor, y_cor};
         }
 
-        private PlayerNr getCell() {
+        private Cell getCell() {
             return cell;
         }
     }
@@ -114,7 +114,7 @@ public class Grid {
     public void restore(Object o) {
         Memento m = (Memento) o;
         int[] cor = m.getCoordinates();
-        PlayerNr cell = m.getCell();
+        Cell cell = m.getCell();
         setCell(this, cor[0], cor[1], cell);
     }
 

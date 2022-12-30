@@ -26,14 +26,14 @@ public class Board implements BoardInter {
 
     // Exports board as 2D-PlayerNr array.
     // DEAD, PLAYER1, PLAYER2
-    public PlayerNr[][] getBoard() {
+    public Cell[][] getBoard() {
         return grid.getGrid(this);
     }
 
-    public PlayerNr[][] setCell(int x_cor, int y_cor, PlayerNr playerNr) {
+    public Cell[][] setCell(int x_cor, int y_cor, Cell cell) {
         // Save the current cell for undo
         captureCell(x_cor, y_cor);
-        grid.setCell(this, x_cor, y_cor, playerNr);
+        grid.setCell(this, x_cor, y_cor, cell);
 
         return grid.getGrid(this);
     }
@@ -63,7 +63,7 @@ public class Board implements BoardInter {
         MemStack.push(grid.getMemento(x_cor, y_cor));
     }
 
-    public PlayerNr[][] undo() {
+    public Cell[][] undo() {
         try {
             grid.restore(MemStack.pop());
         } catch (Exception ignored) {

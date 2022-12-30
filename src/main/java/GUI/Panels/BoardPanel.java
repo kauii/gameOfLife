@@ -4,7 +4,7 @@ import GUI.JObserver;
 import Game.GridIterator;
 import Game.Player;
 import Game.Singleton;
-import Board.PlayerNr;
+import Board.Cell;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static Board.PlayerNr.*;
+import static Board.Cell.*;
 
 public class BoardPanel extends JPanel implements MouseListener,JSubject {
 
@@ -22,7 +22,7 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
     private Player player1 = players.getPlayer(0);
     private Player player2 = players.getPlayer(1);
     private final List<JObserver> observers = new ArrayList<>();
-    private PlayerNr[][] grid;
+    private Cell[][] grid;
     private final int cellSize = 10; // size of each cell in pixels
     private final int rows;
     private final int cols; // dimensions of the grid
@@ -32,7 +32,7 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
     private boolean cellPlaced = false;
     private boolean cellKilled = false;
 
-    public BoardPanel(PlayerNr[][] grid) {
+    public BoardPanel(Cell[][] grid) {
         this.grid = grid;
         rows = grid.length;
         cols = grid[0].length;
@@ -46,7 +46,7 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
         super.paintComponent(g);
 
         // Map the enums to their colors
-        Map<PlayerNr, Color> colorMap = new HashMap<>();
+        Map<Cell, Color> colorMap = new HashMap<>();
         colorMap.put(PLAYER1, player1.getColor());
         colorMap.put(PLAYER2, player2.getColor());
         colorMap.put(DEAD, Color.WHITE);
@@ -55,7 +55,7 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
         while (iterator.hasNext()) {
             int row = iterator.getRow();
             int col = iterator.getCol();
-            PlayerNr cell = iterator.next();
+            Cell cell = iterator.next();
 
             // Translate the value of grid[row][col] to corresponding color
             Color color = colorMap.get(cell);
@@ -108,7 +108,7 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
         }
     }
 
-    public void setGrid(PlayerNr[][] pGrid) {
+    public void setGrid(Cell[][] pGrid) {
         grid = pGrid;
         repaint();
     }
@@ -160,7 +160,7 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
 
     public void clear() {
         // Reset the game board to its initial state
-        for (PlayerNr[] cell : grid) {
+        for (Cell[] cell : grid) {
             Arrays.fill(cell, DEAD);
         }
         // Reset global variables
@@ -181,7 +181,7 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
         activePlayer = (activePlayer == player1) ? player2 : player1;
     }
 
-    public PlayerNr[][] getBoard() {
+    public Cell[][] getBoard() {
         return grid;
     }
 

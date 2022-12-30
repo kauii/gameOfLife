@@ -1,6 +1,6 @@
 package Board;
 
-public enum PlayerNr {
+public enum Cell {
 
     DEAD,
     PLAYER1,

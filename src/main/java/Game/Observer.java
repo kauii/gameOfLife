@@ -1,9 +1,9 @@
 package Game;
 
-import Board.PlayerNr;
+import Board.Cell;
 
 public interface Observer {
-    void updateGrid(PlayerNr[][] grid);
+    void updateGrid(Cell[][] grid);
 
     void skipGen();
     void undo();
