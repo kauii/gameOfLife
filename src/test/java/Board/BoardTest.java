@@ -1,14 +1,14 @@
 package Board;
-
+/*
 import Game.PlayerNr;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-
+*/
 /*
  * Entire Board Package tested through Board
  */
-
+/*
 class BoardTest {
     Board board;
     private final int dim = 10;
@@ -112,3 +112,5 @@ class BoardTest {
         assertArrayEquals(cells, board.getPlayerCells());
     }
 }
+
+*/

@@ -1,5 +1,5 @@
 package Board;
-
+/*
 import Game.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GridTest {
-/*
+
     @Test
     void constructor() {
         Game game = new Game();
@@ -18,5 +18,6 @@ class GridTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
-*/
+
 }
+*/
