@@ -150,17 +150,13 @@ public class StatisticsPanel extends JPanel implements JObserver {
 
     public void setAlive(Player player) {
         if (player == null) {
-            System.out.println("Hallo");
             alive1.setText("0");
             alive2.setText("0");
         }
         else if (player == players.getPlayer(0)) {
-            System.out.println("ALIVE1");
-            System.out.println(player.getLiveCells());
             alive1.setText(String.valueOf(player.getLiveCells()));
         }
         else {
-            System.out.println("ALIVE2");
             alive2.setText(String.valueOf(player.getLiveCells()));
         }
     }
@@ -184,6 +180,11 @@ public class StatisticsPanel extends JPanel implements JObserver {
 
     @Override
     public void enableEvolve(boolean enable) {
+
+    }
+
+    @Override
+    public void enableUndo(boolean enable) {
 
     }
 }

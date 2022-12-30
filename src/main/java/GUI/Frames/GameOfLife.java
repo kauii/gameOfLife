@@ -97,6 +97,9 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             if (Objects.equals(command, evolve.getActionCommand())) {
                 o.skipGen();
             }
+            if (Objects.equals(command, undo.getActionCommand())) {
+                o.undo();
+            }
         }
     }
 
@@ -191,6 +194,9 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     public void enableEvolve(boolean enable) {
         evolve.setEnabled(enable);
     }
+
+    @Override
+    public void enableUndo(boolean enable) { undo.setEnabled(enable); }
 
     @Override
     public void colorPlaced() {

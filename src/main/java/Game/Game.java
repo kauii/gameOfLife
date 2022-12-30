@@ -87,7 +87,8 @@ public class Game implements Observer {
 
     @Override
     public void undo() {
-        gui.setBoard(board.undo());
+        board.undo();
+        gui.setBoard(board.getBoard());
     }
 
 }

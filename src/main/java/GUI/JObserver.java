@@ -8,6 +8,8 @@ public interface JObserver {
 
     void enableEvolve(boolean enable);
 
+    void enableUndo(boolean enable);
+
     void colorPlaced();
 
     void colorKilled();

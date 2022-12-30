@@ -202,9 +202,11 @@ public class BoardPanel extends JPanel implements MouseListener,JSubject {
                 o.enableStart(false);
                 if (cellPlaced) {
                     o.colorPlaced();
+                    o.enableUndo(true);
                 }
                 if  (cellKilled) {
                     o.colorKilled();
+                    o.enableUndo(true);
                 }
                 // notify if a cell is placed & a cell is killed
                 if (cellPlaced && cellKilled) {
