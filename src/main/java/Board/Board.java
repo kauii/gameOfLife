@@ -67,8 +67,9 @@ public class Board implements BoardInter {
     }
 
     public PlayerNr[][] undo() {
-        grid.restore(MemStack.pop());
-
+        try {
+            grid.restore(MemStack.pop());
+        }catch (Exception ignored){}
         return grid.getGrid(this);
     }
 
