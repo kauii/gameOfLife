@@ -11,4 +11,6 @@ public interface BoardInter {
 
     Cell[][] undo();
 
+    void clearStack();
+
 }
