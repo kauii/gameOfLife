@@ -1,116 +1,126 @@
 package Board;
-/*
-import Game.PlayerNr;
-import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-*/
-/*
- * Entire Board Package tested through Board
- */
-/*
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 class BoardTest {
-    Board board;
-    private final int dim = 10;
+    private Board board;
 
     @BeforeEach
     void setUp() {
+        int dim = 5;
         board = new Board(dim);
 
-        // Cells setup
-        board.setCell(0, 0, true, PlayerNr.PLAYER1);
-        board.setCell(0, 1, true, PlayerNr.PLAYER1);
-        board.setCell(1, 0, true, PlayerNr.PLAYER2);
+        // Setup some initial cells
+        board.setCell(0, 0, Cell.PLAYER1);
+        board.setCell(0, 1, Cell.PLAYER1);
+        board.setCell(1, 0, Cell.PLAYER2);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getBoard() {
-        // Set 3,3 to Player 2
-        board.setCell(3, 3, false, PlayerNr.PLAYER2);
-        // Create initial save through one evolution
-        board.evolve();
-
-        // Check grid
-        short[][] checkGrid =
+        Cell[][] checkGrid =
                 {
-                        {2, 2, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {3, 2, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.PLAYER2, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD}
                 };
-        //printArray(board.getBoard());
+
         assertArrayEquals(checkGrid, board.getBoard());
-
     }
 
-    @org.junit.jupiter.api.Test
-    void setCell() {
-        // Tested in getBoard() Test
-    }
-
-    @org.junit.jupiter.api.Test
-    void getDimension() {
-        assert (board.getDimension() == dim);
-    }
-
-    @org.junit.jupiter.api.Test
+    @Test
     void evolve() {
-        // 1,1 -> 2 created;
-        // 3,3 & 7,7 & 8,8 -> set 0
-        // Check that over- and underpopulated cells are deleted
-        // Set 2,2 to Player 2 ALIVE
-        board.setCell(3, 3, true, PlayerNr.PLAYER2);
-        // Set 9,9 to Player 2 ALIVE
-        board.setCell(9, 9, true, PlayerNr.PLAYER2);
-        // Set 9,8 to Player 2 ALIVE
-        board.setCell(9, 8, true, PlayerNr.PLAYER2);
-        // Set 8,9 to Player 2 ALIVE
-        board.setCell(8, 9, true, PlayerNr.PLAYER2);
-        // Set 8,8 to Player 2 ALIVE
-        board.setCell(8, 8, true, PlayerNr.PLAYER2);
-        // Set 7,7 to Player 2 ALIVE
-        board.setCell(7, 7, true, PlayerNr.PLAYER2);
+        // Create Overpopulation
+        board.setCell(2, 3, Cell.PLAYER2);
+        board.setCell(3, 2, Cell.PLAYER2);
+        board.setCell(3, 3, Cell.PLAYER1);
+        board.setCell(3, 4, Cell.PLAYER2);
+        board.setCell(4, 3, Cell.PLAYER2);
 
-        // Create initial save through one evolution
-        board.evolve();
-
-        // Check grid
-        short[][] checkGrid =
+        Cell[][] checkGrid =
                 {
-                        {2, 2, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {3, 2, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 3, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 3, 0, 3},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 3, 3},
+                        {Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.PLAYER2, Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.PLAYER2, Cell.PLAYER1, Cell.PLAYER2},
+                        {Cell.DEAD, Cell.DEAD, Cell.PLAYER2, Cell.DEAD, Cell.DEAD}
                 };
-        //printArray(board.getBoard());
+        board.evolve();
         assertArrayEquals(checkGrid, board.getBoard());
     }
 
-    @org.junit.jupiter.api.Test
-    void getHistory() {
-        board.evolve();
-        board.evolve();
-        board.evolve();
-        assert (board.getHistory().size()==3);
-    }
-
-    @org.junit.jupiter.api.Test
+    @Test
     void getPlayerCells() {
-        int[] cells={2,1};
-        assertArrayEquals(cells, board.getPlayerCells());
+        int[] checkCells = {2, 1};
+        assertArrayEquals(checkCells, board.getPlayerCells());
     }
-}
 
-*/
+    @Test
+    void undo() {
+        Cell[][] checkGrid;
+        // Clear stack manually
+        board.clearStack();
+
+        // Change cells
+        board.setCell(4, 4, Cell.PLAYER1);
+        board.setCell(0, 1, Cell.DEAD);
+
+        // Check grid after setting cells
+        checkGrid = new Cell[][]
+                {
+                        {Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.PLAYER2, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.PLAYER1}
+                };
+
+        assertArrayEquals(checkGrid, board.getBoard());
+
+        // Undo 1
+        board.undo();
+        checkGrid = new Cell[][]
+                {
+                        {Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.PLAYER2, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.PLAYER1}
+                };
+
+        assertArrayEquals(checkGrid, board.getBoard());
+
+        // Undo 2
+        board.undo();
+        checkGrid = new Cell[][]
+                {
+                        {Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.PLAYER2, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD}
+                };
+
+        assertArrayEquals(checkGrid, board.getBoard());
+
+        // Undo 3 - invalid
+        // Undo 2
+        board.undo();
+        checkGrid = new Cell[][]
+                {
+                        {Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.PLAYER2, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD}
+                };
+
+        assertArrayEquals(checkGrid, board.getBoard());
+    }
+
+}
