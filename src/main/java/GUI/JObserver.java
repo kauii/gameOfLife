@@ -1,4 +1,6 @@
-package GUI.Frames;
+package GUI;
+
+// This observer is only for updating the GUI
 
 public interface JObserver {
 

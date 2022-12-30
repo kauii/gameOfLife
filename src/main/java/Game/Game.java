@@ -67,6 +67,7 @@ public class Game implements Observer {
             PlayerNr cell = iterator.next();
             board.setCell(row, col, cell);
         }
+        updatePlayerCells();
     }
 
     @Override

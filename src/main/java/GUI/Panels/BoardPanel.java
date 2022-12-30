@@ -1,9 +1,7 @@
 package GUI.Panels;
 
-import GUI.Frames.JObserver;
+import GUI.JObserver;
 import Game.GridIterator;
-import Game.Observer;
-import GUI.Subject;
 import Game.Player;
 import Game.Singleton;
 import Board.PlayerNr;
