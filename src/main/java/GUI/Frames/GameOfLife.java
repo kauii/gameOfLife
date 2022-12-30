@@ -39,7 +39,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
 
         initialize(getContentPane());
 
-        setSize(1024,768);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
         setLocationRelativeTo(null);
         setResizable(true);
@@ -51,7 +51,6 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     public void initialize(Container container) {
 
         container.setLayout(new BorderLayout());
-        container.setSize(new Dimension(1024,768));
         container.setBackground(Color.white);
 
         // create buttons for button panel
@@ -69,7 +68,12 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
 
         // create board panel
         board = new BoardPanel(aGrid);
-        JScrollPane scrollPane = new JScrollPane(board);
+        JPanel outerPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        outerPanel.add(board, c);
+        JScrollPane scrollPane = new JScrollPane(outerPanel);
 
         // register observer
         board.registerObserver(this);
@@ -243,7 +247,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             JOptionPane.showMessageDialog(this,player.getName() + " won!","Game Over",JOptionPane.INFORMATION_MESSAGE);
         }
         String[] options = new String[] {"New Round", "Exit"};
-        int response = JOptionPane.showOptionDialog(this, "What do you want to do?", "Game Over", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null, options, options[0]);
+        int response = JOptionPane.showOptionDialog(this, "Do you want to play a new round?", "Game Over", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null, options, options[0]);
         if (response == 0) {
             resetAll();
         }
