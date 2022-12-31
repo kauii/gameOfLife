@@ -14,25 +14,22 @@ import java.util.*;
 import java.util.List;
 
 import static Board.Cell.*;
+import static GUI.Panels.Action.*;
 
 public class BoardPanel extends JPanel implements MouseListener, JSubject, CellSubject {
 
     Singleton players = Singleton.getInstance();
     private Player activePlayer;
-    private Player player1 = players.getPlayer(0);
-    private Player player2 = players.getPlayer(1);
+    private final Player player1 = players.getPlayer(0);
+    private final Player player2 = players.getPlayer(1);
     private final List<JObserver> observers = new ArrayList<>();
     private final List<CellObserver> cellObservers = new ArrayList<>();
     private Cell[][] grid;
-    private final int cellSize = 10; // size of each cell in pixels
-    private final int rows;
-    private final int cols; // dimensions of the grid
-    private int zoom = 1; // scale factor for the cells
+    private final List<Action> actions = new ArrayList<>();
+    private final int cellSize = 10;
+    private final int rows, cols;
     private int countCells = 0;
     private boolean preRound = true;
-    private boolean cellPlaced = false;
-    private boolean cellKilled = false;
-    private boolean lastAction = true;
 
     public BoardPanel(Cell[][] grid) {
         this.grid = grid;
@@ -62,11 +59,11 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
             // Translate the value of grid[row][col] to corresponding color
             Color color = colorMap.get(cell);
             g.setColor(color);
-            g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
+            g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
 
             // Draw a black border around each cell
             g.setColor(Color.BLACK);
-            g.drawRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
+            g.drawRect(col * cellSize, row * cellSize, cellSize, cellSize);
         }
     }
 
@@ -77,18 +74,16 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
     private void play(int x, int y) {
         if (activePlayer == player1) {
             if (inBoard(x, y) && grid[y][x] == DEAD) {
-                if (!cellPlaced) {
+                if (!actions.contains(PLACED)) {
                     grid[y][x] = PLAYER1;
-                    cellPlaced = true;
-                    lastAction = true;
+                    actions.add(PLACED);
                     notifyCellObserver(y,x,PLAYER1);
                 }
             }
             else if (inBoard(x, y) && grid[y][x] == PLAYER2) {
-                if (!cellKilled) {
+                if (!actions.contains(KILLED)) {
                     grid[y][x] = DEAD;
-                    cellKilled = true;
-                    lastAction = false;
+                    actions.add(KILLED);
                     notifyCellObserver(y,x,DEAD);
                 }
             }
@@ -97,18 +92,16 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
         else {
 
             if (inBoard(x, y) && grid[y][x] == DEAD) {
-                if (!cellPlaced) {
+                if (!actions.contains(PLACED)) {
                     grid[y][x] = PLAYER2;
-                    cellPlaced = true;
-                    lastAction = true;
+                    actions.add(PLACED);
                     notifyCellObserver(y,x,PLAYER2);
                 }
             }
             else if (inBoard(x, y) && grid[y][x] == PLAYER1) {
-                if (!cellKilled) {
+                if (!actions.contains(KILLED)) {
                     grid[y][x] = DEAD;
-                    cellKilled = true;
-                    lastAction = false;
+                    actions.add(KILLED);
                     notifyCellObserver(y,x,DEAD);
                 }
             }
@@ -147,30 +140,35 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
         }
     }
 
+    private void updateUI(JObserver o, boolean placed, boolean killed) {
+        Color green = new Color(0,200,0);
+        if (placed) {
+            o.colorPlaced(green);
+        } else {
+            o.colorPlaced(Color.RED);
+        }
+        if (killed) {
+            o.colorKilled(green);
+        } else {
+            o.colorKilled(Color.RED);
+        }
+        o.enableUndo(placed || killed);
+        o.enableEvolve(placed && killed);
+    }
+
     public void startGame() {
         preRound = false;
     }
 
     public void undoLastAction() {
-        if (lastAction) {
-            cellPlaced = false;
-            if (cellKilled) {
-                lastAction = false;
-            }
-        } else {
-            cellKilled = false;
-            if (cellPlaced) {
-                lastAction = true;
-            }
-        }
+        actions.remove(actions.size() - 1);
         notifyObserver();
     }
 
-    // MouseListener methods
     @Override
     public void mousePressed(MouseEvent e) {
-        int x = e.getX() / (cellSize * zoom);
-        int y = e.getY() / (cellSize * zoom);
+        int x = e.getX() / (cellSize);
+        int y = e.getY() / (cellSize);
 
         // place the first 4 cells
         if (preRound) { initialCellPlacement(x, y); }
@@ -194,8 +192,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
         // Reset global variables
         countCells = 0;
         preRound = true;
-        cellPlaced = false;
-        cellKilled = false;
+        actions.clear();
         activePlayer = player1;
 
         // Repaint the panel to reflect the changes
@@ -204,13 +201,8 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
     }
 
     public void changeActivePlayer() {
-        cellPlaced = false;
-        cellKilled = false;
+        actions.clear();
         activePlayer = (activePlayer == player1) ? player2 : player1;
-    }
-
-    public Cell[][] getBoard() {
-        return grid;
     }
 
     @Override
@@ -227,30 +219,10 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
             }
             // turn
             else {
+                boolean placed = actions.contains(PLACED);
+                boolean killed = actions.contains(KILLED);
                 o.enableStart(false);
-                if (cellPlaced) {
-                    o.colorPlaced(new Color (0,200,0));
-                    o.enableUndo(true);
-                }
-                if  (cellKilled) {
-                    o.colorKilled(new Color (0,200,0));
-                    o.enableUndo(true);
-                }
-                // notify if a cell is placed & a cell is killed
-                if (cellPlaced && cellKilled) {
-                    o.enableEvolve(true);
-                }
-                if (!cellPlaced && !cellKilled) {
-                    o.enableUndo(false);
-                }
-                if (!cellPlaced) {
-                    o.colorPlaced(Color.RED);
-                    o.enableEvolve(false);
-                }
-                if (!cellKilled) {
-                    o.colorKilled(Color.RED);
-                    o.enableEvolve(false);
-                }
+                updateUI(o, placed, killed);
             }
         }
     }
