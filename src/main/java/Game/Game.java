@@ -6,6 +6,8 @@ import Board.Cell;
 import Observer.Buttons.Observer;
 import Observer.Board.CellObserver;
 
+import static Board.Cell.DEAD;
+
 public class Game implements Observer, CellObserver {
     Singleton players = Singleton.getInstance();
     private Board board;
@@ -81,6 +83,18 @@ public class Game implements Observer, CellObserver {
     @Override
     public void clearStack() {
         board.clearStack();
+    }
+
+    @Override
+    public void reset() {
+        GridIterator iterator = new GridIterator(board.getBoard());
+        while (iterator.hasNext()) {
+            int row = iterator.getRow();
+            int col = iterator.getCol();
+            board.setCell(row, col, DEAD);
+            iterator.next();
+        }
+        gui.setBoard(board.getBoard());
     }
 
     @Override

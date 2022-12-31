@@ -25,6 +25,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     Singleton players = Singleton.getInstance();
     private final List<Observer> observers = new ArrayList<>();
     private JButton start;
+    private JButton reset;
     private JButton evolve;
     private JButton undo;
     private int genCounter;
@@ -61,7 +62,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
 
         // create buttons for button panel
         start = createStartButton();
-        JButton reset = createResetButton();
+        reset = createResetButton();
         evolve = createEvolve();
         undo = createUndoButton();
 
@@ -113,6 +114,9 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             if (Objects.equals(command, start.getActionCommand())) {
                 o.clearStack();
             }
+            if (Objects.equals(command, reset.getActionCommand())) {
+                o.reset();
+            }
         }
     }
 
@@ -147,6 +151,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
                     JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
             if (confirm == 0) {
                 resetAll();
+                notifyObserver(e);
             }
         });
         return resetButton;

@@ -8,4 +8,5 @@ public interface Observer {
     void undo();
 
     void clearStack();
+    void reset();
 }
