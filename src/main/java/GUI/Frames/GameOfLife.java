@@ -33,7 +33,6 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     private int genCounter;
     private Player active;
 
-
     public GameOfLife(Cell[][] grid) {
 
         aGrid = grid;
@@ -49,6 +48,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         initUI(getContentPane());
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1024,768);
         setVisible(true);
         setResizable(true);
 
