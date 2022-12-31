@@ -206,7 +206,6 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         String command = e.getActionCommand();
         for (Observer o : observers) {
             if (Objects.equals(command, evolve.getActionCommand())) {
-                System.out.println("Hallo?");
                 o.skipGen();
             }
             if (Objects.equals(command, undo.getActionCommand())) {

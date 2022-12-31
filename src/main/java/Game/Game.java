@@ -61,18 +61,10 @@ public class Game implements Observer, CellObserver {
 
     @Override
     public void skipGen() {
-        GridIterator iterator = new GridIterator(board.getBoard());
-        while (iterator.hasNext()) {
-            System.out.println(iterator.getRow()+","+iterator.getCol()+","+iterator.next());
-        }
 
-        System.out.println("NOW EVOLVED");
         // evolve cells
         board.evolve();
         gui.setBoard(board.getBoard());
-        while (iterator.hasNext()) {
-            System.out.println(iterator.getRow()+","+iterator.getCol()+","+iterator.next());
-        }
 
         // update number of player cells
         updatePlayerCells();
@@ -106,7 +98,6 @@ public class Game implements Observer, CellObserver {
     @Override
     public void updateCell(int row, int col, Cell cell) {
         board.setCell(row, col, cell);
-        System.out.println(row + "," + col + "," +cell);
         updatePlayerCells();
     }
 }
