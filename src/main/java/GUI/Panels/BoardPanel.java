@@ -107,7 +107,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
             }
             repaint();
         }
-        notifyObserver();
+        notifyJObserver();
     }
 
     public void setGrid(Cell[][] pGrid) {
@@ -136,12 +136,12 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
                 notifyCellObserver(rows - 1 - y, cols - 1 - x, DEAD);
             }
             repaint();
-            notifyObserver();
+            notifyJObserver();
         }
     }
 
     private void updateUI(JObserver o, boolean placed, boolean killed) {
-        Color green = new Color(0,200,0);
+        Color green = new Color(0,180,0);
         if (placed) {
             o.colorPlaced(green);
         } else {
@@ -162,7 +162,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
 
     public void undoLastAction() {
         actions.remove(actions.size() - 1);
-        notifyObserver();
+        notifyJObserver();
     }
 
     @Override
@@ -197,21 +197,22 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
 
         // Repaint the panel to reflect the changes
         repaint();
-        notifyObserver();
+        notifyJObserver();
     }
 
     public void changeActivePlayer() {
         actions.clear();
+        notifyJObserver();
         activePlayer = (activePlayer == player1) ? player2 : player1;
     }
 
     @Override
-    public void registerObserver(JObserver o) {
+    public void registerJObserver(JObserver o) {
         this.observers.add(o);
     }
 
     @Override
-    public void notifyObserver() {
+    public void notifyJObserver() {
         for (JObserver o : observers) {
             // check initial cell placement
             if (countCells == 6 && preRound) {

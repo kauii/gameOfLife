@@ -31,7 +31,6 @@ public class Game implements Observer, CellObserver {
 
         // determine player 1 player 2
         player1 = players.getPlayer(PLAYER1_INDEX);
-
         player2 = players.getPlayer(PLAYER2_INDEX);
 
         // register observer for board panel and gof frame
@@ -62,15 +61,22 @@ public class Game implements Observer, CellObserver {
 
     @Override
     public void skipGen() {
+        GridIterator iterator = new GridIterator(board.getBoard());
+        while (iterator.hasNext()) {
+            System.out.println(iterator.getRow()+","+iterator.getCol()+","+iterator.next());
+        }
 
+        System.out.println("NOW EVOLVED");
         // evolve cells
         board.evolve();
         gui.setBoard(board.getBoard());
+        while (iterator.hasNext()) {
+            System.out.println(iterator.getRow()+","+iterator.getCol()+","+iterator.next());
+        }
 
         // update number of player cells
         updatePlayerCells();
 
-        // check winner
         checkWinner();
     }
 
@@ -100,6 +106,7 @@ public class Game implements Observer, CellObserver {
     @Override
     public void updateCell(int row, int col, Cell cell) {
         board.setCell(row, col, cell);
+        System.out.println(row + "," + col + "," +cell);
         updatePlayerCells();
     }
 }

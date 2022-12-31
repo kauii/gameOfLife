@@ -23,6 +23,8 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     private StatisticsPanel statistics;
     private final Cell[][] aGrid;
     Singleton players = Singleton.getInstance();
+    Player player1 = players.getPlayer(0);
+    Player player2 = players.getPlayer(1);
     private final List<Observer> observers = new ArrayList<>();
     private JButton start;
     private JButton reset;
@@ -82,12 +84,12 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         JScrollPane scrollPane = new JScrollPane(outerPanel);
 
         // register observer
-        board.registerObserver(this);
+        board.registerJObserver(this);
 
         // create statistics panel
         statistics = new StatisticsPanel();
 
-        board.registerObserver(statistics);
+        board.registerJObserver(statistics);
 
         // add all main panels to the container
         container.add(statistics, BorderLayout.EAST);
@@ -101,10 +103,10 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         start.setEnabled(false);
         evolve.setEnabled(false);
 
-        if (active == players.getPlayer(0)) {
-            statistics.resetPanel(players.getPlayer(0));
+        if (active == player1) {
+            statistics.resetPanel(player1);
         } else {
-            statistics.resetPanel(players.getPlayer(1));
+            statistics.resetPanel(player2);
         }
 
         // update live cells
@@ -120,7 +122,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             board.startGame();
             start.setEnabled(false);
 
-            active = players.getPlayer(0);
+            active = player1;
             statistics.activePanel(active);
 
             notifyObserver(e);
@@ -159,13 +161,14 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             ++genCounter;
             statistics.setGeneration(genCounter);
 
-            active = (active == players.getPlayer(0)) ? players.getPlayer(1) : players.getPlayer(0);
+            // switch active player
+            active = (active == player1) ? player2 : player1;
             statistics.activePanel(active);
+
+            notifyObserver(e);
 
             // update live cells
             players.getList().forEach(statistics::setAlive);
-
-            notifyObserver(e);
         });
         evolveButton.setEnabled(false);
         return evolveButton;
@@ -203,6 +206,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         String command = e.getActionCommand();
         for (Observer o : observers) {
             if (Objects.equals(command, evolve.getActionCommand())) {
+                System.out.println("Hallo?");
                 o.skipGen();
             }
             if (Objects.equals(command, undo.getActionCommand())) {
