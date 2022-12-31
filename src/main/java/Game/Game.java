@@ -75,11 +75,6 @@ public class Game implements Observer, CellObserver {
     @Override
     public void undo() {
         Cell[][] last = board.undo();
-        GridIterator iterator = new GridIterator(last);
-        while (iterator.hasNext()) {
-            System.out.print("("+ iterator.getRow() +","+iterator.getCol()+",");
-            System.out.print(iterator.next()+")\n");
-        }
         gui.setBoard(last);
     }
 
@@ -90,7 +85,6 @@ public class Game implements Observer, CellObserver {
 
     @Override
     public void updateCell(int row, int col, Cell cell) {
-        System.out.println("setCell("+row+","+col+","+cell+")");
         board.setCell(row, col, cell);
         updatePlayerCells();
     }

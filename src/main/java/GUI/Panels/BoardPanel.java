@@ -245,9 +245,11 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
                 }
                 if (!cellPlaced) {
                     o.colorPlaced(Color.RED);
+                    o.enableEvolve(false);
                 }
                 if (!cellKilled) {
                     o.colorKilled(Color.RED);
+                    o.enableEvolve(false);
                 }
             }
         }

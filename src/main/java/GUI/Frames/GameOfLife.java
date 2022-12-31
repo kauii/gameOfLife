@@ -10,6 +10,7 @@ import Game.Player;
 import Game.Singleton;
 
 import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -37,6 +38,11 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         setTitle("Game of Life");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        try {
+            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+        } catch (Exception e) {
+            e.printStackTrace();;
+        }
         initialize(getContentPane());
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);

@@ -3,6 +3,7 @@ package GUI.Frames;
 import Game.*;
 
 import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.util.Objects;
 
@@ -21,13 +22,21 @@ public class Menu extends JFrame {
 
         // create new Game
         game = new Game();
+        try {
+            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+        } catch (Exception e) {
+            e.printStackTrace();;
+        }
 
         // config for menu
         setTitle("Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 300);
+
+        setBackground(new Color(222, 222, 222));
         setLocationRelativeTo(null);
         setResizable(false);
+
 
         // set custom icon
         ImageIcon image = new ImageIcon("menu.png");
@@ -62,6 +71,7 @@ public class Menu extends JFrame {
 
         // create panel for slider
         JPanel sliderPanel = new JPanel();
+        sliderPanel.setBackground(new Color(222, 222, 222));
 
         // add slider to panel
         sliderPanel.add(dimSlider);
@@ -70,18 +80,21 @@ public class Menu extends JFrame {
         // create main panel for the 2 player slots
         JPanel playerSlots = new JPanel();
         playerSlots.setBackground(Color.white);
-        playerSlots.setPreferredSize(new Dimension(300, 180));
+        playerSlots.setLayout(new BorderLayout());
+        playerSlots.setBorder(null);
 
         // create panel for player slot 1
         slot1 = new JPanel();
         slot1.setBackground(new Color(200, 200, 200));
-        slot1.setPreferredSize(new Dimension(135, 174));
+        slot1.setPreferredSize(new Dimension(142, 174));
+        slot1.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
         slot1.setLayout(new BorderLayout());
 
         // create panel for player slot 2
         slot2 = new JPanel();
         slot2.setBackground(new Color(200, 200, 200));
-        slot2.setPreferredSize(new Dimension(135, 174));
+        slot2.setPreferredSize(new Dimension(142, 174));
+        slot2.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
         slot2.setLayout(new BorderLayout());
 
         // add player name and remove option to each slot
@@ -93,6 +106,10 @@ public class Menu extends JFrame {
         // add player slots to main panel
         playerSlots.add(slot1, BorderLayout.WEST);
         playerSlots.add(slot2, BorderLayout.EAST);
+
+        buttons.setBorder(null);
+        playerSlots.setBorder(null);
+        sliderPanel.setBorder(null);
 
         // add all panels to menu
         add(buttons, BorderLayout.NORTH);
