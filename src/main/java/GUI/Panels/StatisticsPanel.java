@@ -175,16 +175,16 @@ public class StatisticsPanel extends JPanel implements JObserver {
 
     @Override
     public void enableStart(boolean enable) {
-
+        // implemented in GameOfLife
     }
 
     @Override
     public void enableEvolve(boolean enable) {
-
+        // implemented in GameOfLife
     }
 
     @Override
     public void enableUndo(boolean enable) {
-
+        // implemented in GameOfLife
     }
 }

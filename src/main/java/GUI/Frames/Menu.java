@@ -25,7 +25,7 @@ public class Menu extends JFrame {
         try {
             UIManager.setLookAndFeel(new NimbusLookAndFeel());
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
         }
 
         // config for menu

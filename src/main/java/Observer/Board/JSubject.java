@@ -1,6 +1,6 @@
 package Observer.Board;
 
 public interface JSubject {
-    void registerObserver(JObserver o);
-    void notifyObserver();
+    void registerJObserver(JObserver o);
+    void notifyJObserver();
 }

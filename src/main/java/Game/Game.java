@@ -31,7 +31,6 @@ public class Game implements Observer, CellObserver {
 
         // determine player 1 player 2
         player1 = players.getPlayer(PLAYER1_INDEX);
-
         player2 = players.getPlayer(PLAYER2_INDEX);
 
         // register observer for board panel and gof frame
@@ -70,7 +69,6 @@ public class Game implements Observer, CellObserver {
         // update number of player cells
         updatePlayerCells();
 
-        // check winner
         checkWinner();
     }
 

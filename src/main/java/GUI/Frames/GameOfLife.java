@@ -23,6 +23,8 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     private StatisticsPanel statistics;
     private final Cell[][] aGrid;
     Singleton players = Singleton.getInstance();
+    Player player1 = players.getPlayer(0);
+    Player player2 = players.getPlayer(1);
     private final List<Observer> observers = new ArrayList<>();
     private JButton start;
     private JButton reset;
@@ -30,7 +32,6 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     private JButton undo;
     private int genCounter;
     private Player active;
-
 
     public GameOfLife(Cell[][] grid) {
 
@@ -42,20 +43,20 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         try {
             UIManager.setLookAndFeel(new NimbusLookAndFeel());
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
         }
-        initialize(getContentPane());
+        initUI(getContentPane());
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1024,768);
         setVisible(true);
-        setLocationRelativeTo(null);
         setResizable(true);
 
         ImageIcon image = new ImageIcon("logo.png");
         setIconImage(image.getImage());
     }
 
-    public void initialize(Container container) {
+    public void initUI(Container container) {
 
         container.setLayout(new BorderLayout());
         container.setBackground(Color.white);
@@ -83,12 +84,12 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         JScrollPane scrollPane = new JScrollPane(outerPanel);
 
         // register observer
-        board.registerObserver(this);
+        board.registerJObserver(this);
 
         // create statistics panel
         statistics = new StatisticsPanel();
 
-        board.registerObserver(statistics);
+        board.registerJObserver(statistics);
 
         // add all main panels to the container
         container.add(statistics, BorderLayout.EAST);
@@ -96,28 +97,20 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         container.add(scrollPane, BorderLayout.CENTER);
     }
 
-    @Override
-    public void registerObserver(Observer o) {
-        this.observers.add(o);
-    }
+    private void resetAll() {
+        board.clear();
+        statistics.setGeneration(1);
+        start.setEnabled(false);
+        evolve.setEnabled(false);
 
-    @Override
-    public void notifyObserver(ActionEvent e) {
-        String command = e.getActionCommand();
-        for (Observer o : observers) {
-            if (Objects.equals(command, evolve.getActionCommand())) {
-                o.skipGen();
-            }
-            if (Objects.equals(command, undo.getActionCommand())) {
-                o.undo();
-            }
-            if (Objects.equals(command, start.getActionCommand())) {
-                o.clearStack();
-            }
-            if (Objects.equals(command, reset.getActionCommand())) {
-                o.reset();
-            }
+        if (active == player1) {
+            statistics.resetPanel(player1);
+        } else {
+            statistics.resetPanel(player2);
         }
+
+        // update live cells
+        statistics.setAlive(null);
     }
 
     private JButton createStartButton() {
@@ -129,7 +122,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             board.startGame();
             start.setEnabled(false);
 
-            active = players.getPlayer(0);
+            active = player1;
             statistics.activePanel(active);
 
             notifyObserver(e);
@@ -168,7 +161,8 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             ++genCounter;
             statistics.setGeneration(genCounter);
 
-            active = (active == players.getPlayer(0)) ? players.getPlayer(1) : players.getPlayer(0);
+            // switch active player
+            active = (active == player1) ? player2 : player1;
             statistics.activePanel(active);
 
             notifyObserver(e);
@@ -186,7 +180,6 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
             // event handling
             board.undoLastAction();
             notifyObserver(e);
-
         });
         undoButton.setEnabled(false);
         return undoButton;
@@ -204,6 +197,30 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     }
 
     @Override
+    public void registerObserver(Observer o) {
+        this.observers.add(o);
+    }
+
+    @Override
+    public void notifyObserver(ActionEvent e) {
+        String command = e.getActionCommand();
+        for (Observer o : observers) {
+            if (Objects.equals(command, evolve.getActionCommand())) {
+                o.skipGen();
+            }
+            if (Objects.equals(command, undo.getActionCommand())) {
+                o.undo();
+            }
+            if (Objects.equals(command, start.getActionCommand())) {
+                o.clearStack();
+            }
+            if (Objects.equals(command, reset.getActionCommand())) {
+                o.reset();
+            }
+        }
+    }
+
+    @Override
     public void enableStart(boolean enable) {
         start.setEnabled(enable);
     }
@@ -218,49 +235,35 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
 
     @Override
     public void colorPlaced(Color color) {
-
+        // implemented in StatisticsPanel
     }
 
     @Override
     public void colorKilled(Color color) {
-
+        // implemented in StatisticsPanel
     }
-    private void resetAll() {
-        board.clear();
-        statistics.setGeneration(1);
-        start.setEnabled(false);
-        evolve.setEnabled(false);
 
-        if (active == players.getPlayer(0)) {
-            statistics.resetPanel(players.getPlayer(0));
-        } else {
-            statistics.resetPanel(players.getPlayer(1));
-        }
-
-        // update live cells
-        statistics.setAlive(null);
-    }
     public void registerCellObserver(CellObserver o) {
         board.registerCellObserver(o);
     }
 
     public void declareWinner(Player player) {
-        // update final statistics
-        ++genCounter;
-        statistics.setGeneration(genCounter);
-        players.getList().forEach(statistics::setAlive);
 
         if (player == null) {
             // tie message
-            JOptionPane.showMessageDialog(this, "It's a tie!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "It's a tie!", "Game Over",
+                    JOptionPane.INFORMATION_MESSAGE);
         } else {
             // winner message
-            JOptionPane.showMessageDialog(this,player.getName() + " won!","Game Over",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this,player.getName() + " won!","Game Over",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
         String[] options = new String[] {"New Round", "Exit"};
-        int response = JOptionPane.showOptionDialog(this, "Do you want to play a new round?", "Game Over", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null, options, options[0]);
+        int response = JOptionPane.showOptionDialog(this, "Do you want to play a new round?",
+                "Game Over", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null, options, options[0]);
         if (response == 0) {
             resetAll();
+            notifyObserver(new ActionEvent(this,0,"Reset"));
         }
         if (response == 1) {
             dispose();
