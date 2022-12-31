@@ -15,7 +15,7 @@ class Evolution {
             return;
         }
         // Create copy of grid for iteration
-        Cell[][] old_grid = grid.getGrid().clone(); //copyGrid(grid.getGrid(this));
+        Cell[][] old_grid = grid.getGridCopy(); //copyGrid(grid.getGrid(this));
         //BitSet[][] old_grid = grid.getGrid(this).clone();
         int dim = old_grid.length;
         int[] neighbours;

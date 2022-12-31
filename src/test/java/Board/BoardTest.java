@@ -42,13 +42,21 @@ class BoardTest {
         board.setCell(3, 4, Cell.PLAYER2);
         board.setCell(4, 3, Cell.PLAYER2);
 
+        /*
+         * (1,1,0,0,0)
+         * (2,0,0,0,0)
+         * (0,0,0,2,0)
+         * (0,0,2,1,2)
+         * (0,0,0,2,0)
+         */
+
         Cell[][] checkGrid =
                 {
                         {Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD},
-                        {Cell.PLAYER2, Cell.PLAYER1, Cell.PLAYER1, Cell.DEAD, Cell.DEAD},
-                        {Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD, Cell.DEAD},
-                        {Cell.DEAD, Cell.DEAD, Cell.PLAYER2, Cell.PLAYER1, Cell.PLAYER2},
-                        {Cell.DEAD, Cell.DEAD, Cell.PLAYER2, Cell.DEAD, Cell.DEAD}
+                        {Cell.PLAYER2, Cell.PLAYER1, Cell.DEAD, Cell.DEAD, Cell.DEAD},
+                        {Cell.DEAD, Cell.DEAD, Cell.PLAYER2, Cell.PLAYER2, Cell.PLAYER2},
+                        {Cell.DEAD, Cell.DEAD, Cell.PLAYER2, Cell.DEAD, Cell.PLAYER2},
+                        {Cell.DEAD, Cell.DEAD, Cell.PLAYER2, Cell.PLAYER2, Cell.PLAYER2}
                 };
         board.evolve();
         assertArrayEquals(checkGrid, board.getBoard());
