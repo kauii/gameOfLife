@@ -40,14 +40,17 @@ class Grid {
     }
 
     // Returns the grid as BitSet to the Memento
-    protected Cell[][] getGrid() {
-        Cell[][] res=new Cell[grid.length][grid.length];
+    protected Cell[][] getGridCopy() {
+        Cell[][] res = new Cell[grid.length][grid.length];
         // Create copy of array
-        for(int i=0;i< grid.length;i++){System.arraycopy(grid[i],0,res[i],0,grid.length);
+        for (int i = 0; i < grid.length; i++) {
+            System.arraycopy(grid[i], 0, res[i], 0, grid.length);
         }
-
-
         return res;
+    }
+
+    protected Cell[][] getGrid() {
+        return grid;
     }
 
     // Get int array [player_1,player_2]
