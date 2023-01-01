@@ -6,6 +6,8 @@ package Board;
  * Iterating through a copy of the grid and setting new cells directly in the grid
  */
 
+import Game.GridIterator;
+
 class Evolution {
 
     // Can only be called by Board
@@ -17,29 +19,29 @@ class Evolution {
         // Create copy of grid for iteration
         Cell[][] old_grid = grid.getGridCopy(); //copyGrid(grid.getGrid(this));
         //BitSet[][] old_grid = grid.getGrid(this).clone();
-        int dim = old_grid.length;
         int[] neighbours;
 
         // Iterate through old_grid[x][y]
-        for (int x = 0; x < dim; x++) {
-            for (int y = 0; y < dim; y++) {
-                neighbours = getNeighbours(old_grid, x, y);
-                // If alive (index 0 == 1)
-                if (old_grid[x][y] != Cell.DEAD) {
-                    // If less than 2 or more than 3 neighbours -> kill cell
-                    if (neighbours[0] < 2 || neighbours[0] > 3) {
-                        grid.setCell(x, y, Cell.DEAD);
-                    }
-                    // else -> do nothing
-                } else {
-                    // If neighbours == 3 -> create new cell
-                    if (neighbours[0] == 3) {
-                        // Create cell for player with most cells nearby
-                        if (neighbours[1] == 0) {
-                            grid.setCell(x, y, Cell.PLAYER1);
-                        } else {
-                            grid.setCell(x, y, Cell.PLAYER2);
-                        }
+        GridIterator iterator = new GridIterator(old_grid);
+        while (iterator.hasNext()) {
+            int row = iterator.getRow();
+            int col = iterator.getCol();
+            Cell cell = iterator.next();
+            neighbours = getNeighbours(old_grid, row, col);
+            // If alive (index 0 == 1)
+            if (cell != Cell.DEAD) {
+                if (neighbours[0] < 2 || neighbours[0] > 3) {
+                    grid.setCell(row, col, Cell.DEAD);
+                }
+                // else -> do nothing
+            } else {
+                // If neighbours == 3 -> create new cell
+                if (neighbours[0] == 3) {
+                    // Create cell for player with most cells nearby
+                    if (neighbours[1] == 0) {
+                        grid.setCell(row, col, Cell.PLAYER1);
+                    } else {
+                        grid.setCell(row, col, Cell.PLAYER2);
                     }
                 }
             }
