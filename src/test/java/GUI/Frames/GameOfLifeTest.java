@@ -109,11 +109,4 @@ class GameOfLifeTest {
         assertEquals(1, observer.resetCount);
         assertEquals(1,observer.undoCount);
     }
-
-    @Test
-    void declareWinner() {
-
-
-    }
-
 }
