@@ -1,13 +1,11 @@
 package GUI.Frames;
 
 import Board.Cell;
-import Game.Player;
 import Game.Singleton;
 import Observer.Buttons.Observer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,14 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameOfLifeTest {
 
     private GameOfLife game;
-    Singleton players = Singleton.getInstance();
     private MockObserver observer;
 
     @BeforeEach
     void setUp() {
-
-        players.addToList(new Player("Player 1", Color.BLUE));
-        players.addToList(new Player("Player 2", Color.RED));
 
         Cell[][] grid = new Cell[][] {
                 { Cell.DEAD, Cell.DEAD, Cell.DEAD },

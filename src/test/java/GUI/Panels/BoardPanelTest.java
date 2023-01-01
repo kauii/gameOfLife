@@ -2,8 +2,6 @@ package GUI.Panels;
 
 import Board.Cell;
 import Game.GridIterator;
-import Game.Player;
-import Game.Singleton;
 import Observer.Board.CellObserver;
 import Observer.Board.JObserver;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,14 +12,12 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 class BoardPanelTest {
-
-    private final Singleton players = Singleton.getInstance();
     private static final int ROWS = 10;
     private static final int COLS = 10;
     private static final int CELL_SIZE = 10;
     private static final Cell[][] grid = new Cell[ROWS][COLS];
-    private static final Player player1 = new Player("Player 1", Color.RED);
-    private static final Player player2 = new Player("Player 2", Color.BLACK);
+  //  private static final Player player1 = new Player("Player 1", Color.RED);
+  //  private static final Player player2 = new Player("Player 2", Color.BLACK);
 
     private BoardPanel panel;
     private MockJObserver observer;
@@ -34,8 +30,7 @@ class BoardPanelTest {
             grid[iterator.getRow()][iterator.getCol()] = Cell.DEAD;
             iterator.next();
         }
-        players.addToList(player1);
-        players.addToList(player2);
+
         panel = new BoardPanel(grid);
 
         observer = new MockJObserver();

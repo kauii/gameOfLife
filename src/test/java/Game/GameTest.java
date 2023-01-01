@@ -6,20 +6,36 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.util.Objects;
 
 class GameTest {
     private Game game;
-    private final Singleton players = Singleton.getInstance();
-
+    private Singleton players;
     @BeforeEach
     void setUp() {
-        Player player2 = new Player("Player 2", Color.green);
-        Player player1 = new Player("Player 1", Color.red);
-        players.addToList(player2);
-        players.addToList(player1);
+        players = Singleton.getInstance();
+
+        // players only added in this test class
+        try {
+            players.addToList(new Player("Player 2", Color.RED));
+        } catch (IllegalCallerException ignored) {
+
+        }
+        try {
+            players.addToList(new Player("Player 1", Color.BLUE));
+        } catch (IllegalCallerException ignored) {
+
+        }
+
         game = new Game();
         int dimension = 10;
         game.setUp(dimension);
+    }
+
+    @Test
+    void sortList() {
+        assert(Objects.equals(players.getPlayer(0).getName(), "Player 1"));
+        assert(Objects.equals(players.getPlayer(1).getName(), "Player 2"));
     }
 
     @Test

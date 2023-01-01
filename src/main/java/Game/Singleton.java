@@ -22,7 +22,10 @@ public class Singleton {
     }
 
     public void addToList(Player player) {
-        players.add(player);
+        if (players.size() < 2) { players.add(player); }
+        else {
+            throw new IllegalCallerException("Cannot add more than 2 players to the list");
+        }
     }
 
     public void removeFromList(int index) {
