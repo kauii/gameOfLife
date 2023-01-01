@@ -1,5 +1,6 @@
 package Game;
 
+import Board.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,8 +28,8 @@ class PlayerTest {
 
     @Test
     void getSetPlayerNr() {
-        player.setPlayerNr(PlayerNr.PLAYER2);
-        assert (player.getPlayerNr() == PlayerNr.PLAYER2);
+        player.setPlayerNr(Cell.PLAYER2);
+        assert (player.getPlayerNr() == Cell.PLAYER2);
     }
 
     @Test

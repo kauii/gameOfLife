@@ -1,11 +1,10 @@
 package GUI.Panels;
 
+import Observer.Board.*;
 import Game.GridIterator;
-import Game.Observer;
-import GUI.Subject;
 import Game.Player;
 import Game.Singleton;
-import Board.PlayerNr;
+import Board.Cell;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -14,26 +13,25 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static Board.PlayerNr.*;
+import static Board.Cell.*;
+import static GUI.Panels.Action.*;
 
-public class BoardPanel extends JPanel implements MouseListener, Subject {
+public class BoardPanel extends JPanel implements MouseListener, JSubject, CellSubject {
 
     Singleton players = Singleton.getInstance();
     private Player activePlayer;
-    private Player player1 = players.getPlayer(0);
-    private Player player2 = players.getPlayer(1);
-    private final List<Observer> observers = new ArrayList<>();
-    private PlayerNr[][] grid;
-    private final int cellSize = 10; // size of each cell in pixels
-    private final int rows;
-    private final int cols; // dimensions of the grid
-    private int zoom = 1; // scale factor for the cells
+    private final Player player1 = players.getPlayer(0);
+    private final Player player2 = players.getPlayer(1);
+    private final List<JObserver> observers = new ArrayList<>();
+    private final List<CellObserver> cellObservers = new ArrayList<>();
+    private Cell[][] grid;
+    private final List<Action> actions = new ArrayList<>();
+    private final int cellSize = 10;
+    private final int rows, cols;
     private int countCells = 0;
     private boolean preRound = true;
-    private boolean cellPlaced = false;
-    private boolean cellKilled = false;
 
-    public BoardPanel(PlayerNr[][] grid) {
+    public BoardPanel(Cell[][] grid) {
         this.grid = grid;
         rows = grid.length;
         cols = grid[0].length;
@@ -47,7 +45,7 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         super.paintComponent(g);
 
         // Map the enums to their colors
-        Map<PlayerNr, Color> colorMap = new HashMap<>();
+        Map<Cell, Color> colorMap = new HashMap<>();
         colorMap.put(PLAYER1, player1.getColor());
         colorMap.put(PLAYER2, player2.getColor());
         colorMap.put(DEAD, Color.WHITE);
@@ -56,16 +54,16 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
         while (iterator.hasNext()) {
             int row = iterator.getRow();
             int col = iterator.getCol();
-            PlayerNr cell = iterator.next();
+            Cell cell = iterator.next();
 
             // Translate the value of grid[row][col] to corresponding color
             Color color = colorMap.get(cell);
             g.setColor(color);
-            g.fillRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
+            g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
 
             // Draw a black border around each cell
             g.setColor(Color.BLACK);
-            g.drawRect(col * cellSize * zoom, row * cellSize * zoom, cellSize * zoom, cellSize * zoom);
+            g.drawRect(col * cellSize, row * cellSize, cellSize, cellSize);
         }
     }
 
@@ -76,40 +74,43 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
     private void play(int x, int y) {
         if (activePlayer == player1) {
             if (inBoard(x, y) && grid[y][x] == DEAD) {
-                if (!cellPlaced) {
+                if (!actions.contains(PLACED)) {
                     grid[y][x] = PLAYER1;
-                    cellPlaced = true;
+                    actions.add(PLACED);
+                    notifyCellObserver(y,x,PLAYER1);
                 }
             }
             else if (inBoard(x, y) && grid[y][x] == PLAYER2) {
-                if (!cellKilled) {
+                if (!actions.contains(KILLED)) {
                     grid[y][x] = DEAD;
-                    cellKilled = true;
+                    actions.add(KILLED);
+                    notifyCellObserver(y,x,DEAD);
                 }
             }
             repaint();
-            notifyObserver();
         }
         else {
 
             if (inBoard(x, y) && grid[y][x] == DEAD) {
-                if (!cellPlaced) {
+                if (!actions.contains(PLACED)) {
                     grid[y][x] = PLAYER2;
-                    cellPlaced = true;
+                    actions.add(PLACED);
+                    notifyCellObserver(y,x,PLAYER2);
                 }
             }
             else if (inBoard(x, y) && grid[y][x] == PLAYER1) {
-                if (!cellKilled) {
+                if (!actions.contains(KILLED)) {
                     grid[y][x] = DEAD;
-                    cellKilled = true;
+                    actions.add(KILLED);
+                    notifyCellObserver(y,x,DEAD);
                 }
             }
             repaint();
-            notifyObserver();
         }
+        notifyJObserver();
     }
 
-    public void setGrid(PlayerNr[][] pGrid) {
+    public void setGrid(Cell[][] pGrid) {
         grid = pGrid;
         repaint();
     }
@@ -122,6 +123,8 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
                     ++countCells;
                     grid[y][x] = PLAYER1;
                     grid[rows - 1 - y][cols - 1 - x] = PLAYER2;
+                    notifyCellObserver(y,x,PLAYER1);
+                    notifyCellObserver(rows - 1 - y, cols - 1 - x, PLAYER2);
                 }
             }
             else if (grid[y][x] == PLAYER1 || grid[rows - 1 - y][cols - 1 - x] == PLAYER2) {
@@ -129,21 +132,43 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
                 --countCells;
                 grid[y][x] = DEAD;
                 grid[rows - 1 - y][cols - 1 - x] = DEAD;
+                notifyCellObserver(y,x,DEAD);
+                notifyCellObserver(rows - 1 - y, cols - 1 - x, DEAD);
             }
             repaint();
-            notifyObserver();
+            notifyJObserver();
         }
+    }
+
+    private void updateUI(JObserver o, boolean placed, boolean killed) {
+        Color green = new Color(0,180,0);
+        if (placed) {
+            o.colorPlaced(green);
+        } else {
+            o.colorPlaced(Color.RED);
+        }
+        if (killed) {
+            o.colorKilled(green);
+        } else {
+            o.colorKilled(Color.RED);
+        }
+        o.enableUndo(placed || killed);
+        o.enableEvolve(placed && killed);
     }
 
     public void startGame() {
         preRound = false;
     }
 
-    // MouseListener methods
+    public void undoLastAction() {
+        actions.remove(actions.size() - 1);
+        notifyJObserver();
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
-        int x = e.getX() / (cellSize * zoom);
-        int y = e.getY() / (cellSize * zoom);
+        int x = e.getX() / (cellSize);
+        int y = e.getY() / (cellSize);
 
         // place the first 4 cells
         if (preRound) { initialCellPlacement(x, y); }
@@ -161,55 +186,57 @@ public class BoardPanel extends JPanel implements MouseListener, Subject {
 
     public void clear() {
         // Reset the game board to its initial state
-        for (PlayerNr[] cell : grid) {
+        for (Cell[] cell : grid) {
             Arrays.fill(cell, DEAD);
         }
         // Reset global variables
         countCells = 0;
         preRound = true;
-        cellPlaced = false;
-        cellKilled = false;
+        actions.clear();
         activePlayer = player1;
 
         // Repaint the panel to reflect the changes
         repaint();
-        notifyObserver();
+        notifyJObserver();
     }
 
     public void changeActivePlayer() {
-        cellPlaced = false;
-        cellKilled = false;
+        actions.clear();
+        notifyJObserver();
         activePlayer = (activePlayer == player1) ? player2 : player1;
     }
 
     @Override
-    public void registerObserver(Observer o) {
+    public void registerJObserver(JObserver o) {
         this.observers.add(o);
     }
 
     @Override
-    public void notifyObserver() {
-        for (Observer o : observers) {
-            // update grid
-            o.updateGrid(grid);
+    public void notifyJObserver() {
+        for (JObserver o : observers) {
             // check initial cell placement
             if (countCells == 6 && preRound) {
                 o.enableStart(true);
             }
             // turn
             else {
+                boolean placed = actions.contains(PLACED);
+                boolean killed = actions.contains(KILLED);
                 o.enableStart(false);
-                if (cellPlaced) {
-                    o.colorPlaced();
-                }
-                if  (cellKilled) {
-                    o.colorKilled();
-                }
-                // notify if a cell is placed & a cell is killed
-                if (cellPlaced && cellKilled) {
-                    o.turnOver();
-                }
+                updateUI(o, placed, killed);
             }
+        }
+    }
+
+    @Override
+    public void registerCellObserver(CellObserver o) {
+        this.cellObservers.add(o);
+    }
+
+    @Override
+    public void notifyCellObserver(int row, int col, Cell cell) {
+        for (CellObserver o : cellObservers) {
+            o.updateCell(row, col, cell);
         }
     }
 }

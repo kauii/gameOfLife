@@ -3,20 +3,13 @@ package Board;
 /*
  * FACADE DESIGN PATTERN
  * Each Board manipulation is handled through the Board class
- *
- * COMMAND DESIGN PATTERN
- * Invoker
  */
-
-import Board.Grid.Evolution;
-import Board.Grid.Grid;
 
 import java.util.Stack;
 
 public class Board implements BoardInter {
     private final Grid grid;
     private final Evolution evo;
-    private final Exporter expo;
     private Stack<Object> MemStack;
 
 
@@ -24,26 +17,22 @@ public class Board implements BoardInter {
         grid = new Grid(this, dimension);
         //captureState();
         evo = new Evolution();
-        expo = new Exporter();
         MemStack = new Stack<>();
+
     }
 
     // Exports board as 2D-PlayerNr array.
     // DEAD, PLAYER1, PLAYER2
-    public PlayerNr[][] getBoard() {
-        return expo.gridExport(grid.getGrid(this));
+    public Cell[][] getBoard() {
+        return grid.getGridCopy();
     }
 
-    public PlayerNr[][] setCell(int x_cor, int y_cor, PlayerNr playerNr) {
-        boolean alive = playerNr != PlayerNr.DEAD;
-        // If playerNr == 1 -> player = false
-        // If playerNr == 2 -> player = true
-        boolean player = playerNr == PlayerNr.PLAYER2;
+    public Cell[][] setCell(int x_cor, int y_cor, Cell cell) {
         // Save the current cell for undo
         captureCell(x_cor, y_cor);
-        grid.setCell(this, x_cor, y_cor, alive, player);
+        grid.setCell(x_cor, y_cor, cell);
 
-        return expo.gridExport(grid.getGrid(this));
+        return grid.getGridCopy();
     }
 
     public void evolve() {
@@ -63,7 +52,7 @@ public class Board implements BoardInter {
     /*
      * MEMENTO DESIGN PATTERN
      * Caretaker function.
-     * Saves the previous states.
+     * Saves the previous state from changed cells.
      */
 
     // Saving the current state of a cell as a memento in the stack
@@ -71,13 +60,15 @@ public class Board implements BoardInter {
         MemStack.push(grid.getMemento(x_cor, y_cor));
     }
 
-    public PlayerNr[][] undo() {
-        grid.restore(MemStack.pop());
-
-        return expo.gridExport(grid.getGrid(this));
+    public Cell[][] undo() {
+        try {
+            grid.restore(MemStack.pop());
+        } catch (Exception ignored) {
+        }
+        return grid.getGridCopy();
     }
 
-    private void clearStack() {
+    public void clearStack() {
         MemStack = new Stack<>();
     }
 
