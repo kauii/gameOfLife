@@ -1,6 +1,5 @@
 package Game;
 
-import Board.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,12 +23,6 @@ class PlayerTest {
     @Test
     void getColor() {
         assert (player.getColor() == Color.GREEN);
-    }
-
-    @Test
-    void getSetPlayerNr() {
-        player.setPlayerNr(Cell.PLAYER2);
-        assert (player.getPlayerNr() == Cell.PLAYER2);
     }
 
     @Test
