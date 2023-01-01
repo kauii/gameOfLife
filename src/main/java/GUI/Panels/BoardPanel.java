@@ -120,7 +120,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
     }
     private void initialCellPlacement(int x, int y) {
         if (inBoard(x, y)) {
-            if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == DEAD) {
+            if (grid[y][x] == DEAD) {
                 if (countCells < 6) {
                     // Create player 1s cell and the symmetrical cell for player 2
                     ++countCells;
@@ -130,7 +130,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
                     notifyCellObserver(rows - 1 - y, cols - 1 - x, PLAYER2);
                 }
             }
-            else if (grid[y][x] == PLAYER1 || grid[rows - 1 - y][cols - 1 - x] == PLAYER2) {
+            else if (grid[y][x] == PLAYER1) {
                 // Erase player 1s cell and the symmetrical cell for player 2
                 --countCells;
                 grid[y][x] = DEAD;
@@ -221,11 +221,14 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
             if (countCells == 6 && preRound) {
                 o.enableStart(true);
             }
-            // turn
-            else {
+            if (countCells != 6) {
+                o.enableStart(false);
+            }
+            // update label colors
+            if (!preRound) {
+                o.enableStart(false);
                 boolean placed = actions.contains(PLACED);
                 boolean killed = actions.contains(KILLED);
-                o.enableStart(false);
                 updateUI(o, placed, killed);
             }
         }

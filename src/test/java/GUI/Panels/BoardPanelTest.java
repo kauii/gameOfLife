@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 class BoardPanelTest {
 
@@ -269,6 +270,34 @@ class BoardPanelTest {
             assert(panel.getGrid()[iterator.getRow()][iterator.getCol()] == Cell.DEAD);
             iterator.next();
         }
+
+    }
+
+    @Test
+    void updateUI() {
+        panel.startGame();
+
+        // place cell = Cells[0][0]
+        MouseEvent cell1 = simulateMouseEvent(0,0);
+        panel.dispatchEvent(cell1);
+        Color green = new Color(0,180,0);
+        assert(Objects.equals(observer.killed, Color.RED));
+        assert(Objects.equals(observer.placed, green));
+
+        panel.changeActivePlayer();
+
+        // kill cell = Cells[0][0]
+        panel.dispatchEvent(cell1);
+        assert(Objects.equals(observer.killed, green));
+        assert(Objects.equals(observer.placed, Color.RED));
+        assert(!observer.evolveIsEnabled);
+        assert(observer.undoIsEnabled);
+
+        // place cell = Cells[0][0]
+        panel.dispatchEvent(cell1);
+        assert(Objects.equals(observer.placed, green));
+        assert(observer.evolveIsEnabled);
+
 
     }
 

@@ -57,8 +57,9 @@ public class Game implements Observer, CellObserver {
         }
     }
 
-
-
+    public Cell[][] getBoard() {
+        return board.getBoard();
+    }
     @Override
     public void skipGen() {
 
