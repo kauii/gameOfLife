@@ -59,6 +59,7 @@ class Grid {
 
         // Iterate through grid
         iterator = new GridIterator(grid);
+
         while (iterator.hasNext()) {
             Cell cell = iterator.next();
             // Check if player 1
