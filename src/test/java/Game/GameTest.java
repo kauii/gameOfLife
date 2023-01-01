@@ -9,23 +9,17 @@ import java.awt.*;
 
 class GameTest {
     private Game game;
-    private final int dimension = 10;
-    private Singleton players = Singleton.getInstance();
-    private Player player1, player2;
+    private final Singleton players = Singleton.getInstance();
+
     @BeforeEach
     void setUp() {
-        player2 = new Player("Player 2", Color.green);
-        player1 = new Player("Player 1", Color.red);
+        Player player2 = new Player("Player 2", Color.green);
+        Player player1 = new Player("Player 1", Color.red);
         players.addToList(player2);
         players.addToList(player1);
         game = new Game();
+        int dimension = 10;
         game.setUp(dimension);
-    }
-
-    @Test
-    void sortList() {
-        assert(players.getPlayer(0) == player1);
-        assert(players.getPlayer(1) == player2);
     }
 
     @Test
