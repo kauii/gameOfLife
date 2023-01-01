@@ -16,8 +16,6 @@ class BoardPanelTest {
     private static final int COLS = 10;
     private static final int CELL_SIZE = 10;
     private static final Cell[][] grid = new Cell[ROWS][COLS];
-  //  private static final Player player1 = new Player("Player 1", Color.RED);
-  //  private static final Player player2 = new Player("Player 2", Color.BLACK);
 
     private BoardPanel panel;
     private MockJObserver observer;
