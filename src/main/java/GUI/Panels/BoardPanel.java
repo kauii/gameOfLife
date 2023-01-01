@@ -115,6 +115,9 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
         repaint();
     }
 
+    public Cell[][] getGrid() {
+        return this.grid;
+    }
     private void initialCellPlacement(int x, int y) {
         if (inBoard(x, y)) {
             if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] == DEAD) {

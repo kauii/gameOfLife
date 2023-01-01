@@ -196,9 +196,11 @@ public class Menu extends JFrame {
         dimSlider.setMajorTickSpacing(10);
         dimSlider.setPaintLabels(false);
         dimSlider.setSnapToTicks(true);
+        dimSlider.setValue(100);
         dimSlider.addChangeListener(e -> {
             // Handle change event of the JSlider
-            dimLabel.setText("Board Dimension: " + dimSlider.getValue() + " x " + dimSlider.getValue());
+            int value = ((dimSlider.getValue() + 5) / 10) * 10;
+            dimLabel.setText("Board Dimension: " + value + " x " + value);
         });
         return dimSlider;
     }

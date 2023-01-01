@@ -56,7 +56,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         setIconImage(image.getImage());
     }
 
-    public void initUI(Container container) {
+    private void initUI(Container container) {
 
         container.setLayout(new BorderLayout());
         container.setBackground(Color.white);
@@ -194,6 +194,10 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     public void setBoard(Cell[][] grid) {
         board.setGrid(grid);
         board.repaint();
+    }
+
+    public Cell[][] getBoard() {
+        return board.getGrid();
     }
 
     @Override
