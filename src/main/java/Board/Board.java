@@ -21,18 +21,18 @@ public class Board implements BoardInter {
 
     }
 
-    // Exports board as 2D-PlayerNr array.
+    // Exports board as 2D-Cell array.
     // DEAD, PLAYER1, PLAYER2
     public Cell[][] getBoard() {
         return grid.getGridCopy();
     }
 
-    public Cell[][] setCell(int x_cor, int y_cor, Cell cell) {
+    public void setCell(int x_cor, int y_cor, Cell cell) {
         // Save the current cell for undo
         captureCell(x_cor, y_cor);
         grid.setCell(x_cor, y_cor, cell);
 
-        return grid.getGridCopy();
+        grid.getGridCopy();
     }
 
     public void evolve() {

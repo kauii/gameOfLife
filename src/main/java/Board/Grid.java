@@ -7,9 +7,6 @@ package Board;
  * MEMENTO DESIGN PATTERN
  * Originator function.
  * Memento function. -> See below
- *
- * COMMAND DESIGN PATTERN
- * Receiver
  */
 
 class Grid {
@@ -32,8 +29,7 @@ class Grid {
         }
     }
 
-    // Set value of a cell to dead or alive + player
-    // Arguments: true=1, false=0
+    // Set value of a cell to dead, p1, or p2
     protected void setCell(int x_cor, int y_cor, Cell player) {
         // Set first bit status to alive or dead
         grid[x_cor][y_cor] = player;
@@ -47,10 +43,6 @@ class Grid {
             System.arraycopy(grid[i], 0, res[i], 0, grid.length);
         }
         return res;
-    }
-
-    protected Cell[][] getGrid() {
-        return grid;
     }
 
     // Get int array [player_1,player_2]
