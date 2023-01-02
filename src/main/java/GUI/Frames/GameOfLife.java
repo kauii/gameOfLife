@@ -252,6 +252,8 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
     }
 
     public void declareWinner(Player player) {
+        // update final alive labels
+        players.getList().forEach(statistics::setAlive);
 
         if (player == null) {
             // tie message

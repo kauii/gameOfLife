@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Singleton {
-    private static Singleton instance;
+    private static final Singleton instance = new Singleton();
     private final List<Player> players;
 
     private Singleton() {
@@ -13,11 +13,6 @@ public class Singleton {
     }
 
     public static Singleton getInstance() {
-
-        // lazy initialization
-        if (instance == null) {
-            instance = new Singleton();
-        }
         return instance;
     }
 

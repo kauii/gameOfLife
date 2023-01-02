@@ -19,6 +19,8 @@ public class StatisticsPanel extends JPanel implements JObserver {
     private JLabel killed1;
     private JLabel killed2;
     Singleton players = Singleton.getInstance();
+    Player player1 = players.getPlayer(0);
+    Player player2 = players.getPlayer(1);
 
     public StatisticsPanel() {
         setLayout(new BorderLayout());
@@ -32,8 +34,8 @@ public class StatisticsPanel extends JPanel implements JObserver {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
 
-        player1Panel = createPlayerPanel(players.getPlayer(0));
-        player2Panel = createPlayerPanel(players.getPlayer(1));
+        player1Panel = createPlayerPanel(player1);
+        player2Panel = createPlayerPanel(player2);
 
         manageLayout();
 
@@ -113,13 +115,13 @@ public class StatisticsPanel extends JPanel implements JObserver {
     }
 
     public void activePanel(Player player) {
-        if (player == players.getPlayer(0)) {
+        if (player == player1) {
             player1Panel.setBorder(BorderFactory.createLineBorder(player.getColor(), 6));
             placed1.setText("Cell placed");
             placed1.setForeground(Color.red);
             killed1.setText("Cell killed");
             killed1.setForeground(Color.red);
-            resetPanel(players.getPlayer(1));
+            resetPanel(player2);
         }
         else {
             player2Panel.setBorder(BorderFactory.createLineBorder(player.getColor(), 6));
@@ -127,12 +129,12 @@ public class StatisticsPanel extends JPanel implements JObserver {
             placed2.setForeground(Color.RED);
             killed2.setText("Cell killed");
             killed2.setForeground(Color.red);
-            resetPanel(players.getPlayer(0));
+            resetPanel(player1);
         }
     }
 
     public void resetPanel(Player player) {
-        if (player == players.getPlayer(0)) {
+        if (player == player1) {
             player1Panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
             placed1.setText(" ");
             killed1.setText(" ");
@@ -153,7 +155,7 @@ public class StatisticsPanel extends JPanel implements JObserver {
             alive1.setText("0");
             alive2.setText("0");
         }
-        else if (player == players.getPlayer(0)) {
+        else if (player == player1) {
             alive1.setText(String.valueOf(player.getLiveCells()));
         }
         else {
