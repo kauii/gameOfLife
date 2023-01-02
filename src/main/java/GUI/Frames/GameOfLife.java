@@ -52,7 +52,7 @@ public class GameOfLife extends JFrame implements Subject, JObserver {
         setVisible(true);
         setResizable(true);
 
-        ImageIcon image = new ImageIcon("logo.png");
+        ImageIcon image = new ImageIcon("src/main/java/GUI/logo.png");
         setIconImage(image.getImage());
     }
 

@@ -39,7 +39,7 @@ public class Menu extends JFrame {
 
 
         // set custom icon
-        ImageIcon image = new ImageIcon("menu.png");
+        ImageIcon image = new ImageIcon("src/main/java/GUI/menu.png");
         setIconImage(image.getImage());
 
         // create top buttons
