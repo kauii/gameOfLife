@@ -173,7 +173,7 @@ public class BoardPanel extends JPanel implements MouseListener, JSubject, CellS
         int x = e.getX() / (cellSize);
         int y = e.getY() / (cellSize);
 
-        // place the first 4 cells
+        // place the first 6 cells
         if (preRound) { initialCellPlacement(x, y); }
         else { play(x,y); }
     }
